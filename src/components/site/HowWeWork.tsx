@@ -1,10 +1,120 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useId } from "react";
 import { SectionBadge } from "./SectionBadge";
-import { ArrowUpRight, TrendingUp, Sparkles, CheckCircle2 } from "lucide-react";
+import { ArrowUpRight, TrendingUp, Sparkles, Check, ChevronRight } from "lucide-react";
 
+/* -------------------------------------------------------------
+   TYPES & DATA FOR HOW WE WORK
+------------------------------------------------------------- */
+type ChartChannel = "blended" | "meta" | "google" | "retention";
+
+interface ChannelData {
+  label: string;
+  roas: string;
+  points: number[]; // normalized 0-100 values
+  color: string;
+}
+
+const CHANNEL_DATA: Record<ChartChannel, ChannelData> = {
+  blended: {
+    label: "Blended",
+    roas: "5.4x ROAS",
+    points: [22, 34, 38, 48, 52, 68, 74, 88],
+    color: "#0052FF",
+  },
+  meta: {
+    label: "Meta Ads",
+    roas: "5.6x ROAS",
+    points: [18, 28, 42, 46, 60, 66, 80, 92],
+    color: "#3B82F6",
+  },
+  google: {
+    label: "Google Ads",
+    roas: "4.8x ROAS",
+    points: [30, 36, 40, 50, 54, 62, 70, 78],
+    color: "#60A5FA",
+  },
+  retention: {
+    label: "Retention",
+    roas: "16.5x ROAS",
+    points: [40, 48, 55, 65, 72, 82, 89, 98],
+    color: "#10B981",
+  },
+};
+
+interface FunnelStep {
+  id: string;
+  name: string;
+  metric: string;
+  detail: string;
+}
+
+const FUNNEL_STEPS: FunnelStep[] = [
+  {
+    id: "discover",
+    name: "Discover",
+    metric: "Reach",
+    detail: "High-tempo paid media and targeted reach that capture commercial intent.",
+  },
+  {
+    id: "visit",
+    name: "Visit",
+    metric: "Speed",
+    detail: "Sub-second landing pages engineered for immediate message match.",
+  },
+  {
+    id: "enquire",
+    name: "Enquire",
+    metric: "CVR",
+    detail: "High-converting forms and frictionless checkout flows that capture pipeline.",
+  },
+  {
+    id: "retain",
+    name: "Retain",
+    metric: "LTV",
+    detail: "Automated post-purchase sequences that turn buyers into repeat brand advocates.",
+  },
+];
+
+interface RetentionMessage {
+  type: string;
+  subject: string;
+  stat: string;
+  timing: string;
+}
+
+const RETENTION_MESSAGES: RetentionMessage[] = [
+  {
+    type: "Welcome Flow",
+    subject: "Private Founder Welcome & VIP Onboarding",
+    stat: "52% Open Rate",
+    timing: "Trigger: Instant",
+  },
+  {
+    type: "Follow-Up Sequence",
+    subject: "Behavioral Follow-up & Custom Recommendations",
+    stat: "28% CTR",
+    timing: "Trigger: 48h Post-Visit",
+  },
+  {
+    type: "Re-engagement",
+    subject: "Exclusive 60-Day Repeat Member Privilege",
+    stat: "+34% Repeat LTV",
+    timing: "Trigger: 60 Days",
+  },
+];
+
+/* -------------------------------------------------------------
+   MAIN COMPONENT: HowWeWork
+------------------------------------------------------------- */
 export function HowWeWork() {
   const [hasEntered, setHasEntered] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+
+  // Card 1 State (Daily Performance)
+  const [activeChannel, setActiveChannel] = useState<ChartChannel>("blended");
+
+  // Card 2 State (Full-Funnel Ownership)
+  const [activeStep, setActiveStep] = useState<string>("visit");
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -17,324 +127,540 @@ export function HowWeWork() {
           observer.disconnect();
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.12 }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
+  // SVG Line generator for Card 1
+  const chartPoints = CHANNEL_DATA[activeChannel].points;
+  const svgWidth = 320;
+  const svgHeight = 110;
+  const pointCoords = chartPoints.map((val, idx) => {
+    const x = (idx / (chartPoints.length - 1)) * (svgWidth - 24) + 12;
+    const y = svgHeight - (val / 100) * (svgHeight - 24) - 12;
+    return { x, y };
+  });
+
+  const pathD = pointCoords.reduce((acc, curr, idx) => {
+    if (idx === 0) return `M ${curr.x} ${curr.y}`;
+    const prev = pointCoords[idx - 1];
+    const cpX = (prev.x + curr.x) / 2;
+    return `${acc} C ${cpX} ${prev.y}, ${cpX} ${curr.y}, ${curr.x} ${curr.y}`;
+  }, "");
+
+  const areaD = `${pathD} L ${svgWidth - 12} ${svgHeight} L 12 ${svgHeight} Z`;
+
   return (
     <section
       ref={sectionRef}
       id="how-we-work"
       aria-label="How We Work & Growth Methodology"
-      className="relative w-full overflow-hidden bg-[#060608] pt-20 sm:pt-28 lg:pt-32 pb-20 sm:pb-28 lg:pb-32 border-t border-b border-white/[0.06] select-none scroll-mt-24"
+      className="relative w-full overflow-hidden bg-[#060608] pt-16 sm:pt-20 lg:pt-24 pb-16 sm:pb-20 lg:pb-24 border-t border-b border-white/[0.06] select-none scroll-mt-24"
     >
       {/* Ambient background glow */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-1/4 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] bg-[#0052FF]/[0.04] blur-[140px] rounded-full"
+        className="pointer-events-none absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-[#0052FF]/[0.035] blur-[140px] rounded-full"
       />
 
-      <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
-        {/* Header Block matching Defiant */}
+      <div className="relative mx-auto max-w-[1240px] px-4 sm:px-6">
+        {/* ========================================================
+            HEADER
+           ======================================================== */}
         <div className="flex flex-col items-center text-center">
           <SectionBadge>HOW WE WORK</SectionBadge>
 
-          <h2 className="mt-5 font-display text-[clamp(36px,5.2vw,72px)] font-extrabold tracking-[-0.03em] text-white leading-[1.04] max-w-4xl">
-            Scaling your brand <br className="hidden sm:inline" />
-            goes <span className="font-serif italic font-normal text-white">so much deeper</span> than just “winning ads”
+          <h2 className="mt-4 font-display text-[clamp(36px,4vw,58px)] font-extrabold tracking-[-0.03em] text-white leading-[1.05]">
+            Built for growth. <br />
+            <span className="font-serif italic font-normal text-white">
+              Connected at every level.
+            </span>
           </h2>
 
-          <p className="mt-5 max-w-[760px] font-sans text-[16px] sm:text-[18px] text-[#A1A1AA] leading-relaxed">
-            Real profit-driven scale requires more than disconnected creatives. You need an execution partner that operates at every level—from daily data attribution to high-converting creative engines—to unlock the next stage of growth.
+          <p className="mt-3.5 max-w-[700px] font-sans text-[15px] sm:text-[17px] text-[#A1A1AA] leading-relaxed">
+            Real profit-driven scale requires more than disconnected tactics. We align market intelligence, high-converting creative systems, and precision attribution into one unified growth engine.
           </p>
         </div>
 
-        {/* 6 High-End Defiant-Style Cards Grid */}
-        <div
-          className={`mt-14 sm:mt-18 lg:mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7 transition-all duration-700 ease-out ${
-            hasEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
-        >
-          {/* CARD 1: Daily Performance Tracking */}
-          <div className="group relative flex flex-col justify-between rounded-[28px] border border-white/[0.08] bg-[#0C0C10] p-7 sm:p-8 shadow-2xl transition-all duration-300 hover:border-white/20 hover:-translate-y-1.5 hover:shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden">
+        {/* ========================================================
+            RESPONSIVE ASYMMETRIC GRID
+            Row 1: 7 cols + 5 cols
+            Row 2: 5 cols + 7 cols
+            Row 3: 6 cols + 6 cols
+           ======================================================== */}
+        <div className="mt-9 sm:mt-10 grid grid-cols-1 md:grid-cols-12 gap-5">
+          {/* ----------------------------------------------------
+              CARD 1: Daily Performance (7 columns)
+             ---------------------------------------------------- */}
+          <div
+            style={{
+              transitionDelay: hasEntered ? "0ms" : "0ms",
+            }}
+            className={`group relative rounded-[24px] border border-white/[0.08] bg-[#0C0C10] p-6 sm:p-7 shadow-2xl transition-all duration-500 ease-out hover:border-white/20 md:col-span-7 flex flex-col justify-between ${
+              hasEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[18px]"
+            }`}
+          >
+            {/* Top specular edge highlight */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent"
+            />
+
             <div>
-              <h3 className="font-display text-[26px] sm:text-[30px] font-bold text-white tracking-tight leading-[1.1]">
-                Daily Performance <br />
-                <span className="font-serif italic font-normal text-white">Tracking</span>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#0052FF]">
+                  01 • Performance Intelligence
+                </span>
+                <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 font-mono text-[10px] text-neutral-400">
+                  Illustrative dashboard
+                </span>
+              </div>
+
+              <h3 className="mt-3 font-display text-[22px] sm:text-[25px] font-bold text-white tracking-tight leading-snug">
+                Daily Performance <span className="font-serif italic font-normal text-white">Tracking</span>
               </h3>
-              <p className="mt-3.5 text-[15px] leading-relaxed text-[#A1A1AA]">
-                We work together to set the north-star metrics that will drive real profit for your brand, then track them daily on custom live dashboards for total visibility.
+
+              <p className="mt-2 text-[14px] leading-relaxed text-[#A1A1AA]">
+                We set north-star metrics that drive enterprise revenue and track them daily. Custom views give complete visibility without vanity metrics.
               </p>
             </div>
 
-            {/* Mockup 1: Live Performance Tracker Spreadsheet */}
-            <div className="mt-8 pt-4 border-t border-white/[0.06]">
-              <div className="rounded-xl border border-white/10 bg-[#07070A] p-3.5 shadow-inner">
-                <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-white/[0.06]">
-                  <div className="flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-[11px] font-mono font-semibold tracking-wider text-neutral-300 uppercase">
-                      thrides. Live Tracker
-                    </span>
-                  </div>
-                  <span className="rounded bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
-                    +142% Target
+            {/* Interactive SVG Line Chart Visual */}
+            <div className="mt-5 rounded-2xl border border-white/[0.07] bg-[#07070A] p-4">
+              <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/[0.06]">
+                {/* Channel Selector Buttons */}
+                <div className="flex flex-wrap items-center gap-1.5" role="tablist" aria-label="Performance Channels">
+                  {(["blended", "meta", "google", "retention"] as ChartChannel[]).map((ch) => {
+                    const isActive = activeChannel === ch;
+                    return (
+                      <button
+                        key={ch}
+                        type="button"
+                        role="tab"
+                        aria-selected={isActive}
+                        onClick={() => setActiveChannel(ch)}
+                        className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-all duration-200 cursor-pointer ${
+                          isActive
+                            ? "bg-[#0052FF] text-white shadow-[0_0_12px_rgba(0,82,255,0.4)]"
+                            : "bg-white/[0.04] text-neutral-400 hover:text-white hover:bg-white/[0.08]"
+                        }`}
+                      >
+                        {CHANNEL_DATA[ch].label}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Active ROAS pill */}
+                <div className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="font-mono text-[12px] font-bold text-emerald-400">
+                    {CHANNEL_DATA[activeChannel].roas}
                   </span>
                 </div>
+              </div>
 
-                <div className="space-y-1.5 font-mono text-[11px]">
-                  <div className="flex justify-between items-center px-2 py-1.5 rounded bg-white/[0.03] text-neutral-300">
-                    <span className="text-white font-medium">Meta Ads Scale</span>
-                    <span className="text-neutral-400">$12,450 spend</span>
-                    <span className="text-emerald-400 font-bold">5.5x ROAS</span>
-                  </div>
-                  <div className="flex justify-between items-center px-2 py-1.5 rounded text-neutral-400">
-                    <span>Google Search</span>
-                    <span>$8,200 spend</span>
-                    <span className="text-white font-semibold">4.8x ROAS</span>
-                  </div>
-                  <div className="flex justify-between items-center px-2 py-1.5 rounded text-neutral-400">
-                    <span>Email & SMS Flows</span>
-                    <span>$1,400 spend</span>
-                    <span className="text-emerald-400 font-bold">16.0x ROAS</span>
-                  </div>
-                </div>
+              {/* Chart SVG */}
+              <div className="relative mt-3 h-[110px] w-full">
+                <svg
+                  viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+                  className="h-full w-full overflow-visible"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <defs>
+                    <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#0052FF" stopOpacity="0.35" />
+                      <stop offset="100%" stopColor="#0052FF" stopOpacity="0.0" />
+                    </linearGradient>
+                  </defs>
 
-                <div className="mt-2.5 pt-2 border-t border-white/[0.04] flex items-center justify-between text-[11px] text-[#71717A]">
-                  <span>Blended Growth</span>
-                  <span className="text-white font-bold">5.48x Blended ROAS</span>
-                </div>
+                  {/* Horizontal grid guide lines */}
+                  <line x1="0" y1="28" x2={svgWidth} y2="28" stroke="rgba(255,255,255,0.05)" strokeDasharray="3 3" />
+                  <line x1="0" y1="62" x2={svgWidth} y2="62" stroke="rgba(255,255,255,0.05)" strokeDasharray="3 3" />
+                  <line x1="0" y1="96" x2={svgWidth} y2="96" stroke="rgba(255,255,255,0.05)" strokeDasharray="3 3" />
+
+                  {/* Area fill */}
+                  <path d={areaD} fill="url(#chartGradient)" />
+
+                  {/* Stroke path */}
+                  <path
+                    d={pathD}
+                    fill="none"
+                    stroke={CHANNEL_DATA[activeChannel].color}
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="transition-all duration-300"
+                  />
+
+                  {/* Endpoint glow dot */}
+                  {pointCoords.length > 0 && (
+                    <circle
+                      cx={pointCoords[pointCoords.length - 1].x}
+                      cy={pointCoords[pointCoords.length - 1].y}
+                      r="4.5"
+                      fill="#FFFFFF"
+                      stroke={CHANNEL_DATA[activeChannel].color}
+                      strokeWidth="2"
+                      className="shadow-sm"
+                    />
+                  )}
+                </svg>
+              </div>
+
+              <div className="mt-2 flex items-center justify-between font-mono text-[10px] text-neutral-500">
+                <span>Day 01</span>
+                <span>Day 15</span>
+                <span>Day 30 (Scaled)</span>
               </div>
             </div>
           </div>
 
-          {/* CARD 2: Full-Funnel Ownership */}
-          <div className="group relative flex flex-col justify-between rounded-[28px] border border-white/[0.08] bg-[#0C0C10] p-7 sm:p-8 shadow-2xl transition-all duration-300 hover:border-white/20 hover:-translate-y-1.5 hover:shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden">
+          {/* ----------------------------------------------------
+              CARD 2: Full-Funnel Ownership (5 columns)
+             ---------------------------------------------------- */}
+          <div
+            style={{
+              transitionDelay: hasEntered ? "70ms" : "0ms",
+            }}
+            className={`group relative rounded-[24px] border border-white/[0.08] bg-[#0C0C10] p-6 sm:p-7 shadow-2xl transition-all duration-500 ease-out hover:border-white/20 md:col-span-5 flex flex-col justify-between ${
+              hasEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[18px]"
+            }`}
+          >
+            {/* Top specular edge highlight */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent"
+            />
+
             <div>
-              <h3 className="font-display text-[26px] sm:text-[30px] font-bold text-white tracking-tight leading-[1.1]">
-                Full-Funnel <br />
-                <span className="font-serif italic font-normal text-white">Ownership</span>
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#0052FF]">
+                02 • Conversion Engine
+              </span>
+
+              <h3 className="mt-3 font-display text-[22px] sm:text-[25px] font-bold text-white tracking-tight leading-snug">
+                Full-Funnel <span className="font-serif italic font-normal text-white">Ownership</span>
               </h3>
-              <p className="mt-3.5 text-[15px] leading-relaxed text-[#A1A1AA]">
-                From first impression to checkout retention, we optimize your full growth engine. That means landing pages, CRO, high-converting offers, and email flows.
+
+              <p className="mt-2 text-[14px] leading-relaxed text-[#A1A1AA]">
+                From first touch to checkout, we optimize every stage of your customer journey. Landing pages, conversion rate optimization, and friction-free funnels.
               </p>
             </div>
 
-            {/* Mockup 2: Full-Funnel CRO Browser Window */}
-            <div className="mt-8 pt-4 border-t border-white/[0.06]">
-              <div className="rounded-xl border border-white/10 bg-[#07070A] p-3.5 shadow-inner">
-                {/* Browser top bar */}
-                <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-white/[0.06]">
-                  <div className="flex items-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full bg-red-500/80" />
-                    <span className="h-2 w-2 rounded-full bg-amber-500/80" />
-                    <span className="h-2 w-2 rounded-full bg-emerald-500/80" />
-                  </div>
-                  <span className="text-[10px] font-mono text-neutral-400">
-                    thrides.com/convert/funnel-v3
-                  </span>
-                </div>
-
-                {/* Funnel bars */}
-                <div className="space-y-2">
-                  <div>
-                    <div className="flex justify-between text-[10px] text-neutral-400 mb-1">
-                      <span>Ad Impressions</span>
-                      <span className="text-white font-semibold">420K (100%)</span>
-                    </div>
-                    <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
-                      <div className="h-full bg-neutral-400 rounded-full w-full" />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-[10px] text-neutral-400 mb-1">
-                      <span>Landing Page Visitors</span>
-                      <span className="text-white font-semibold">38.6K (9.2% CTR)</span>
-                    </div>
-                    <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
-                      <div className="h-full bg-blue-400 rounded-full w-[65%]" />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-[10px] text-neutral-400 mb-1">
-                      <span>Completed Purchases</span>
-                      <span className="text-emerald-400 font-bold">2,140 (33.8% CVR)</span>
-                    </div>
-                    <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
-                      <div className="h-full bg-emerald-400 rounded-full w-[45%]" />
-                    </div>
-                  </div>
-                </div>
+            {/* Connected Journey Nodes Visual */}
+            <div className="mt-5 rounded-2xl border border-white/[0.07] bg-[#07070A] p-4">
+              <div className="flex items-center justify-between pb-2 mb-3 border-b border-white/[0.06]">
+                <span className="text-[11px] font-mono text-neutral-400">Connected Customer Flow</span>
+                <span className="text-[10px] font-mono text-[#0052FF] font-semibold">Interactive</span>
               </div>
-            </div>
-          </div>
 
-          {/* CARD 3: Creative Volume & Diversity */}
-          <div className="group relative flex flex-col justify-between rounded-[28px] border border-white/[0.08] bg-[#0C0C10] p-7 sm:p-8 shadow-2xl transition-all duration-300 hover:border-white/20 hover:-translate-y-1.5 hover:shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden">
-            <div>
-              <h3 className="font-display text-[26px] sm:text-[30px] font-bold text-white tracking-tight leading-[1.1]">
-                Creative Volume <br />
-                <span className="font-serif italic font-normal text-white">&amp; diversity</span>
-              </h3>
-              <p className="mt-3.5 text-[15px] leading-relaxed text-[#A1A1AA]">
-                We build creative systems that generate constant winning ads across UGC, statics, and motion. Every concept starts with market insights and ends with profitable scale.
-              </p>
-            </div>
-
-            {/* Mockup 3: Dual iPhone Creative Ad Cards */}
-            <div className="mt-8 pt-4 border-t border-white/[0.06]">
-              <div className="flex items-center justify-center gap-3">
-                {/* Phone 1 */}
-                <div className="relative w-28 rounded-2xl border border-white/15 bg-gradient-to-b from-[#181820] to-[#0A0A0E] p-2 shadow-lg">
-                  <div className="aspect-[9/14] rounded-xl bg-[#0052FF]/20 border border-[#0052FF]/30 flex flex-col items-center justify-between p-2 text-center">
-                    <span className="rounded bg-black/60 px-1.5 py-0.5 text-[9px] font-bold text-emerald-400">
-                      5.6x ROAS
-                    </span>
-                    <div className="h-6 w-6 rounded-full bg-white/20 flex items-center justify-center text-white text-[10px]">
-                      ▶
-                    </div>
-                    <span className="text-[9px] text-white/90 font-medium leading-tight">
-                      UGC Video Hook
-                    </span>
-                  </div>
+              {/* 4 Interactive Nodes */}
+              <div className="grid grid-cols-4 gap-1.5 relative">
+                {/* Connecting track line */}
+                <div
+                  aria-hidden="true"
+                  className="absolute top-[18px] left-[12%] right-[12%] h-[2px] bg-white/[0.08] -z-0"
+                >
+                  <div className="h-full bg-gradient-to-r from-[#0052FF] to-blue-400 w-full" />
                 </div>
 
-                {/* Phone 2 */}
-                <div className="relative w-28 rounded-2xl border border-white/15 bg-gradient-to-b from-[#181820] to-[#0A0A0E] p-2 shadow-lg -mt-3">
-                  <div className="aspect-[9/14] rounded-xl bg-purple-500/20 border border-purple-500/30 flex flex-col items-center justify-between p-2 text-center">
-                    <span className="rounded bg-black/60 px-1.5 py-0.5 text-[9px] font-bold text-purple-300">
-                      Top Static
-                    </span>
-                    <span className="text-xs">✨</span>
-                    <span className="text-[9px] text-white/90 font-medium leading-tight">
-                      High-CTR Carousel
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* CARD 4: Retention & Lifetime Value */}
-          <div className="group relative flex flex-col justify-between rounded-[28px] border border-white/[0.08] bg-[#0C0C10] p-7 sm:p-8 shadow-2xl transition-all duration-300 hover:border-white/20 hover:-translate-y-1.5 hover:shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden">
-            <div>
-              <h3 className="font-display text-[26px] sm:text-[30px] font-bold text-white tracking-tight leading-[1.1]">
-                Retention <br />
-                <span className="font-serif italic font-normal text-white">&amp; lifetime value</span>
-              </h3>
-              <p className="mt-3.5 text-[15px] leading-relaxed text-[#A1A1AA]">
-                We turn one-time buyers into loyal repeat customers through automated email and SMS flows that build lasting affinity and drive recurring revenue.
-              </p>
-            </div>
-
-            {/* Mockup 4: Stacked Postcards / VIP flows */}
-            <div className="mt-8 pt-4 border-t border-white/[0.06]">
-              <div className="relative h-28 flex items-center justify-center">
-                {/* Back card */}
-                <div className="absolute top-2 w-[85%] rounded-xl border border-white/10 bg-[#16161E] p-3 shadow-md transform rotate-2">
-                  <div className="flex justify-between items-center text-[10px] text-neutral-400">
-                    <span>SMS Re-Engagement</span>
-                    <span className="text-emerald-400 font-bold">+28% Repeat CVR</span>
-                  </div>
-                </div>
-                {/* Front card */}
-                <div className="absolute top-7 w-[92%] rounded-xl border border-white/15 bg-gradient-to-r from-[#1E1E28] to-[#121218] p-3 shadow-xl transform -rotate-1">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-[11px] font-bold text-white">VIP Automated Flow</p>
-                      <p className="text-[10px] text-neutral-400">48.2% Open Rate • Klaviyo Sync</p>
-                    </div>
-                    <span className="rounded-full bg-[#0052FF]/20 px-2.5 py-1 text-[10px] font-bold text-[#0052FF] border border-[#0052FF]/30">
-                      Active
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* CARD 5: Blended Attribution */}
-          <div className="group relative flex flex-col justify-between rounded-[28px] border border-white/[0.08] bg-[#0C0C10] p-7 sm:p-8 shadow-2xl transition-all duration-300 hover:border-white/20 hover:-translate-y-1.5 hover:shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden">
-            <div>
-              <h3 className="font-display text-[26px] sm:text-[30px] font-bold text-white tracking-tight leading-[1.1]">
-                Blended <br />
-                <span className="font-serif italic font-normal text-white">Attribution</span>
-              </h3>
-              <p className="mt-3.5 text-[15px] leading-relaxed text-[#A1A1AA]">
-                We unify Meta, Google, TikTok, and retention channels into one clear view so you always know what is performing and exactly where to scale.
-              </p>
-            </div>
-
-            {/* Mockup 5: Attribution Breakdown Widgets */}
-            <div className="mt-8 pt-4 border-t border-white/[0.06]">
-              <div className="rounded-xl border border-white/10 bg-[#07070A] p-3.5 shadow-inner">
-                <div className="grid grid-cols-2 gap-2 text-[11px]">
-                  <div className="rounded-lg bg-white/[0.04] p-2 border border-white/[0.05]">
-                    <span className="text-neutral-400 block text-[10px]">Google Spend</span>
-                    <span className="text-white font-bold">$18,400</span>
-                  </div>
-                  <div className="rounded-lg bg-white/[0.04] p-2 border border-white/[0.05]">
-                    <span className="text-neutral-400 block text-[10px]">Meta Spend</span>
-                    <span className="text-white font-bold">$34,200</span>
-                  </div>
-                  <div className="rounded-lg bg-white/[0.04] p-2 border border-white/[0.05]">
-                    <span className="text-neutral-400 block text-[10px]">Blended ROAS</span>
-                    <span className="text-emerald-400 font-bold">5.4x Avg</span>
-                  </div>
-                  <div className="rounded-lg bg-white/[0.04] p-2 border border-white/[0.05]">
-                    <span className="text-neutral-400 block text-[10px]">Net Margin</span>
-                    <span className="text-[#0052FF] font-bold">+38% Scale</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* CARD 6: Profit-First Strategy */}
-          <div className="group relative flex flex-col justify-between rounded-[28px] border border-white/[0.08] bg-[#0C0C10] p-7 sm:p-8 shadow-2xl transition-all duration-300 hover:border-white/20 hover:-translate-y-1.5 hover:shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden">
-            <div>
-              <h3 className="font-display text-[26px] sm:text-[30px] font-bold text-white tracking-tight leading-[1.1]">
-                Profit-first <br />
-                <span className="font-serif italic font-normal text-white">Strategy</span>
-              </h3>
-              <p className="mt-3.5 text-[15px] leading-relaxed text-[#A1A1AA]">
-                We align strategy and ad spend around one core outcome — profitable scale. Every single dollar tracked to contribution margin.
-              </p>
-            </div>
-
-            {/* Mockup 6: iPhone Push Notification Card */}
-            <div className="mt-8 pt-4 border-t border-white/[0.06]">
-              <div className="rounded-2xl border border-white/15 bg-gradient-to-b from-[#181822] to-[#0A0A0F] p-3.5 shadow-2xl">
-                <div className="flex items-center justify-between text-[10px] text-neutral-400 pb-2 mb-2 border-b border-white/[0.06]">
-                  <span>21:45</span>
-                  <div className="flex items-center gap-1.5">
-                    <span>LTE 5G</span>
-                    <span>🔋 100%</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#0052FF] text-white font-black text-xs shadow-md">
-                    t.
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between items-baseline">
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-white">
-                        THRIDES
+                {FUNNEL_STEPS.map((step) => {
+                  const isSelected = activeStep === step.id;
+                  return (
+                    <button
+                      key={step.id}
+                      type="button"
+                      onClick={() => setActiveStep(step.id)}
+                      onMouseEnter={() => setActiveStep(step.id)}
+                      onFocus={() => setActiveStep(step.id)}
+                      className="group/node relative z-10 flex flex-col items-center text-center cursor-pointer focus-visible:outline-2 focus-visible:outline-[#0052FF] rounded-xl p-1"
+                    >
+                      <div
+                        className={`flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-200 ${
+                          isSelected
+                            ? "bg-[#0052FF] border-[#0052FF] text-white shadow-[0_0_14px_rgba(0,82,255,0.6)] scale-110"
+                            : "bg-[#101015] border-white/15 text-neutral-400 hover:border-white/30 hover:text-white"
+                        }`}
+                      >
+                        <span className="text-[11px] font-bold font-mono">
+                          {step.metric.charAt(0)}
+                        </span>
+                      </div>
+                      <span
+                        className={`mt-1.5 text-[11px] font-semibold tracking-tight transition-colors ${
+                          isSelected ? "text-white font-bold" : "text-neutral-400"
+                        }`}
+                      >
+                        {step.name}
                       </span>
-                      <span className="text-[10px] text-neutral-400">1h ago</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Detail explanation callout */}
+              <div className="mt-3 rounded-xl border border-white/[0.06] bg-[#0E0E14] p-3 text-[12px] leading-relaxed text-neutral-300 min-h-[46px] flex items-center">
+                {FUNNEL_STEPS.find((s) => s.id === activeStep)?.detail}
+              </div>
+            </div>
+          </div>
+
+          {/* ----------------------------------------------------
+              CARD 3: Creative Volume (5 columns)
+             ---------------------------------------------------- */}
+          <div
+            style={{
+              transitionDelay: hasEntered ? "140ms" : "0ms",
+            }}
+            className={`group relative rounded-[24px] border border-white/[0.08] bg-[#0C0C10] p-6 sm:p-7 shadow-2xl transition-all duration-500 ease-out hover:border-white/20 md:col-span-5 flex flex-col justify-between ${
+              hasEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[18px]"
+            }`}
+          >
+            {/* Top specular edge highlight */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent"
+            />
+
+            <div>
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#0052FF]">
+                03 • Creative Production
+              </span>
+
+              <h3 className="mt-3 font-display text-[22px] sm:text-[25px] font-bold text-white tracking-tight leading-snug">
+                Creative Volume <span className="font-serif italic font-normal text-white">&amp; diversity</span>
+              </h3>
+
+              <p className="mt-2 text-[14px] leading-relaxed text-[#A1A1AA]">
+                We engineer dedicated creative systems producing winning ad variations across formats. Every concept starts with audience psychology and scales with data.
+              </p>
+            </div>
+
+            {/* Concept Creative Artwork (3:2 Ratio) */}
+            <div className="relative mt-5 overflow-hidden rounded-2xl border border-white/10 aspect-[3/2] w-full bg-[#07070A] group/creative shadow-lg">
+              <img
+                src="/Cobalt.png"
+                alt="Concept creative showcasing product and editorial campaign ad variations"
+                className="h-full w-full object-cover transition-transform duration-[450ms] ease-out group-hover/creative:scale-[1.025] will-change-transform"
+                loading="lazy"
+              />
+              <div className="absolute bottom-2.5 right-2.5 rounded-full bg-black/80 backdrop-blur-md border border-white/15 px-3 py-1 text-[10px] font-mono font-medium text-neutral-300 shadow-md">
+                Concept creative
+              </div>
+            </div>
+          </div>
+
+          {/* ----------------------------------------------------
+              CARD 4: Retention (7 columns)
+             ---------------------------------------------------- */}
+          <div
+            style={{
+              transitionDelay: hasEntered ? "210ms" : "0ms",
+            }}
+            className={`group relative rounded-[24px] border border-white/[0.08] bg-[#0C0C10] p-6 sm:p-7 shadow-2xl transition-all duration-500 ease-out hover:border-white/20 md:col-span-7 flex flex-col justify-between ${
+              hasEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[18px]"
+            }`}
+          >
+            {/* Top specular edge highlight */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent"
+            />
+
+            <div>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#0052FF]">
+                  04 • Lifecycle &amp; LTV
+                </span>
+                <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 font-mono text-[10px] text-neutral-400">
+                  Illustrative sequence
+                </span>
+              </div>
+
+              <h3 className="mt-3 font-display text-[22px] sm:text-[25px] font-bold text-white tracking-tight leading-snug">
+                Retention <span className="font-serif italic font-normal text-white">&amp; lifetime value</span>
+              </h3>
+
+              <p className="mt-2 text-[14px] leading-relaxed text-[#A1A1AA]">
+                We turn first-time buyers into repeat customers through automated messaging. Tailored email and SMS sequences maximize customer lifetime value.
+              </p>
+            </div>
+
+            {/* Stack of 3 Message Previews */}
+            <div className="mt-5 space-y-2.5">
+              {RETENTION_MESSAGES.map((msg, mIdx) => (
+                <div
+                  key={mIdx}
+                  className="rounded-xl border border-white/[0.07] bg-[#08080C] p-3 transition-all duration-300 hover:border-white/20 hover:bg-[#0E0E14] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#0052FF]/15 text-[#0052FF] font-mono text-[11px] font-bold border border-[#0052FF]/25">
+                      0{mIdx + 1}
                     </div>
-                    <p className="text-[12px] font-semibold text-white mt-0.5">
-                      Your ad campaign reached 5.6x ROI
-                    </p>
-                    <p className="text-[11px] text-neutral-400 mt-0.5">
-                      An increase of 149% in 30 Days.
-                    </p>
+                    <div>
+                      <p className="text-[11px] font-mono font-semibold uppercase tracking-wider text-neutral-400">
+                        {msg.type} • <span className="text-neutral-500">{msg.timing}</span>
+                      </p>
+                      <p className="text-[13px] font-medium text-white line-clamp-1">
+                        {msg.subject}
+                      </p>
+                    </div>
+                  </div>
+
+                  <span className="self-start sm:self-center shrink-0 rounded-md bg-emerald-500/10 px-2 py-0.5 font-mono text-[11px] font-bold text-emerald-400 border border-emerald-500/20">
+                    {msg.stat}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ----------------------------------------------------
+              CARD 5: Blended Attribution (6 columns)
+             ---------------------------------------------------- */}
+          <div
+            style={{
+              transitionDelay: hasEntered ? "280ms" : "0ms",
+            }}
+            className={`group relative rounded-[24px] border border-white/[0.08] bg-[#0C0C10] p-6 sm:p-7 shadow-2xl transition-all duration-500 ease-out hover:border-white/20 md:col-span-6 flex flex-col justify-between ${
+              hasEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[18px]"
+            }`}
+          >
+            {/* Top specular edge highlight */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent"
+            />
+
+            <div>
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#0052FF]">
+                05 • Cross-Channel Data
+              </span>
+
+              <h3 className="mt-3 font-display text-[22px] sm:text-[25px] font-bold text-white tracking-tight leading-snug">
+                Blended <span className="font-serif italic font-normal text-white">Attribution</span>
+              </h3>
+
+              <p className="mt-2 text-[14px] leading-relaxed text-[#A1A1AA]">
+                We unify Meta, Google, and direct channels into a single source of truth. You always know which dollar drives real commercial profit.
+              </p>
+            </div>
+
+            {/* Channels Connected to Central Thrides Mark Visual */}
+            <div className="mt-5 rounded-2xl border border-white/[0.07] bg-[#07070A] p-4 relative overflow-hidden">
+              <div className="flex items-center justify-between pb-2 mb-3 border-b border-white/[0.06]">
+                <span className="text-[11px] font-mono text-neutral-400">Channel Network</span>
+                <span className="text-[10px] font-mono text-emerald-400 font-bold">Unified View</span>
+              </div>
+
+              <div className="grid grid-cols-3 items-center gap-2 relative">
+                {/* Left channel nodes */}
+                <div className="space-y-2">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-2 text-center">
+                    <span className="block text-[11px] font-bold text-white">Meta Ads</span>
+                    <span className="block font-mono text-[10px] text-neutral-400">Paid Social</span>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-2 text-center">
+                    <span className="block text-[11px] font-bold text-white">Google Search</span>
+                    <span className="block font-mono text-[10px] text-neutral-400">High-Intent</span>
+                  </div>
+                </div>
+
+                {/* Central Thrides Hub */}
+                <div className="flex flex-col items-center justify-center">
+                  <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-[#0052FF] text-white shadow-[0_0_24px_rgba(0,82,255,0.6)] border border-white/30">
+                    <span className="font-display text-2xl font-black leading-none">t.</span>
+                    {/* Pulsing ring */}
+                    <span className="absolute -inset-1 rounded-2xl border border-[#0052FF] animate-ping opacity-30" />
+                  </div>
+                  <span className="mt-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-neutral-300">
+                    Hub
+                  </span>
+                </div>
+
+                {/* Right channel nodes */}
+                <div className="space-y-2">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-2 text-center">
+                    <span className="block text-[11px] font-bold text-white">TikTok Creative</span>
+                    <span className="block font-mono text-[10px] text-neutral-400">Viral Reach</span>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-2 text-center">
+                    <span className="block text-[11px] font-bold text-white">Klaviyo / SMS</span>
+                    <span className="block font-mono text-[10px] text-neutral-400">Retention</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ----------------------------------------------------
+              CARD 6: Profit-First Strategy (6 columns)
+             ---------------------------------------------------- */}
+          <div
+            style={{
+              transitionDelay: hasEntered ? "350ms" : "0ms",
+            }}
+            className={`group relative rounded-[24px] border border-white/[0.08] bg-[#0C0C10] p-6 sm:p-7 shadow-2xl transition-all duration-500 ease-out hover:border-white/20 md:col-span-6 flex flex-col justify-between ${
+              hasEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[18px]"
+            }`}
+          >
+            {/* Top specular edge highlight */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent"
+            />
+
+            <div>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#0052FF]">
+                  06 • Unit Economics
+                </span>
+                <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 font-mono text-[10px] text-neutral-400">
+                  Illustrative breakdown
+                </span>
+              </div>
+
+              <h3 className="mt-3 font-display text-[22px] sm:text-[25px] font-bold text-white tracking-tight leading-snug">
+                Profit-first <span className="font-serif italic font-normal text-white">Strategy</span>
+              </h3>
+
+              <p className="mt-2 text-[14px] leading-relaxed text-[#A1A1AA]">
+                We align ad spend directly to contribution margin and unit economics. Every campaign is engineered around true net profit, not vanity ROAS.
+              </p>
+            </div>
+
+            {/* Profit & Unit Economics Composition Visual */}
+            <div className="mt-5 rounded-2xl border border-white/[0.07] bg-[#07070A] p-4">
+              <div className="flex items-center justify-between text-[11px] font-mono text-neutral-400 pb-2 border-b border-white/[0.06]">
+                <span>Contribution Margin Model</span>
+                <span className="text-emerald-400 font-bold">+$36,000 Net Profit</span>
+              </div>
+
+              {/* Segmented Bar Visual */}
+              <div className="mt-3 space-y-2">
+                <div className="h-3 w-full rounded-full bg-white/5 overflow-hidden flex">
+                  <div className="h-full bg-neutral-600 w-[38%]" title="COGS & Ops: 38%" />
+                  <div className="h-full bg-blue-500 w-[26%]" title="Ad Spend: 26%" />
+                  <div className="h-full bg-emerald-400 w-[36%]" title="Net Profit: 36%" />
+                </div>
+
+                {/* Legend / Breakdown Details */}
+                <div className="grid grid-cols-3 gap-2 pt-1 font-mono text-[11px]">
+                  <div className="rounded-lg bg-white/[0.03] p-2 border border-white/[0.05]">
+                    <span className="text-neutral-500 block text-[10px]">COGS / Ops</span>
+                    <span className="text-neutral-300 font-bold">$38k (38%)</span>
+                  </div>
+                  <div className="rounded-lg bg-white/[0.03] p-2 border border-white/[0.05]">
+                    <span className="text-neutral-500 block text-[10px]">Ad Spend</span>
+                    <span className="text-blue-400 font-bold">$26k (26%)</span>
+                  </div>
+                  <div className="rounded-lg bg-emerald-500/10 p-2 border border-emerald-500/20">
+                    <span className="text-emerald-400 block text-[10px]">Contribution</span>
+                    <span className="text-emerald-400 font-black">$36k (36%)</span>
                   </div>
                 </div>
               </div>
@@ -342,23 +668,25 @@ export function HowWeWork() {
           </div>
         </div>
 
-        {/* Defiant-Style Bottom Glowing Pill CTA */}
-        <div className="mt-14 sm:mt-18 flex justify-center">
+        {/* ========================================================
+            BOTTOM CTA: Growth Audit
+           ======================================================== */}
+        <div className="mt-12 sm:mt-14 flex justify-center">
           <a
             href="#enquiry"
-            className="group relative inline-flex items-center gap-3.5 rounded-full border border-[#0052FF]/60 bg-gradient-to-b from-[#111116] to-[#050508] px-8 sm:px-10 py-4 shadow-[0_0_35px_rgba(0,82,255,0.35)] transition-all duration-300 hover:scale-105 hover:border-[#0052FF] hover:shadow-[0_0_55px_rgba(0,82,255,0.6)]"
+            className="group relative inline-flex items-center gap-3.5 rounded-full border border-[#0052FF]/60 bg-gradient-to-b from-[#111116] to-[#050508] px-8 sm:px-9 py-3.5 shadow-[0_0_30px_rgba(0,82,255,0.3)] transition-all duration-300 hover:scale-105 hover:border-[#0052FF] hover:shadow-[0_0_50px_rgba(0,82,255,0.55)] cursor-pointer"
           >
-            <span className="font-display text-[15px] sm:text-[17px] font-bold text-white tracking-wide">
+            <span className="font-display text-[15px] sm:text-[16px] font-bold text-white tracking-wide">
               Book a
             </span>
             <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#0052FF] text-white text-[12px] font-black shadow-[0_0_12px_#0052FF]">
               t.
             </span>
-            <span className="font-display text-[15px] sm:text-[17px] font-bold text-white tracking-wide">
+            <span className="font-display text-[15px] sm:text-[16px] font-bold text-white tracking-wide">
               Growth Audit
             </span>
             <ArrowUpRight
-              size={18}
+              size={17}
               className="text-[#0052FF] transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-1"
             />
           </a>
