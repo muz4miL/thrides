@@ -35,6 +35,8 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-navy: var(--brand-navy);
 }
 
 :root {
@@ -48,6 +50,11 @@
   --muted-foreground: #71717a;
   --primary: #09090b;
   --primary-foreground: #ffffff;
+  --brand-blue: #1d4ed8;
+  --brand-blue-hover: #1e40af;
+  --brand-navy: #0a1128;
+  --brand-navy-light: #162044;
+  --brand-blue-subtle: #eff6ff;
   --card: #ffffff;
   --card-foreground: #09090b;
   --popover: #ffffff;
@@ -61,7 +68,7 @@
   --destructive-foreground: #ffffff;
   --border: rgba(0, 0, 0, 0.08);
   --input: rgba(0, 0, 0, 0.12);
-  --ring: #09090b;
+  --ring: #1d4ed8;
   --header-h: 76px;
 }
 

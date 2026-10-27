@@ -140,7 +140,9 @@ export interface SubmissionDoc {
     email: string;
     phoneWhatsApp?: string;
     company?: string;
+    packageInterest?: string;
     serviceOfInterest?: string;
+    budgetRange?: string;
     message?: string;
     // Studio
     shootType?: string;

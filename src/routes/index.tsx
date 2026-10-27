@@ -2,10 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
 import { LogoMarquee } from "@/components/site/LogoMarquee";
-import { ServiceCards } from "@/components/site/ServiceCards";
-import { OurWorkSection } from "@/components/site/OurWorkSection";
-import { WhoItsFor } from "@/components/site/WhoItsFor";
 import { WhyBrandit } from "@/components/site/WhyBrandit";
+import { ServiceCards } from "@/components/site/ServiceCards";
+import { WhoItsFor } from "@/components/site/WhoItsFor";
+import { OurWorkSection } from "@/components/site/OurWorkSection";
 import { AboutCEO } from "@/components/site/AboutCEO";
 import { TestimonialsSection } from "@/components/site/TestimonialsSection";
 import FAQ from "@/components/FAQ";
@@ -15,23 +15,22 @@ import { Footer } from "@/components/site/Footer";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "brandit. — Marketing Agency | Ads, Content, Branding & Web" },
+      { title: "Thrides | Digital Creative Agency" },
       {
         name: "description",
         content:
-          "Full-service marketing agency. Meta, Google & TikTok ads, video and photography production, branding, websites, Shopify and AI automation. UAE-forged, delivered worldwide.",
+          "Thrides is a digital creative agency that puts your brand in front of the right customers, with a purpose behind every move. Book a free strategy call.",
       },
       {
         property: "og:title",
-        content: "brandit. — Marketing Agency | Ads, Content, Branding & Web",
+        content: "Thrides | Digital Creative Agency",
       },
       {
         property: "og:description",
         content:
-          "Full-service marketing agency. Meta, Google & TikTok ads, video and photography production, branding, websites, Shopify and AI automation. UAE-forged, delivered worldwide.",
+          "Thrides is a digital creative agency that puts your brand in front of the right customers, with a purpose behind every move. Book a free strategy call.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "/og-image.png" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
@@ -50,35 +49,35 @@ function Index() {
           <Hero />
         </div>
 
-        {/* Section 2 — Trust Strip */}
+        {/* Section 2 — Trust Bar (3 years · 14+ businesses · 8 countries) */}
         <LogoMarquee />
 
-        {/* Section 3 — Services (6-service 3/2/1 grid with visible tags) */}
-        <ServiceCards />
-
-        {/* Section 4 — Our Work (10 supplied portfolio cards with 16:9 media, no View Project buttons) */}
-        <OurWorkSection />
-
-        {/* Section 5 — Who It’s For */}
-        <WhoItsFor />
-
-        {/* Section 6 — Why brandit. */}
+        {/* Section 3 — What We Believe & Where Your Brand Shows Up */}
         <WhyBrandit />
 
-        {/* Section 7 — About the CEO (Umar Farooq) */}
+        {/* Section 4 — Services Overview (6 Services with Proof Previews) */}
+        <ServiceCards />
+
+        {/* Section 5 — Packages (Kickstart, Accelerate, Authority) */}
+        <WhoItsFor />
+
+        {/* Section 6 — Selected Proof / Our Work */}
+        <OurWorkSection />
+
+        {/* Section 7 — The On-Purpose Method, Guarantees & Team */}
         <AboutCEO />
 
-        {/* Section 8 — Testimonials (3 structured cards) */}
+        {/* Section 8 — Testimonials */}
         <TestimonialsSection />
 
-        {/* Section 9 — FAQ (Initially collapsed) */}
+        {/* Section 9 — Questions Before You Book (FAQ) */}
         <FAQ />
 
-        {/* Section 10 — Final CTA */}
+        {/* Section 10 — Final CTA: Ready to be chosen, not just seen? */}
         <ReadyToScale />
       </main>
 
-      {/* Footer (No navigation links) */}
+      {/* Footer */}
       <Footer />
     </div>
   );

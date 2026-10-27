@@ -10,7 +10,7 @@ export async function sendEnquiryNotification(payload: NotificationPayload): Pro
   success: boolean;
   error?: string;
 }> {
-  const recipient = process.env.ENQUIRY_NOTIFICATION_EMAIL || "info@brandit.agency";
+  const recipient = process.env.ENQUIRY_NOTIFICATION_EMAIL || "info@thrides.com";
   const smtpHost = process.env.SMTP_HOST;
   const smtpUser = process.env.SMTP_USER;
   const smtpPass = process.env.SMTP_PASS;
@@ -42,7 +42,7 @@ export async function sendEnquiryNotification(payload: NotificationPayload): Pro
       .join("<br/>");
 
     await transporter.sendMail({
-      from: process.env.SMTP_FROM || `"Brandit Notifications" <no-reply@brandit.agency>`,
+      from: process.env.SMTP_FROM || `"Thrides Notifications" <no-reply@thrides.com>`,
       to: recipient,
       subject: payload.subject,
       html: `
@@ -52,7 +52,7 @@ export async function sendEnquiryNotification(payload: NotificationPayload): Pro
             ${lines}
           </div>
           <p style="margin-top: 24px; font-size: 12px; color: #888;">
-            Sent automatically by Brand It CMS. Manage submissions in the /admin portal.
+            Sent automatically by Thrides website enquiry router.
           </p>
         </div>
       `,

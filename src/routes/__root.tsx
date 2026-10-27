@@ -109,8 +109,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Brand It — We Build Brands." },
-      { name: "description", content: "Brand identity, social content and advertising." },
+      { title: "Thrides | Digital Creative Agency" },
+      {
+        name: "description",
+        content:
+          "Thrides is a digital creative agency that puts your brand in front of the right customers, with a purpose behind every move. Book a free strategy call.",
+      },
+      { property: "og:title", content: "Thrides | Digital Creative Agency" },
+      {
+        property: "og:description",
+        content:
+          "Thrides is a digital creative agency that puts your brand in front of the right customers, with a purpose behind every move. Book a free strategy call.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

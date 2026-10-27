@@ -89,6 +89,8 @@ export const getSiteContentFn = createServerFn({ method: "GET" }).handler(async 
   }
 });
 
+const submissionDebounceMap = new Map<string, number>();
+
 export const submitContactEnquiryFn = createServerFn({ method: "POST" })
   .validator((data: unknown) => {
     const d = data as Record<string, string>;
@@ -98,22 +100,42 @@ export const submitContactEnquiryFn = createServerFn({ method: "POST" })
     if (!d.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)) {
       throw new Error("Please provide a valid email address");
     }
+    if (!d.phoneWhatsApp || d.phoneWhatsApp.trim().length < 5) {
+      throw new Error("Please provide your phone or WhatsApp number");
+    }
     if (d._hp && d._hp.trim().length > 0) {
       throw new Error("Spam detected");
     }
     return {
       fullName: d.fullName.trim(),
       email: d.email.trim(),
-      phoneWhatsApp: d.phoneWhatsApp?.trim() || "",
+      phoneWhatsApp: d.phoneWhatsApp.trim(),
       company: d.company?.trim() || "",
+      packageInterest: d.packageInterest?.trim() || "",
       serviceOfInterest: d.serviceOfInterest?.trim() || "",
+      budgetRange: d.budgetRange?.trim() || "",
       message: d.message?.trim() || "",
     };
   })
   .handler(async ({ data }) => {
-    const { getCollections } = await import("@/server/db");
-    const { sendEnquiryNotification } = await import("@/server/email");
-    const { submissions } = await getCollections();
+    // 1. Double submission debounce check (15 seconds window)
+    const debounceKey = `${data.email.toLowerCase()}:${data.phoneWhatsApp}`;
+    const lastSubmitTime = submissionDebounceMap.get(debounceKey);
+    const now = Date.now();
+
+    if (lastSubmitTime && now - lastSubmitTime < 15000) {
+      throw new Error(
+        "Your enquiry was already submitted moments ago. Our team reviews every message personally and will reply within 24 hours.",
+      );
+    }
+    submissionDebounceMap.set(debounceKey, now);
+
+    // Clean up stale debounce keys
+    if (submissionDebounceMap.size > 200) {
+      for (const [k, time] of submissionDebounceMap.entries()) {
+        if (now - time > 60000) submissionDebounceMap.delete(k);
+      }
+    }
 
     const record: SubmissionDoc = {
       type: "contact",
@@ -122,7 +144,9 @@ export const submitContactEnquiryFn = createServerFn({ method: "POST" })
         email: data.email,
         phoneWhatsApp: data.phoneWhatsApp,
         company: data.company,
+        packageInterest: data.packageInterest,
         serviceOfInterest: data.serviceOfInterest,
+        budgetRange: data.budgetRange,
         message: data.message,
       },
       status: "new",
@@ -130,25 +154,47 @@ export const submitContactEnquiryFn = createServerFn({ method: "POST" })
       submittedAt: new Date(),
     };
 
-    const result = await submissions.insertOne(record);
+    let result;
+    try {
+      const { getCollections } = await import("@/server/db");
+      const { submissions } = await getCollections();
+      result = await submissions.insertOne(record);
+    } catch (dbErr: any) {
+      console.error("[Database Storage Error]", dbErr?.message || dbErr);
+      throw new Error(
+        "We are temporarily unable to record your enquiry to the database due to a server connection issue. Please contact us directly via WhatsApp at +92 337 3252840 or email info@thrides.com.",
+      );
+    }
 
-    sendEnquiryNotification({
-      subject: `New Discovery Call Enquiry: ${data.fullName}`,
-      type: "contact",
-      data,
-    }).then(async (res) => {
-      if (res.success) {
-        await submissions.updateOne(
-          { _id: result.insertedId },
-          { $set: { emailNotificationSent: true } },
-        );
-      } else {
-        await submissions.updateOne(
-          { _id: result.insertedId },
-          { $set: { emailNotificationError: res.error } },
-        );
-      }
-    });
+    // Attempt background email notification (isolated from DB storage success)
+    try {
+      const { sendEnquiryNotification } = await import("@/server/email");
+      sendEnquiryNotification({
+        subject: `New Discovery Call Enquiry: ${data.fullName}`,
+        type: "contact",
+        data,
+      }).then(async (res) => {
+        try {
+          const { getCollections } = await import("@/server/db");
+          const { submissions } = await getCollections();
+          if (res.success) {
+            await submissions.updateOne(
+              { _id: result.insertedId },
+              { $set: { emailNotificationSent: true } },
+            );
+          } else {
+            await submissions.updateOne(
+              { _id: result.insertedId },
+              { $set: { emailNotificationError: res.error } },
+            );
+          }
+        } catch {
+          // Non-fatal background email status update
+        }
+      });
+    } catch {
+      // Email delivery error does not fail the database write record
+    }
 
     return { success: true, submissionId: result.insertedId.toString() };
   });

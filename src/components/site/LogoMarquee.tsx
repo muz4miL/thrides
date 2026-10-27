@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Pause, Play } from "lucide-react";
-import logosSequence from "@/assets/logos-sequence.png";
+import { siteMeta } from "@/content/site";
 
 interface LogoMarqueeProps {
   label?: string;
@@ -8,7 +8,7 @@ interface LogoMarqueeProps {
 }
 
 export function LogoMarquee({
-  label = "Trusted by 100+ brands across industries and borders",
+  label = siteMeta.trustBarSummary,
   speedPixelsPerSecond = 40,
 }: LogoMarqueeProps) {
   const [isPaused, setIsPaused] = useState(false);
@@ -32,24 +32,30 @@ export function LogoMarquee({
     return () => resizeObserver.disconnect();
   }, [speedPixelsPerSecond]);
 
-  const brands = [
-    "fäm Properties",
-    "DXB Interact",
-    "fäm Luxe",
-    "Louis Aesthetic",
+  const highlights = [
+    "3 Years Track Record",
+    "14+ Businesses Supported",
+    "8 Countries Reached",
+    "On-Purpose Marketing",
+    "Conversion Websites",
+    "Measurable Results",
   ];
 
   return (
     <section
-      aria-label="Trusted by 100+ brands across industries and borders"
-      className="relative w-full overflow-hidden bg-white py-10 sm:py-14 select-none border-b border-black/[0.06]"
+      aria-label="Trust Bar"
+      className="relative w-full overflow-hidden bg-white py-8 sm:py-12 select-none border-b border-black/[0.06]"
     >
       <div className="mx-auto flex max-w-[1440px] flex-col items-center px-4">
-        {/* Heading and accessible pause/resume control */}
+        {/* Trust Bar metrics */}
         <div className="flex items-center justify-center gap-3">
-          <h2 className="text-center font-display text-[13px] sm:text-[14px] md:text-[15px] font-semibold tracking-[0.16em] text-[#71717A] uppercase">
-            {label}
-          </h2>
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-center font-display text-[13px] sm:text-[15px] md:text-[16px] font-bold tracking-[0.14em] text-[#09090B] uppercase">
+            <span>3 years</span>
+            <span className="text-blue-700">•</span>
+            <span>14+ businesses</span>
+            <span className="text-blue-700">•</span>
+            <span>8 countries</span>
+          </div>
 
           <button
             type="button"
@@ -68,11 +74,14 @@ export function LogoMarquee({
       </div>
 
       {/* Overflow-clipped horizontal marquee track */}
-      <div className="relative mt-7 sm:mt-9 w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent_0%,black_8%,black_92%,transparent_100%)] focus-within:[&_.marquee-track]:[animation-play-state:paused] hover:[&_.marquee-track]:[animation-play-state:paused]">
+      <div className="relative mt-6 sm:mt-8 w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent_0%,black_8%,black_92%,transparent_100%)] focus-within:[&_.marquee-track]:[animation-play-state:paused] hover:[&_.marquee-track]:[animation-play-state:paused]">
         <div
           className="marquee-track flex w-max will-change-transform"
           style={{
-            animation: `marquee-scroll ${duration}s linear infinite`,
+            animationName: "marquee-scroll",
+            animationDuration: `${duration}s`,
+            animationTimingFunction: "linear",
+            animationIterationCount: "infinite",
             animationPlayState: isPaused ? "paused" : "running",
           }}
         >
@@ -81,23 +90,18 @@ export function LogoMarquee({
             <div
               key={rep}
               ref={rep === 0 ? groupRef : undefined}
-              className="flex shrink-0 items-center gap-10 sm:gap-16 px-6 sm:px-8"
+              className="flex shrink-0 items-center gap-10 sm:gap-14 px-6 sm:px-8"
               aria-hidden={rep > 0}
             >
-              {brands.map((brand, bIdx) => (
+              {highlights.map((item, bIdx) => (
                 <div
                   key={bIdx}
-                  className="flex items-center gap-3 text-[18px] sm:text-[22px] font-bold text-[#09090B] tracking-tight opacity-75 hover:opacity-100 transition-opacity"
+                  className="flex items-center gap-3 text-[17px] sm:text-[20px] font-bold text-[#09090B] tracking-tight opacity-75 hover:opacity-100 transition-opacity"
                 >
-                  <span className="font-display">{brand}</span>
-                  <span className="text-[#A1A1AA] text-sm">•</span>
+                  <span className="font-display">{item}</span>
+                  <span className="text-blue-700 text-sm">•</span>
                 </div>
               ))}
-              <img
-                src={logosSequence}
-                alt="Partner and media logos"
-                className="h-[28px] sm:h-[34px] w-auto max-w-none opacity-60 grayscale hover:opacity-90 transition-opacity"
-              />
             </div>
           ))}
         </div>
