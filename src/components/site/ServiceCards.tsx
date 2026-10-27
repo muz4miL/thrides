@@ -10,6 +10,8 @@ import emailImg from "@/assets/service-email.jpg";
 import webImg from "@/assets/service-web.jpg";
 import identityImg from "@/assets/service-identity.jpg";
 
+import { SectionBadge } from "./SectionBadge";
+
 interface ServiceCardItem {
   id: string;
   titleSans: string;
@@ -158,11 +160,7 @@ export function ServiceCards() {
       {/* 1. Centred Section Introduction */}
       <div className="mx-auto flex max-w-[1040px] flex-col items-center px-4 sm:px-6 text-center">
         {/* Capsule Badge Label */}
-        <div className="flex h-[38px] sm:h-[42px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-5 sm:px-6 backdrop-blur-md">
-          <span className="font-display text-[11px] sm:text-[12px] font-semibold tracking-[0.16em] text-neutral-300 uppercase">
-            OUR SERVICES
-          </span>
-        </div>
+        <SectionBadge>OUR SERVICES</SectionBadge>
 
         {/* Section Headline */}
         <h2 className="mt-5 sm:mt-7 lg:mt-9 select-none text-center">

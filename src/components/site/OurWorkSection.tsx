@@ -11,6 +11,7 @@ import voyaraImg from "@/assets/work-ads-travel.jpg";
 import homeImg from "@/assets/work-campaign-home.jpg";
 import identityImg from "@/assets/service-identity.jpg";
 import creativeImg from "@/assets/service-creative.jpg";
+import { SectionBadge } from "./SectionBadge";
 
 export type TabKey = "ads" | "emails" | "landing" | "ugc";
 
@@ -455,11 +456,7 @@ export function OurWorkSection() {
     >
       <div className="mx-auto flex max-w-[1440px] flex-col items-center px-4 text-center">
         {/* Pill badge at top */}
-        <div className="inline-flex h-[38px] sm:h-[42px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-5 sm:px-6 backdrop-blur-md">
-          <span className="font-display text-[11px] sm:text-[12px] font-semibold tracking-[0.16em] text-neutral-300 uppercase">
-            OUR WORK
-          </span>
-        </div>
+        <SectionBadge>OUR WORK</SectionBadge>
 
         {/* Section Heading: Creative that Converts */}
         <h2 className="mt-5 sm:mt-7 lg:mt-9 flex flex-col items-center text-center">

@@ -176,6 +176,18 @@
   animation: rise-in 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
+@keyframes badge-shine {
+  0% {
+    transform: translateX(-150%) skewX(-15deg);
+  }
+  30%, 100% {
+    transform: translateX(150%) skewX(-15deg);
+  }
+}
+.animate-badge-shine {
+  animation: badge-shine 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
 @keyframes marquee-scroll {
   from {
     transform: translate3d(0, 0, 0);

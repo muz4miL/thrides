@@ -1,80 +1,85 @@
-import { ArrowUpRight, MessageSquare, Mail, Phone } from "lucide-react";
-import { siteMeta } from "@/content/site";
+import { ArrowUpRight } from "lucide-react";
+import { SectionBadge } from "./site/SectionBadge";
 
 export default function ReadyToScale() {
   return (
     <section
       id="final-cta"
-      aria-label="Ready to be chosen"
-      className="relative w-full overflow-hidden bg-white pt-16 sm:pt-20 lg:pt-24 pb-16 sm:pb-20 lg:pb-24 select-none"
+      aria-label="Ready to Scale"
+      className="relative w-full overflow-hidden bg-[#000000] pt-16 sm:pt-22 lg:pt-28 pb-16 sm:pb-22 lg:pb-28 select-none border-t border-white/[0.06] scroll-mt-24"
     >
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
-        {/* High-Contrast Architectural Shell Card */}
-        <div className="relative overflow-hidden rounded-[36px] sm:rounded-[44px] bg-[#09090B] px-6 py-16 sm:px-12 sm:py-20 lg:py-24 text-center text-white shadow-2xl">
-          {/* Subtle Navy Glow */}
-          <div className="pointer-events-none absolute -top-40 -right-40 h-96 w-96 rounded-full bg-blue-700/20 blur-3xl" />
-          <div className="pointer-events-none absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-blue-800/15 blur-3xl" />
+        {/* Eyebrow and Section Header */}
+        <div className="flex flex-col items-center text-center max-w-[840px] mx-auto">
+          <SectionBadge>YOU MADE IT THIS FAR</SectionBadge>
 
-          <div className="relative z-10 mx-auto max-w-[760px] flex flex-col items-center">
-            {/* Eyebrow */}
-            <div className="inline-flex h-[36px] items-center justify-center rounded-full border border-white/15 bg-white/[0.08] px-4">
-              <span className="font-display text-[12px] font-semibold tracking-[0.16em] text-white/80 uppercase">
-                Free Strategy Call
+          <h2 className="mt-5 sm:mt-7 text-center">
+            <span className="block font-display text-[36px] sm:text-[54px] lg:text-[72px] font-extrabold leading-[0.98] lg:leading-[0.95] tracking-[-0.04em] text-white">
+              Ready to{" "}
+              <span className="font-serif italic font-normal text-white">
+                Scale?
               </span>
-            </div>
+            </span>
+          </h2>
 
-            {/* Heading */}
-            <h2 className="mt-5 font-display text-[34px] sm:text-[50px] lg:text-[64px] font-extrabold leading-[0.96] tracking-tight text-white">
-              Ready to be chosen,{" "}
-              <span className="font-serif italic font-normal text-blue-400">
-                not just seen?
-              </span>
-            </h2>
+          <p className="mt-4 sm:mt-5 text-[15px] sm:text-[17px] lg:text-[19px] leading-relaxed text-[#A1A1AA] max-w-[660px]">
+            Whether you’re <strong className="text-white font-semibold">scaling to $1M/month</strong> or heading towards a <strong className="text-white font-semibold">$100M+ valuation</strong>. Thrides becomes your unfair advantage in creative, media, and performance.
+          </p>
+        </div>
 
-            {/* Body */}
-            <p className="mt-5 max-w-[620px] text-[16px] sm:text-[18px] lg:text-[19px] leading-relaxed text-[#A1A1AA]">
-              Book a free 30-minute strategy call. We’ll review your current marketing and show you what will make the biggest difference first.
-            </p>
+        {/* Architectural Banner Container */}
+        <div className="relative mt-12 sm:mt-16 overflow-hidden rounded-[30px] sm:rounded-[44px] border border-white/10 bg-[#08080C] shadow-2xl">
+          {/* Ambient Blue Backlight */}
+          <div
+            className="pointer-events-none absolute -right-20 top-1/2 -translate-y-1/2 h-80 w-80 rounded-full bg-[#0052FF]/20 blur-3xl"
+            aria-hidden="true"
+          />
 
-            {/* Button */}
-            <div className="mt-9 flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+          {/* Banner Graphic Layer */}
+          <div className="relative w-full overflow-hidden min-h-[300px] sm:min-h-[380px] lg:min-h-[460px] flex items-center justify-between">
+            <img
+              src="/readytoScale.png"
+              alt="Ready to scale? Make your next move with Thrides"
+              className="absolute inset-0 h-full w-full object-cover object-left md:object-center select-none"
+              loading="lazy"
+            />
+
+            {/* Subtle Gradient Overlay for Contrast */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/70 sm:to-black/50" />
+
+            {/* Floating Hero Bouncy Pulsing Button on the Right */}
+            <div className="relative z-20 w-full flex justify-center md:justify-end px-6 sm:px-10 lg:px-16 py-12 md:py-0">
               <a
                 href="/contact"
-                className="inline-flex h-[60px] items-center justify-center gap-2.5 rounded-full bg-white px-8 text-[16px] font-bold text-[#09090B] transition-all hover:bg-neutral-200 active:scale-[0.98]"
+                aria-label="Book a Growth Audit"
+                className="group relative inline-flex h-[72px] sm:h-[78px] w-full max-w-[340px] sm:max-w-[360px] items-center justify-between rounded-full bg-[#000000] p-[5px] transition-all duration-300 hover:bg-[#0052FF] hover:scale-[1.03] active:scale-[0.98] select-none shadow-[0_0_35px_rgba(0,82,255,0.35)]"
               >
-                <span>Book a Free Strategy Call</span>
-                <ArrowUpRight size={18} className="stroke-[2.5]" />
-              </a>
+                {/* Animated Outer Blue Pulse */}
+                <span
+                  className="pointer-events-none absolute -inset-[2px] rounded-full border-2 border-[#0052FF] animate-hero-border-pulse"
+                  aria-hidden="true"
+                />
 
-              <a
-                href={`https://wa.me/${siteMeta.contact.phone.replace(/[^0-9]/g, "")}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex h-[60px] items-center justify-center gap-2 rounded-full border border-white/20 bg-white/[0.05] px-7 text-[15px] font-semibold text-white transition-colors hover:bg-white/10"
-              >
-                <MessageSquare size={17} />
-                <span>WhatsApp Directly</span>
-              </a>
-            </div>
+                {/* Inner Pill */}
+                <div className="relative z-10 flex h-full w-full items-center justify-between rounded-full border border-white/20 px-5 sm:px-6 transition-colors duration-300 group-hover:border-white/50">
+                  <span className="text-[16px] sm:text-[17px] font-medium text-white transition-colors duration-300">
+                    Book a
+                  </span>
 
-            {/* Reply Guarantee & Contact Line */}
-            <div className="mt-8 pt-6 border-t border-white/10 text-[13px] sm:text-[14px] text-[#A1A1AA] flex flex-wrap items-center justify-center gap-3">
-              <span className="text-white font-medium">{siteMeta.contact.responseTime}</span>
-              <span>•</span>
-              <a
-                href={`mailto:${siteMeta.contact.email}`}
-                className="inline-flex items-center gap-1.5 hover:text-white underline-offset-4 hover:underline"
-              >
-                <Mail size={13} />
-                <span>{siteMeta.contact.email}</span>
-              </a>
-              <span>•</span>
-              <a
-                href={`tel:${siteMeta.contact.phone.replace(/\s+/g, "")}`}
-                className="inline-flex items-center gap-1.5 hover:text-white underline-offset-4 hover:underline"
-              >
-                <Phone size={13} />
-                <span>{siteMeta.contact.phoneDisplay}</span>
+                  {/* Central Blue Icon Tile with t. */}
+                  <div className="relative flex items-center justify-center">
+                    <div className="absolute inset-0 rounded-[12px] bg-[#0052FF] blur-[8px] opacity-60 transition-opacity duration-300 group-hover:opacity-90" />
+                    <div className="relative grid h-[42px] w-[42px] sm:h-[46px] sm:w-[46px] place-items-center rounded-[12px] bg-[#0052FF] shadow-[0_0_14px_rgba(0,82,255,0.55)]">
+                      <span className="font-display text-[22px] sm:text-[24px] font-black text-white leading-none pl-0.5">
+                        t.
+                      </span>
+                    </div>
+                  </div>
+
+                  <span className="text-[16px] sm:text-[17px] font-medium text-white transition-colors duration-300">
+                    Growth Audit
+                  </span>
+                </div>
               </a>
             </div>
           </div>
