@@ -1,4 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
+import { HeroButton } from "./HeroButton";
 
 export function Hero() {
   return (
@@ -24,35 +25,12 @@ export function Hero() {
 
           {/* Button & Partner Logos on the same row directly below headline */}
           <div className="mt-9 flex flex-wrap items-center gap-6 lg:gap-7">
-            <a
+            <HeroButton
               href="/contact"
-              aria-label="Book a Growth Audit"
-              className="group relative inline-flex h-[80px] w-[345px] shrink-0 items-center justify-between rounded-full bg-[#000000] p-[5px] transition-colors duration-200 hover:bg-[#0052FF] focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-4 select-none"
-            >
-              <span
-                className="pointer-events-none absolute -inset-[2px] rounded-full border-2 border-[#0052FF] animate-hero-border-pulse"
-                aria-hidden="true"
-              />
-
-              <div className="relative z-10 flex h-full w-full items-center justify-between rounded-full border border-white/20 px-6 transition-colors duration-200 group-hover:border-white/50">
-                <span className="text-[18px] font-medium text-white transition-colors duration-200">
-                  Book a
-                </span>
-
-                <div className="relative flex items-center justify-center">
-                  <div className="absolute inset-0 rounded-[14px] bg-[#0052FF] blur-[10px] opacity-40 transition-opacity duration-200 group-hover:opacity-80" />
-                  <div className="relative grid h-[46px] w-[46px] place-items-center rounded-[14px] bg-[#0052FF] shadow-[0_0_18px_rgba(0,82,255,0.55)]">
-                    <span className="font-display text-[22px] font-black text-white leading-none pl-0.5 group-hover:scale-105 transition-transform">
-                      t.
-                    </span>
-                  </div>
-                </div>
-
-                <span className="text-[18px] font-medium text-white transition-colors duration-200">
-                  Growth Audit
-                </span>
-              </div>
-            </a>
+              leftText="Book a"
+              rightText="Growth Audit"
+              ariaLabel="Book a Growth Audit"
+            />
 
             <div className="flex items-center">
               <img
@@ -142,38 +120,12 @@ export function Hero() {
 
         {/* Pill CTA Button with Glowing Outer Border */}
         <div className="w-full flex justify-center">
-          <a
+          <HeroButton
             href="/contact"
-            aria-label="Book a Growth Audit"
-            className="group relative inline-flex h-[72px] sm:h-[76px] w-full max-w-[340px] items-center justify-between rounded-full bg-[#000000] p-[5px] transition-colors duration-200 hover:bg-[#0052FF] focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-4 select-none"
-          >
-            {/* Animated Outer Blue Pulse */}
-            <span
-              className="pointer-events-none absolute -inset-[2px] rounded-full border-2 border-[#0052FF] animate-hero-border-pulse"
-              aria-hidden="true"
-            />
-
-            {/* Inner Pill */}
-            <div className="relative z-10 flex h-full w-full items-center justify-between rounded-full border border-white/20 px-5 sm:px-6 transition-colors duration-200 group-hover:border-white/50">
-              <span className="text-[16px] sm:text-[17px] font-medium text-white transition-colors duration-200">
-                Book a
-              </span>
-
-              {/* Central Blue Icon Tile with t. */}
-              <div className="relative flex items-center justify-center">
-                <div className="absolute inset-0 rounded-[12px] bg-[#0052FF] blur-[8px] opacity-60" />
-                <div className="relative grid h-[42px] w-[42px] place-items-center rounded-[12px] bg-[#0052FF] shadow-[0_0_14px_rgba(0,82,255,0.55)]">
-                  <span className="font-display text-[22px] font-black text-white leading-none">
-                    t.
-                  </span>
-                </div>
-              </div>
-
-              <span className="text-[16px] sm:text-[17px] font-medium text-white transition-colors duration-200">
-                Growth Audit
-              </span>
-            </div>
-          </a>
+            leftText="Book a"
+            rightText="Growth Audit"
+            ariaLabel="Book a Growth Audit"
+          />
         </div>
 
         {/* Partner Logos Strip Centered Below Button */}
