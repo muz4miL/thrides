@@ -167,7 +167,7 @@ export function Header() {
                 "flex h-[44px] items-center justify-center rounded-full px-4 text-[15px] transition-colors duration-150",
                 "focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2",
                 activePath === "/"
-                  ? "bg-[#F3FF00] font-bold text-black shadow-sm"
+                  ? "bg-[#0052FF] font-bold text-white shadow-md shadow-blue-950/40"
                   : "bg-transparent font-medium text-[#E4E4E7] hover:bg-white/10 hover:text-white",
               )}
             >
@@ -182,7 +182,7 @@ export function Header() {
                   className={cn(
                     "flex h-[44px] items-center justify-center pl-4 pr-1.5 text-[15px] transition-colors duration-150 rounded-l-full",
                     activePath.startsWith("/services")
-                      ? "bg-[#F3FF00] font-bold text-black shadow-sm"
+                      ? "bg-[#0052FF] font-bold text-white shadow-md shadow-blue-950/40"
                       : "bg-transparent font-medium text-[#E4E4E7] hover:bg-white/10 hover:text-white",
                   )}
                 >
@@ -199,7 +199,7 @@ export function Header() {
                   className={cn(
                     "flex h-[44px] items-center justify-center pr-3 pl-1 text-[15px] transition-colors duration-150 rounded-r-full",
                     activePath.startsWith("/services") || isServicesOpen
-                      ? "bg-[#F3FF00] text-black"
+                      ? "bg-[#0052FF] text-white"
                       : "bg-transparent text-[#E4E4E7] hover:bg-white/10 hover:text-white",
                   )}
                   aria-label="Toggle services menu"
@@ -223,7 +223,7 @@ export function Header() {
                 "flex h-[44px] items-center justify-center rounded-full px-4 text-[15px] transition-colors duration-150",
                 "focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2",
                 activePath.startsWith("/our-work") || activePath.startsWith("/case-studies")
-                  ? "bg-[#F3FF00] font-bold text-black shadow-sm"
+                  ? "bg-[#0052FF] font-bold text-white shadow-md shadow-blue-950/40"
                   : "bg-transparent font-medium text-[#E4E4E7] hover:bg-white/10 hover:text-white",
               )}
             >
@@ -237,7 +237,7 @@ export function Header() {
                 "flex h-[44px] items-center justify-center rounded-full px-4 text-[15px] transition-colors duration-150",
                 "focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2",
                 activePath.startsWith("/about")
-                  ? "bg-[#F3FF00] font-bold text-black shadow-sm"
+                  ? "bg-[#0052FF] font-bold text-white shadow-md shadow-blue-950/40"
                   : "bg-transparent font-medium text-[#E4E4E7] hover:bg-white/10 hover:text-white",
               )}
             >
@@ -251,7 +251,7 @@ export function Header() {
                 "flex h-[44px] items-center justify-center rounded-full px-4 text-[15px] transition-colors duration-150",
                 "focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2",
                 activePath.startsWith("/contact")
-                  ? "bg-[#F3FF00] font-bold text-black shadow-sm"
+                  ? "bg-[#0052FF] font-bold text-white shadow-md shadow-blue-950/40"
                   : "bg-transparent font-medium text-[#E4E4E7] hover:bg-white/10 hover:text-white",
               )}
             >
@@ -260,11 +260,11 @@ export function Header() {
           </nav>
         </div>
 
-        {/* Right: Defiant-Style Standout CTA Button "t. Get Started" */}
+        {/* Right: Standout CTA Button "t. Get Started" in Thrides Blue */}
         <div className="flex items-center gap-3 justify-self-end">
           <a
             href="/contact"
-            className="inline-flex h-[52px] items-center gap-2.5 rounded-full bg-[#F3FF00] px-6 text-[15px] font-bold text-black transition-all duration-200 hover:bg-[#e2ed00] hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_24px_rgba(243,255,0,0.35)] select-none focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-3"
+            className="inline-flex h-[52px] items-center gap-2.5 rounded-full bg-[#0052FF] px-6 text-[15px] font-bold text-white transition-all duration-200 hover:bg-[#0043DB] hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_24px_rgba(0,82,255,0.45)] select-none focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-3"
           >
             <span className="font-display font-black text-[17px] leading-none">t.</span>
             <span>Get Started</span>
@@ -291,14 +291,14 @@ export function Header() {
                     key={item.id}
                     href={`/services#${item.slug}`}
                     onClick={() => setIsServicesOpen(false)}
-                    className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-[#15151C] p-4 text-left transition-all duration-200 hover:border-[#F3FF00]/50 hover:bg-[#1C1C26] focus-visible:outline-2 focus-visible:outline-white min-h-[145px]"
+                    className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-[#15151C] p-4 text-left transition-all duration-200 hover:border-[#0052FF]/60 hover:bg-[#1C1C26] focus-visible:outline-2 focus-visible:outline-white min-h-[145px]"
                   >
                     <div>
                       <div className="flex items-center justify-between">
-                        <span className="font-display text-[16px] font-bold tracking-tight text-white group-hover:text-[#F3FF00] transition-colors">
+                        <span className="font-display text-[16px] font-bold tracking-tight text-white group-hover:text-[#60A5FA] transition-colors">
                           {item.title}
                         </span>
-                        <span className="grid h-7 w-7 place-items-center rounded-full bg-white/10 text-white transition-all group-hover:bg-[#F3FF00] group-hover:text-black">
+                        <span className="grid h-7 w-7 place-items-center rounded-full bg-white/10 text-white transition-all group-hover:bg-[#0052FF] group-hover:text-white">
                           <ArrowUpRight size={14} className="stroke-[2.5]" />
                         </span>
                       </div>
@@ -346,7 +346,7 @@ export function Header() {
                   <a
                     href="/services#packages"
                     onClick={() => setIsServicesOpen(false)}
-                    className="flex h-[46px] w-full items-center justify-center gap-2 rounded-full bg-[#F3FF00] font-bold text-black transition-transform hover:scale-[1.02] shadow-[0_0_15px_rgba(243,255,0,0.3)]"
+                    className="flex h-[46px] w-full items-center justify-center gap-2 rounded-full bg-[#0052FF] font-bold text-white transition-transform hover:scale-[1.02] shadow-[0_0_18px_rgba(0,82,255,0.45)]"
                   >
                     <span>Compare All Packages</span>
                     <ArrowUpRight size={16} className="stroke-[2.5]" />
@@ -369,7 +369,7 @@ export function Header() {
           <a
             href="/"
             onClick={() => setIsMobileOpen(false)}
-            className="flex min-h-[46px] items-center rounded-2xl bg-[#17171E] px-4 text-[15px] font-medium text-white transition-colors hover:bg-[#F3FF00] hover:font-bold hover:text-black"
+            className="flex min-h-[46px] items-center rounded-2xl bg-[#17171E] px-4 text-[15px] font-medium text-white transition-colors hover:bg-[#0052FF] hover:font-bold hover:text-white"
           >
             Home
           </a>
@@ -380,7 +380,7 @@ export function Header() {
               <a
                 href="/services"
                 onClick={() => setIsMobileOpen(false)}
-                className="flex min-h-[46px] flex-1 items-center px-4 text-[15px] font-medium text-white hover:text-[#F3FF00]"
+                className="flex min-h-[46px] flex-1 items-center px-4 text-[15px] font-medium text-white hover:text-[#60A5FA]"
               >
                 Services & Packages
               </a>
@@ -408,13 +408,13 @@ export function Header() {
                     key={item.id}
                     href={`/services#${item.slug}`}
                     onClick={() => setIsMobileOpen(false)}
-                    className="flex items-center justify-between rounded-xl bg-[#1C1C24] p-3 text-left border border-white/5 hover:border-[#F3FF00]/50 transition-colors"
+                    className="flex items-center justify-between rounded-xl bg-[#1C1C24] p-3 text-left border border-white/5 hover:border-[#0052FF]/50 transition-colors"
                   >
                     <div>
                       <div className="text-[14px] font-bold text-white">{item.title}</div>
                       <div className="text-[12px] text-[#A1A1AA] line-clamp-1">{item.description}</div>
                     </div>
-                    <ArrowUpRight size={15} className="text-[#F3FF00] shrink-0 ml-2" />
+                    <ArrowUpRight size={15} className="text-[#60A5FA] shrink-0 ml-2" />
                   </a>
                 ))}
               </div>
@@ -425,7 +425,7 @@ export function Header() {
           <a
             href="/our-work"
             onClick={() => setIsMobileOpen(false)}
-            className="flex min-h-[46px] items-center rounded-2xl bg-[#17171E] px-4 text-[15px] font-medium text-white transition-colors hover:bg-[#F3FF00] hover:font-bold hover:text-black"
+            className="flex min-h-[46px] items-center rounded-2xl bg-[#17171E] px-4 text-[15px] font-medium text-white transition-colors hover:bg-[#0052FF] hover:font-bold hover:text-white"
           >
             Our Work
           </a>
@@ -434,7 +434,7 @@ export function Header() {
           <a
             href="/about"
             onClick={() => setIsMobileOpen(false)}
-            className="flex min-h-[46px] items-center rounded-2xl bg-[#17171E] px-4 text-[15px] font-medium text-white transition-colors hover:bg-[#F3FF00] hover:font-bold hover:text-black"
+            className="flex min-h-[46px] items-center rounded-2xl bg-[#17171E] px-4 text-[15px] font-medium text-white transition-colors hover:bg-[#0052FF] hover:font-bold hover:text-white"
           >
             About
           </a>
@@ -443,7 +443,7 @@ export function Header() {
           <a
             href="/contact"
             onClick={() => setIsMobileOpen(false)}
-            className="flex min-h-[46px] items-center rounded-2xl bg-[#17171E] px-4 text-[15px] font-medium text-white transition-colors hover:bg-[#F3FF00] hover:font-bold hover:text-black"
+            className="flex min-h-[46px] items-center rounded-2xl bg-[#17171E] px-4 text-[15px] font-medium text-white transition-colors hover:bg-[#0052FF] hover:font-bold hover:text-white"
           >
             Contact
           </a>
@@ -452,7 +452,7 @@ export function Header() {
           <a
             href="/contact"
             onClick={() => setIsMobileOpen(false)}
-            className="mt-1 flex min-h-[50px] items-center justify-center gap-2 rounded-full bg-[#F3FF00] px-5 text-[15px] font-bold text-black transition-transform active:scale-[0.98] shadow-[0_0_20px_rgba(243,255,0,0.35)]"
+            className="mt-1 flex min-h-[50px] items-center justify-center gap-2 rounded-full bg-[#0052FF] px-5 text-[15px] font-bold text-white transition-transform active:scale-[0.98] shadow-[0_0_20px_rgba(0,82,255,0.45)]"
           >
             <span className="font-display font-black text-[16px]">t.</span>
             <span>Get Started</span>

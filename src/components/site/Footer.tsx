@@ -40,37 +40,37 @@ export function Footer() {
           <div className="md:col-span-3 flex flex-col gap-3.5 sm:gap-4">
             <a
               href="/"
-              className="font-display text-2xl sm:text-[28px] font-extrabold text-white hover:text-[#F3FF00] transition-colors tracking-tight"
+              className="font-display text-2xl sm:text-[28px] font-extrabold text-white hover:text-[#60A5FA] transition-colors tracking-tight"
             >
               Home
             </a>
             <a
               href="/about"
-              className="font-display text-2xl sm:text-[28px] font-extrabold text-white hover:text-[#F3FF00] transition-colors tracking-tight"
+              className="font-display text-2xl sm:text-[28px] font-extrabold text-white hover:text-[#60A5FA] transition-colors tracking-tight"
             >
               About Us
             </a>
             <a
               href="/our-work"
-              className="font-display text-2xl sm:text-[28px] font-extrabold text-white hover:text-[#F3FF00] transition-colors tracking-tight"
+              className="font-display text-2xl sm:text-[28px] font-extrabold text-white hover:text-[#60A5FA] transition-colors tracking-tight"
             >
               Case Studies
             </a>
             <a
               href="/careers"
-              className="font-display text-2xl sm:text-[28px] font-extrabold text-white hover:text-[#F3FF00] transition-colors tracking-tight"
+              className="font-display text-2xl sm:text-[28px] font-extrabold text-white hover:text-[#60A5FA] transition-colors tracking-tight"
             >
               Careers
             </a>
             <a
               href="/studio"
-              className="font-display text-2xl sm:text-[28px] font-extrabold text-white hover:text-[#F3FF00] transition-colors tracking-tight"
+              className="font-display text-2xl sm:text-[28px] font-extrabold text-white hover:text-[#60A5FA] transition-colors tracking-tight"
             >
               Studio
             </a>
             <a
               href="/contact"
-              className="font-display text-2xl sm:text-[28px] font-extrabold text-white hover:text-[#F3FF00] transition-colors tracking-tight"
+              className="font-display text-2xl sm:text-[28px] font-extrabold text-white hover:text-[#60A5FA] transition-colors tracking-tight"
             >
               Contact
             </a>
@@ -85,7 +85,7 @@ export function Footer() {
               <li>
                 <a
                   href="/services#creative-performance"
-                  className="block py-2.5 text-[#A1A1AA] hover:text-[#F3FF00] transition-colors"
+                  className="block py-2.5 text-[#A1A1AA] hover:text-[#60A5FA] transition-colors"
                 >
                   Performance Creative
                 </a>
@@ -93,7 +93,7 @@ export function Footer() {
               <li>
                 <a
                   href="/services#paid-social"
-                  className="block py-2.5 text-[#A1A1AA] hover:text-[#F3FF00] transition-colors"
+                  className="block py-2.5 text-[#A1A1AA] hover:text-[#60A5FA] transition-colors"
                 >
                   Meta & Instagram Ads
                 </a>
@@ -101,7 +101,7 @@ export function Footer() {
               <li>
                 <a
                   href="/services#paid-search"
-                  className="block py-2.5 text-[#A1A1AA] hover:text-[#F3FF00] transition-colors"
+                  className="block py-2.5 text-[#A1A1AA] hover:text-[#60A5FA] transition-colors"
                 >
                   Google & YouTube Ads
                 </a>
@@ -109,7 +109,7 @@ export function Footer() {
               <li>
                 <a
                   href="/services#creative-performance"
-                  className="block py-2.5 text-[#A1A1AA] hover:text-[#F3FF00] transition-colors"
+                  className="block py-2.5 text-[#A1A1AA] hover:text-[#60A5FA] transition-colors"
                 >
                   TikTok & Vertical Video
                 </a>
@@ -117,7 +117,7 @@ export function Footer() {
               <li>
                 <a
                   href="/services#conversion-websites"
-                  className="block py-2.5 text-[#A1A1AA] hover:text-[#F3FF00] transition-colors"
+                  className="block py-2.5 text-[#A1A1AA] hover:text-[#60A5FA] transition-colors"
                 >
                   CRO & Landing Pages
                 </a>
@@ -125,7 +125,7 @@ export function Footer() {
               <li>
                 <a
                   href="/services#brand-content"
-                  className="block py-2.5 text-[#A1A1AA] hover:text-[#F3FF00] transition-colors"
+                  className="block py-2.5 text-[#A1A1AA] hover:text-[#60A5FA] transition-colors"
                 >
                   Email & SMS Marketing
                 </a>
@@ -133,7 +133,7 @@ export function Footer() {
               <li>
                 <a
                   href="/services#conversion-websites"
-                  className="block py-2.5 text-[#A1A1AA] hover:text-[#F3FF00] transition-colors"
+                  className="block py-2.5 text-[#A1A1AA] hover:text-[#60A5FA] transition-colors"
                 >
                   Web Design & Development
                 </a>
@@ -141,7 +141,7 @@ export function Footer() {
               <li>
                 <a
                   href="/services#brand-identity"
-                  className="block py-2.5 text-[#A1A1AA] hover:text-[#F3FF00] transition-colors"
+                  className="block py-2.5 text-[#A1A1AA] hover:text-[#60A5FA] transition-colors"
                 >
                   Branding & Visual Direction
                 </a>
@@ -156,9 +156,9 @@ export function Footer() {
                 <h3 className="font-display text-xl sm:text-2xl font-bold text-white tracking-tight">
                   Now it&apos;s time to scale.
                 </h3>
-                {/* 3 carousel indicators like Defiant */}
+                {/* 3 carousel indicators */}
                 <div className="flex items-center gap-1.5" aria-hidden="true">
-                  <span className="h-1.5 w-1.5 rounded-full bg-white" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#0052FF]" />
                   <span className="h-1.5 w-1.5 rounded-full bg-white/30" />
                   <span className="h-1.5 w-1.5 rounded-full bg-white/30" />
                 </div>
@@ -175,15 +175,15 @@ export function Footer() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Your email"
-                  className="flex-1 rounded-xl border border-white/10 bg-[#17171F] px-4 py-3.5 text-[14px] text-white placeholder-[#71717A] focus:outline-none focus:border-[#F3FF00] transition-colors"
+                  className="flex-1 rounded-xl border border-white/10 bg-[#17171F] px-4 py-3.5 text-[14px] text-white placeholder-[#71717A] focus:outline-none focus:border-[#0052FF] transition-colors"
                 />
                 <button
                   type="submit"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3.5 text-[14px] font-bold text-black transition-all hover:bg-[#F3FF00] hover:scale-[1.02] active:scale-[0.98] shrink-0"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#0052FF] px-5 py-3.5 text-[14px] font-bold text-white transition-all hover:bg-[#0043DB] hover:scale-[1.02] active:scale-[0.98] shrink-0 shadow-lg shadow-blue-950/50"
                 >
                   {isSubmitted ? (
                     <>
-                      <CheckCircle2 size={16} className="text-emerald-600" />
+                      <CheckCircle2 size={16} className="text-white" />
                       <span>Joined!</span>
                     </>
                   ) : (
@@ -204,22 +204,22 @@ export function Footer() {
             <div className="flex flex-col gap-2.5 text-[14px] text-[#A1A1AA] pt-2">
               <a
                 href={`mailto:${siteMeta.contact.email}`}
-                className="inline-flex items-center gap-2 hover:text-[#F3FF00] transition-colors"
+                className="inline-flex items-center gap-2 hover:text-[#60A5FA] transition-colors"
               >
-                <Mail size={15} className="text-[#F3FF00]" />
+                <Mail size={15} className="text-[#0052FF]" />
                 <span>{siteMeta.contact.email}</span>
               </a>
 
               <a
                 href={`tel:${siteMeta.contact.phone.replace(/\s+/g, "")}`}
-                className="inline-flex items-center gap-2 hover:text-[#F3FF00] transition-colors"
+                className="inline-flex items-center gap-2 hover:text-[#60A5FA] transition-colors"
               >
-                <Phone size={15} className="text-[#F3FF00]" />
+                <Phone size={15} className="text-[#0052FF]" />
                 <span>{siteMeta.contact.phoneDisplay}</span>
               </a>
 
               <div className="inline-flex items-start gap-2 text-[#71717A] text-[13px] mt-1">
-                <MapPin size={15} className="text-[#F3FF00] shrink-0 mt-0.5" />
+                <MapPin size={15} className="text-[#0052FF] shrink-0 mt-0.5" />
                 <span>{siteMeta.contact.office}</span>
               </div>
             </div>

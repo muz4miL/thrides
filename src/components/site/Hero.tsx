@@ -5,16 +5,16 @@ export function Hero() {
     <section
       id="top"
       aria-label="Hero overview"
-      className="relative mx-auto w-full overflow-hidden rounded-[36px] sm:rounded-[44px] md:rounded-[52px] bg-[#000000] border border-white/[0.08] min-h-[560px] lg:h-[calc(100vh-140px)] lg:min-h-[600px] lg:max-h-[720px] shadow-2xl"
+      className="relative mx-auto w-full overflow-hidden rounded-[36px] sm:rounded-[44px] md:rounded-[52px] bg-[#000000] border border-white/[0.08] min-h-[560px] lg:h-[calc(100vh-140px)] lg:min-h-[580px] lg:max-h-[720px] shadow-2xl"
     >
       {/* ========================================================
-          DESKTOP LAYOUT (>= 1024px / lg) - DEFIANT BLACK THEME
+          DESKTOP LAYOUT (>= 1024px / lg) - CLEAN MINIMAL BLUE
          ======================================================== */}
       <div className="hidden lg:grid lg:grid-cols-[48fr_52fr] h-full">
         {/* Left: Text, CTA & Partner Logos */}
         <div className="rise-in z-10 flex flex-col justify-center px-10 py-10 lg:px-14 xl:px-16 h-full">
           {/* Headline: We / Deliver / Growth */}
-          <h1 className="select-none text-[clamp(60px,5.8vw,104px)] font-extrabold leading-[0.88] tracking-[-0.055em] text-[#D5D5D5]">
+          <h1 className="select-none text-[clamp(62px,6vw,108px)] font-extrabold leading-[0.88] tracking-[-0.055em] text-[#D5D5D5]">
             <span className="block font-display">We</span>
             <span className="block font-serif font-normal italic tracking-[-0.035em] text-[1.07em] leading-[0.88] -ml-1 text-[#D5D5D5]">
               Deliver
@@ -22,38 +22,33 @@ export function Hero() {
             <span className="block font-display">Growth.</span>
           </h1>
 
-          {/* Subtitle description */}
-          <p className="mt-5 max-w-md text-[17px] xl:text-[18px] text-[#A0A0AA] leading-relaxed">
-            Brand identity, social content, and scalable performance campaigns built to convert.
-          </p>
-
-          {/* Button & Partner Logos on the same row */}
-          <div className="mt-8 flex flex-wrap items-center gap-6 lg:gap-7">
+          {/* Button & Partner Logos on the same row directly below headline */}
+          <div className="mt-9 flex flex-wrap items-center gap-6 lg:gap-7">
             <a
               href="/contact"
               aria-label="Book a Growth Audit"
-              className="group relative inline-flex h-[80px] w-[345px] shrink-0 items-center justify-between rounded-full bg-[#000000] p-[5px] transition-colors duration-200 hover:bg-[#F3FF00] focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-4 select-none"
+              className="group relative inline-flex h-[80px] w-[345px] shrink-0 items-center justify-between rounded-full bg-[#000000] p-[5px] transition-colors duration-200 hover:bg-[#0052FF] focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-4 select-none"
             >
               <span
-                className="pointer-events-none absolute -inset-[2px] rounded-full border-2 border-[#F3FF00] animate-hero-border-pulse"
+                className="pointer-events-none absolute -inset-[2px] rounded-full border-2 border-[#0052FF] animate-hero-border-pulse"
                 aria-hidden="true"
               />
 
-              <div className="relative z-10 flex h-full w-full items-center justify-between rounded-full border border-white/20 px-6 transition-colors duration-200 group-hover:border-[#b8c200]/70">
-                <span className="text-[18px] font-medium text-white transition-colors duration-200 group-hover:text-black">
+              <div className="relative z-10 flex h-full w-full items-center justify-between rounded-full border border-white/20 px-6 transition-colors duration-200 group-hover:border-white/50">
+                <span className="text-[18px] font-medium text-white transition-colors duration-200">
                   Book a
                 </span>
 
                 <div className="relative flex items-center justify-center">
-                  <div className="absolute inset-0 rounded-[14px] bg-[#F3FF00] blur-[10px] opacity-40 transition-opacity duration-200 group-hover:opacity-75" />
-                  <div className="relative grid h-[46px] w-[46px] place-items-center rounded-[14px] bg-[#F3FF00] shadow-[0_0_16px_rgba(243,255,0,0.45)]">
-                    <span className="font-display text-[22px] font-black text-black leading-none pl-0.5 group-hover:scale-105 transition-transform">
+                  <div className="absolute inset-0 rounded-[14px] bg-[#0052FF] blur-[10px] opacity-40 transition-opacity duration-200 group-hover:opacity-80" />
+                  <div className="relative grid h-[46px] w-[46px] place-items-center rounded-[14px] bg-[#0052FF] shadow-[0_0_18px_rgba(0,82,255,0.55)]">
+                    <span className="font-display text-[22px] font-black text-white leading-none pl-0.5 group-hover:scale-105 transition-transform">
                       t.
                     </span>
                   </div>
                 </div>
 
-                <span className="text-[18px] font-medium text-white transition-colors duration-200 group-hover:text-black">
+                <span className="text-[18px] font-medium text-white transition-colors duration-200">
                   Growth Audit
                 </span>
               </div>
@@ -83,10 +78,9 @@ export function Hero() {
 
       {/* ========================================================
           MOBILE & TABLET LAYOUT (< 1024px)
-          Defiant Style Typography + Real Marquee Logos + Glowing Badge
          ======================================================== */}
       <div className="flex lg:hidden flex-col items-center justify-center text-center px-4 py-8 sm:py-10 w-full h-full select-none">
-        {/* Top Centered Headline: We / Deliver / Growth. */}
+        {/* Top Centered Headline */}
         <h1 className="select-none flex flex-col items-center">
           <span className="block font-display text-[44px] sm:text-[54px] font-extrabold leading-[0.88] tracking-[-0.055em] text-[#D5D5D5]">
             We
@@ -99,15 +93,10 @@ export function Hero() {
           </span>
         </h1>
 
-        {/* Subtitle description */}
-        <p className="mt-3.5 text-center text-[15px] sm:text-[17px] text-[#A0A0AA] max-w-[290px] leading-relaxed">
-          Brand identity, social content and advertising.
-        </p>
-
         {/* Center: Glowing Brand Squircle with Real Marquee Logos Gliding Horizontally */}
         <div className="relative my-7 sm:my-8 flex items-center justify-center w-full max-w-[420px] overflow-hidden">
-          {/* Intense ambient yellow glow blur */}
-          <div className="pointer-events-none absolute z-10 h-36 w-36 rounded-full bg-[#F3FF00]/30 blur-3xl" />
+          {/* Intense ambient blue glow blur */}
+          <div className="pointer-events-none absolute z-10 h-36 w-36 rounded-full bg-[#0052FF]/30 blur-3xl" />
 
           {/* Real Marquee Logos flowing behind the central badge */}
           <div className="absolute inset-x-0 z-0 flex items-center overflow-hidden [mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)]">
@@ -140,11 +129,11 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Central Glowing Brand Squircle (pinned on top) */}
+          {/* Central Glowing Brand Squircle in Thrides Blue */}
           <div className="relative z-20 flex shrink-0 items-center justify-center py-2">
-            <div className="absolute -inset-1.5 rounded-[28px] bg-[#F3FF00] opacity-80 blur-md" />
-            <div className="relative grid h-[92px] w-[92px] place-items-center rounded-[26px] bg-[#F3FF00] shadow-[0_0_40px_rgba(243,255,0,0.55)]">
-              <span className="font-display text-[54px] font-black leading-none text-black select-none pl-0.5">
+            <div className="absolute -inset-1.5 rounded-[28px] bg-[#0052FF] opacity-80 blur-md" />
+            <div className="relative grid h-[92px] w-[92px] place-items-center rounded-[26px] bg-[#0052FF] shadow-[0_0_40px_rgba(0,82,255,0.6)]">
+              <span className="font-display text-[54px] font-black leading-none text-white select-none pl-0.5">
                 t.
               </span>
             </div>
@@ -156,31 +145,31 @@ export function Hero() {
           <a
             href="/contact"
             aria-label="Book a Growth Audit"
-            className="group relative inline-flex h-[72px] sm:h-[76px] w-full max-w-[340px] items-center justify-between rounded-full bg-[#000000] p-[5px] transition-colors duration-200 hover:bg-[#F3FF00] focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-4 select-none"
+            className="group relative inline-flex h-[72px] sm:h-[76px] w-full max-w-[340px] items-center justify-between rounded-full bg-[#000000] p-[5px] transition-colors duration-200 hover:bg-[#0052FF] focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-4 select-none"
           >
-            {/* Animated Outer Yellow Pulse */}
+            {/* Animated Outer Blue Pulse */}
             <span
-              className="pointer-events-none absolute -inset-[2px] rounded-full border-2 border-[#F3FF00] animate-hero-border-pulse"
+              className="pointer-events-none absolute -inset-[2px] rounded-full border-2 border-[#0052FF] animate-hero-border-pulse"
               aria-hidden="true"
             />
 
             {/* Inner Pill */}
-            <div className="relative z-10 flex h-full w-full items-center justify-between rounded-full border border-white/20 px-5 sm:px-6 transition-colors duration-200 group-hover:border-[#b8c200]/70">
-              <span className="text-[16px] sm:text-[17px] font-medium text-white transition-colors duration-200 group-hover:text-black">
+            <div className="relative z-10 flex h-full w-full items-center justify-between rounded-full border border-white/20 px-5 sm:px-6 transition-colors duration-200 group-hover:border-white/50">
+              <span className="text-[16px] sm:text-[17px] font-medium text-white transition-colors duration-200">
                 Book a
               </span>
 
-              {/* Central Yellow Rounded Icon Tile with t. */}
+              {/* Central Blue Icon Tile with t. */}
               <div className="relative flex items-center justify-center">
-                <div className="absolute inset-0 rounded-[12px] bg-[#F3FF00] blur-[8px] opacity-60" />
-                <div className="relative grid h-[42px] w-[42px] place-items-center rounded-[12px] bg-[#F3FF00] shadow-[0_0_12px_rgba(243,255,0,0.5)]">
-                  <span className="font-display text-[22px] font-black text-black leading-none">
+                <div className="absolute inset-0 rounded-[12px] bg-[#0052FF] blur-[8px] opacity-60" />
+                <div className="relative grid h-[42px] w-[42px] place-items-center rounded-[12px] bg-[#0052FF] shadow-[0_0_14px_rgba(0,82,255,0.55)]">
+                  <span className="font-display text-[22px] font-black text-white leading-none">
                     t.
                   </span>
                 </div>
               </div>
 
-              <span className="text-[16px] sm:text-[17px] font-medium text-white transition-colors duration-200 group-hover:text-black">
+              <span className="text-[16px] sm:text-[17px] font-medium text-white transition-colors duration-200">
                 Growth Audit
               </span>
             </div>

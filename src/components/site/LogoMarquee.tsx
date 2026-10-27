@@ -51,9 +51,9 @@ export function LogoMarquee({
         <div className="flex items-center justify-center gap-3">
           <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-center font-display text-[13px] sm:text-[15px] md:text-[16px] font-bold tracking-[0.14em] text-white uppercase">
             <span>3 years</span>
-            <span className="text-[#F3FF00]">•</span>
+            <span className="text-[#0052FF]">•</span>
             <span>14+ businesses</span>
-            <span className="text-[#F3FF00]">•</span>
+            <span className="text-[#0052FF]">•</span>
             <span>8 countries</span>
           </div>
 
