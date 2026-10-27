@@ -18,21 +18,31 @@ export function BrandIntro() {
       />
 
       <div className="relative z-10 mx-auto flex max-w-[960px] w-full flex-col items-center text-center">
-        {/* Main Heading: "Welcome to" + "thrides.®" in Thrides Electric Blue */}
+        {/* Main Heading: "Welcome to" + Original Thrides Logo */}
         <div className="flex flex-col items-center">
-          <h2 className="text-center font-display text-[32px] sm:text-[44px] lg:text-[56px] font-extrabold tracking-[-0.045em] text-white leading-[1.05]">
+          <h2 className="text-center font-display text-[28px] sm:text-[40px] lg:text-[50px] font-extrabold tracking-[-0.04em] text-white leading-[1.05]">
             Welcome to
           </h2>
           <div
-            className="mt-0.5 sm:mt-1.5 flex items-center justify-center"
-            aria-label="thrides."
+            className="mt-3 sm:mt-4 flex items-center justify-center relative"
+            aria-label="thrides"
           >
-            <span className="inline-flex items-baseline font-display font-black tracking-[-0.045em] text-[#0052FF] text-[40px] sm:text-[56px] lg:text-[76px] leading-none select-none drop-shadow-[0_0_35px_rgba(0,82,255,0.45)]">
-              thrides.
-              <span className="font-display font-bold text-white text-[0.42em] align-top ml-1.5 opacity-90">
+            {/* Ambient blue glow behind mark */}
+            <div
+              className="pointer-events-none absolute -inset-x-8 -inset-y-4 bg-[#0052FF]/25 blur-[35px] rounded-full"
+              aria-hidden="true"
+            />
+            <div className="relative flex items-center">
+              <img
+                src="/thrideLogo.png"
+                alt="thrides"
+                className="h-11 sm:h-15 md:h-18 lg:h-22 w-auto object-contain select-none drop-shadow-[0_0_24px_rgba(0,82,255,0.35)]"
+                loading="eager"
+              />
+              <span className="font-display font-bold text-white text-[13px] sm:text-[18px] lg:text-[22px] self-start -mt-0.5 sm:-mt-1 ml-1 opacity-90 select-none">
                 ®
               </span>
-            </span>
+            </div>
           </div>
         </div>
 
