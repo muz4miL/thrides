@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
 import { LogoMarquee } from "@/components/site/LogoMarquee";
-import { WhyBrandit } from "@/components/site/WhyBrandit";
+import { BrandIntro } from "@/components/site/BrandIntro";
 import { ServiceCards } from "@/components/site/ServiceCards";
 import { WhoItsFor } from "@/components/site/WhoItsFor";
 import { OurWorkSection } from "@/components/site/OurWorkSection";
@@ -39,7 +39,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <div className="min-h-screen bg-[#FAFAFA] text-[#09090B]">
+    <div className="min-h-screen bg-[#08080B] text-white">
       {/* Navigation */}
       <Header />
 
@@ -52,8 +52,8 @@ function Index() {
         {/* Section 2 — Trust Bar (3 years · 14+ businesses · 8 countries) */}
         <LogoMarquee />
 
-        {/* Section 3 — What We Believe & Where Your Brand Shows Up */}
-        <WhyBrandit />
+        {/* Section 3 — Welcome to thrides.® (Defiant Manifesto Section) */}
+        <BrandIntro />
 
         {/* Section 4 — Services Overview (6 Services with Proof Previews) */}
         <ServiceCards />

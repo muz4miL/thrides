@@ -44,16 +44,16 @@ export function LogoMarquee({
   return (
     <section
       aria-label="Trust Bar"
-      className="relative w-full overflow-hidden bg-white py-8 sm:py-12 select-none border-b border-black/[0.06]"
+      className="relative w-full overflow-hidden bg-[#08080B] py-8 sm:py-12 select-none border-y border-white/[0.08]"
     >
       <div className="mx-auto flex max-w-[1440px] flex-col items-center px-4">
         {/* Trust Bar metrics */}
         <div className="flex items-center justify-center gap-3">
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-center font-display text-[13px] sm:text-[15px] md:text-[16px] font-bold tracking-[0.14em] text-[#09090B] uppercase">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-center font-display text-[13px] sm:text-[15px] md:text-[16px] font-bold tracking-[0.14em] text-white uppercase">
             <span>3 years</span>
-            <span className="text-blue-700">•</span>
+            <span className="text-[#F3FF00]">•</span>
             <span>14+ businesses</span>
-            <span className="text-blue-700">•</span>
+            <span className="text-[#F3FF00]">•</span>
             <span>8 countries</span>
           </div>
 
@@ -61,7 +61,7 @@ export function LogoMarquee({
             type="button"
             onClick={() => setIsPaused((p) => !p)}
             aria-label={isPaused ? "Resume logo marquee animation" : "Pause logo marquee animation"}
-            className="grid h-6 w-6 place-items-center rounded-full border border-black/10 bg-black/[0.04] text-[#71717A] transition-colors hover:border-black hover:text-black focus-visible:outline-2 focus-visible:outline-black"
+            className="grid h-6 w-6 place-items-center rounded-full border border-white/20 bg-white/5 text-neutral-400 transition-colors hover:border-white hover:text-white focus-visible:outline-2 focus-visible:outline-white"
             title={isPaused ? "Resume marquee" : "Pause marquee"}
           >
             {isPaused ? (
@@ -96,7 +96,7 @@ export function LogoMarquee({
               {highlights.map((item, bIdx) => (
                 <div
                   key={bIdx}
-                  className="flex items-center gap-3 text-[17px] sm:text-[20px] font-bold text-[#09090B] tracking-tight opacity-75 hover:opacity-100 transition-opacity"
+                  className="flex items-center gap-3 text-[17px] sm:text-[20px] font-bold text-white/75 hover:text-white tracking-tight transition-colors"
                 >
                   <span className="font-display">{item}</span>
                   <span className="text-blue-700 text-sm">•</span>

@@ -1,12 +1,21 @@
-// Clean, responsive typographic wordmark for Thrides.
-export function Wordmark({ className = "" }: { className?: string }) {
+import { cn } from "@/lib/utils";
+
+interface WordmarkProps {
+  className?: string;
+  variant?: "white" | "black" | "dark";
+}
+
+export function Wordmark({ className = "", variant = "white" }: WordmarkProps) {
+  const isDarkVariant = variant === "black" || variant === "dark";
+  const logoSrc = isDarkVariant ? "/thrideLogo-dark.png" : "/thrideLogo.png";
+
   return (
-    <span
-      className={`inline-flex items-baseline font-display font-extrabold tracking-[-0.04em] text-foreground ${className}`}
-      aria-label="Thrides"
-    >
-      <span>thrides</span>
-      <span className="text-blue-700">.</span>
-    </span>
+    <img
+      src={logoSrc}
+      alt="Thrides"
+      className={cn("h-8 w-auto object-contain select-none shrink-0", className)}
+      loading="eager"
+    />
   );
 }
+
