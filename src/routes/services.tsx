@@ -213,7 +213,7 @@ function ServicesPage() {
             ref={heroRef}
             id="services-hero"
             aria-label="Services & Packages Hero"
-            className="relative mx-auto w-full overflow-hidden rounded-[36px] sm:rounded-[44px] md:rounded-[52px] bg-[#000000] border border-white/[0.08] min-h-[560px] lg:h-[calc(100vh-160px)] lg:min-h-[620px] lg:max-h-[700px] shadow-2xl flex flex-col justify-center items-center text-center px-4 sm:px-6 md:px-8 py-16 sm:py-20 select-none"
+            className="relative mx-auto w-full overflow-hidden rounded-[36px] sm:rounded-[44px] md:rounded-[52px] bg-[#000000] border border-white/[0.08] min-h-[520px] lg:h-[calc(100vh-180px)] lg:min-h-[580px] lg:max-h-[640px] shadow-2xl flex flex-col justify-center items-center text-center px-4 sm:px-6 md:px-8 py-14 sm:py-16 select-none"
           >
             <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
               <img
@@ -243,29 +243,29 @@ function ServicesPage() {
                 className={`mt-4 sm:mt-5 select-none font-display text-[clamp(40px,5.8vw,86px)] font-extrabold tracking-[-0.04em] text-[#F4F4F5] leading-[0.96] transition-all duration-700 ease-out ${heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
               >
                 <span className="block">Start where you are.</span>
-                <span className="block font-serif font-normal italic tracking-[-0.025em] text-[#0052FF] mt-1 sm:mt-2">
+                <span className="block font-serif font-normal italic tracking-[-0.025em] text-[#4385FF] mt-0.5">
                   Grow from there.
                 </span>
               </h1>
 
               <p
                 style={{ transitionDelay: heroEntered ? "160ms" : "0ms" }}
-                className={`mt-4 sm:mt-5 max-w-[580px] font-sans text-[15px] sm:text-[17px] text-[#A1A1AA] leading-relaxed transition-all duration-700 ease-out ${heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+                className={`mt-3 sm:mt-4 max-w-[600px] font-sans text-[15px] sm:text-[17px] text-[#C9C9D0] leading-relaxed transition-all duration-700 ease-out ${heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
               >
-                Choose the support your business needs today. We'll bring the strategy, creative, and execution to help you grow.
+                Strategy, websites, and content — packaged around your stage of growth.
               </p>
 
               <div
                 style={{ transitionDelay: heroEntered ? "240ms" : "0ms" }}
-                className={`mt-7 sm:mt-9 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5 w-full transition-all duration-700 ease-out ${heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+                className={`mt-7 sm:mt-8 flex flex-col items-center gap-5 w-full transition-all duration-700 ease-out ${heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
               >
                 <HeroButton href="/contact" leftText="Book a" rightText="Free Strategy Call" ariaLabel="Book a Free Strategy Call" />
                 <a
                   href="#packages"
-                  className="group inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-7 py-4 text-[14px] sm:text-[15px] font-semibold text-neutral-300 backdrop-blur-sm transition-all duration-200 hover:border-white/30 hover:bg-white/[0.08] hover:text-white focus-visible:outline-2 focus-visible:outline-[#0052FF] cursor-pointer"
+                  className="group inline-flex items-center gap-1.5 text-[13px] font-medium text-neutral-500 hover:text-neutral-200 transition-colors duration-200 cursor-pointer focus-visible:outline-none focus-visible:text-white"
                 >
-                  <span>Explore Packages</span>
-                  <ChevronDown size={16} className="text-neutral-400 transition-transform duration-200 group-hover:translate-y-0.5 group-hover:text-white" />
+                  <span>Explore packages</span>
+                  <ChevronDown size={13} className="transition-transform duration-200 group-hover:translate-y-0.5" />
                 </a>
               </div>
             </div>
