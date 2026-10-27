@@ -505,12 +505,15 @@
 }
 
 .showcase-track {
-  animation: showcase-left 50s linear infinite;
+  animation: showcase-left 28s linear infinite;
   will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 @media (min-width: 768px) {
   .showcase-track {
-    animation-duration: 70s;
+    animation-duration: 38s;
   }
 }
 

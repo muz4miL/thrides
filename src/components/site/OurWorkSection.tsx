@@ -233,23 +233,23 @@ function PhoneCard({ videoSrc, index, isDuplicate, isSectionNear }: PhoneCardPro
   };
 
   return (
-    <div className="relative h-[410px] w-[212px] shrink-0 select-none sm:h-[510px] sm:w-[264px] md:h-[610px] md:w-[316px]">
+    <div className="relative h-[330px] w-[172px] shrink-0 select-none sm:h-[390px] sm:w-[204px] md:h-[450px] md:w-[234px] lg:h-[470px] lg:w-[244px]">
       {/* Left side volume buttons */}
-      <div className="absolute -left-[3px] top-[100px] h-[28px] w-[3px] rounded-l-sm bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] sm:top-[115px] sm:h-[32px] md:top-[130px] md:h-[38px]" />
-      <div className="absolute -left-[3px] top-[136px] h-[28px] w-[3px] rounded-l-sm bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] sm:top-[156px] sm:h-[32px] md:top-[178px] md:h-[38px]" />
+      <div className="absolute -left-[3px] top-[75px] h-[22px] w-[3px] rounded-l-sm bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] sm:top-[90px] sm:h-[26px] md:top-[105px] md:h-[30px]" />
+      <div className="absolute -left-[3px] top-[103px] h-[22px] w-[3px] rounded-l-sm bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] sm:top-[122px] sm:h-[26px] md:top-[142px] md:h-[30px]" />
 
       {/* Right side power button */}
-      <div className="absolute -right-[3px] top-[108px] h-[44px] w-[3px] rounded-r-sm bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] sm:top-[125px] sm:h-[50px] md:top-[144px] md:h-[58px]" />
+      <div className="absolute -right-[3px] top-[82px] h-[34px] w-[3px] rounded-r-sm bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] sm:top-[98px] sm:h-[40px] md:top-[114px] md:h-[46px]" />
 
       {/* Phone outer frame: titanium silver border */}
-      <div className="relative h-full w-full rounded-[38px] bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] p-[2px] shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_30px_80px_rgba(0,0,0,0.65)] sm:rounded-[46px] md:rounded-[52px]">
+      <div className="relative h-full w-full rounded-[30px] bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] p-[2px] shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_24px_60px_rgba(0,0,0,0.65)] sm:rounded-[36px] md:rounded-[42px]">
         {/* Thin black bezel padding */}
-        <div className="relative h-full w-full rounded-[36px] bg-[#0c0c0e] p-[5px] sm:rounded-[44px] sm:p-[6px] md:rounded-[50px] md:p-[7px]">
+        <div className="relative h-full w-full rounded-[28px] bg-[#0c0c0e] p-[4px] sm:rounded-[34px] sm:p-[5px] md:rounded-[40px] md:p-[6px]">
           {/* Inner screen radius with overflow hidden */}
-          <div className="relative h-full w-full overflow-hidden rounded-[31px] bg-[#121214] sm:rounded-[38px] md:rounded-[43px]">
+          <div className="relative h-full w-full overflow-hidden rounded-[25px] bg-[#121214] sm:rounded-[30px] md:rounded-[35px]">
             {/* Dynamic island */}
-            <div className="pointer-events-none absolute top-[7px] left-1/2 z-20 flex h-[18px] w-[70px] -translate-x-1/2 items-center justify-end rounded-full bg-black pr-1.5 sm:top-[9px] sm:h-[22px] sm:w-[85px] sm:pr-2 md:top-[11px] md:h-[26px] md:w-[98px] md:pr-2.5">
-              <div className="h-[6px] w-[6px] rounded-full bg-[#0d1b2a] shadow-[inset_0_0_2px_#415a77] ring-1 ring-[#1b263b]/70 md:h-[8px] md:w-[8px]" />
+            <div className="pointer-events-none absolute top-[6px] left-1/2 z-20 flex h-[15px] w-[60px] -translate-x-1/2 items-center justify-end rounded-full bg-black pr-1 sm:top-[7px] sm:h-[18px] sm:w-[72px] sm:pr-1.5 md:top-[9px] md:h-[20px] md:w-[80px] md:pr-2">
+              <div className="h-[5px] w-[5px] rounded-full bg-[#0d1b2a] shadow-[inset_0_0_2px_#415a77] ring-1 ring-[#1b263b]/70 md:h-[6px] md:w-[6px]" />
             </div>
 
             {/* Video element */}
@@ -280,9 +280,9 @@ function EmailCard({ item }: { item: EmailCardData }) {
   const isDark = item.theme === "dark";
 
   return (
-    <div className="relative h-[460px] w-[260px] shrink-0 select-none overflow-hidden rounded-[34px] border border-white/10 bg-[#0d0d10] p-3 shadow-[0_25px_60px_rgba(0,0,0,0.6)] sm:h-[540px] sm:w-[310px] md:h-[610px] md:w-[350px]">
+    <div className="relative h-[340px] w-[210px] shrink-0 select-none overflow-hidden rounded-[26px] border border-white/10 bg-[#0d0d10] p-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.6)] sm:h-[400px] sm:w-[245px] md:h-[460px] md:w-[280px]">
       <div
-        className={`relative flex h-full w-full flex-col justify-between overflow-hidden rounded-[26px] p-5 sm:p-6 ${
+        className={`relative flex h-full w-full flex-col justify-between overflow-hidden rounded-[20px] p-4 sm:p-5 ${
           isDark
             ? "bg-[#131318] text-white"
             : "bg-[#FAFAFA] text-[#09090B]"
@@ -290,12 +290,12 @@ function EmailCard({ item }: { item: EmailCardData }) {
       >
         {/* Header: Sender & Tag */}
         <div>
-          <div className="flex items-center justify-between border-b pb-3 border-current/10">
-            <span className="font-display text-[11px] font-extrabold uppercase tracking-wider">
+          <div className="flex items-center justify-between border-b pb-2.5 border-current/10">
+            <span className="font-display text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider">
               {item.sender}
             </span>
             <span
-              className="rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white"
+              className="rounded-full px-2 py-0.5 text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-white"
               style={{ backgroundColor: item.accentColor }}
             >
               {item.tag}
@@ -303,12 +303,12 @@ function EmailCard({ item }: { item: EmailCardData }) {
           </div>
 
           {/* Subject Line */}
-          <p className="mt-3 text-[12px] font-medium opacity-70 truncate">
+          <p className="mt-2 text-[11px] sm:text-[12px] font-medium opacity-70 truncate">
             {item.subject}
           </p>
 
           {/* Hero Visual */}
-          <div className="relative mt-3 aspect-[16/10] w-full overflow-hidden rounded-[18px]">
+          <div className="relative mt-2.5 aspect-[16/10] w-full overflow-hidden rounded-[14px]">
             <img
               src={item.heroImg}
               alt={item.heading}
@@ -319,27 +319,24 @@ function EmailCard({ item }: { item: EmailCardData }) {
           </div>
 
           {/* Heading */}
-          <h4 className="mt-4 font-display text-[17px] sm:text-[20px] font-extrabold leading-[1.1] tracking-tight">
+          <h4 className="mt-3 font-display text-[15px] sm:text-[18px] font-extrabold leading-[1.1] tracking-tight">
             {item.heading}
           </h4>
 
           {/* Subheading */}
-          <p className="mt-2 text-[12px] sm:text-[13px] leading-relaxed opacity-75 line-clamp-3">
+          <p className="mt-1.5 text-[11px] sm:text-[12px] leading-relaxed opacity-75 line-clamp-2">
             {item.subheading}
           </p>
         </div>
 
         {/* Action Button & Footer */}
-        <div className="mt-4 pt-3 border-t border-current/10">
+        <div className="mt-3 pt-2.5 border-t border-current/10">
           <div
-            className="flex h-[42px] w-full items-center justify-center rounded-full text-[12px] font-bold text-white shadow-md transition-transform duration-200 hover:scale-[1.02]"
+            className="flex h-[36px] sm:h-[38px] w-full items-center justify-center rounded-full text-[11px] font-bold text-white shadow-md transition-transform duration-200 hover:scale-[1.02]"
             style={{ backgroundColor: item.accentColor }}
           >
             <span>{item.ctaText}</span>
           </div>
-          <p className="mt-2 text-center text-[10px] opacity-50">
-            Delivered by Thrides Growth Marketing Engine
-          </p>
         </div>
       </div>
     </div>
@@ -351,7 +348,7 @@ function EmailCard({ item }: { item: EmailCardData }) {
 ------------------------------------------------------------- */
 function LandingPageCard({ item }: { item: LandingCardData }) {
   return (
-    <div className="relative h-[460px] w-[270px] shrink-0 select-none overflow-hidden rounded-[32px] border border-white/10 bg-[#0e0e12] shadow-[0_25px_60px_rgba(0,0,0,0.6)] sm:h-[540px] sm:w-[320px] md:h-[610px] md:w-[360px] flex flex-col">
+    <div className="relative h-[340px] w-[220px] shrink-0 select-none overflow-hidden rounded-[26px] border border-white/10 bg-[#0e0e12] shadow-[0_20px_50px_rgba(0,0,0,0.6)] sm:h-[400px] sm:w-[255px] md:h-[460px] md:w-[290px] flex flex-col">
       {/* Browser chrome header with macOS-style dots */}
       <div className="flex h-10 items-center justify-between border-b border-white/10 bg-[#16161c] px-4">
         <div className="flex items-center gap-1.5">
