@@ -9,12 +9,14 @@ import {
   Check,
   Sparkles,
   ChevronDown,
+  ChevronRight,
+  Layers,
+  ArrowRight,
 } from "lucide-react";
 import {
   packages,
   packageComparisonRows,
   services,
-  caseStudies,
   whatHappensWhenYouJoin,
   whatItsLikeToWork,
 } from "@/content/site";
@@ -44,7 +46,18 @@ export const Route = createFileRoute("/services")({
 });
 
 function ServicesPage() {
-  const [showTable, setShowTable] = useState(true);
+  const [showComparison, setShowComparison] = useState(false);
+  const [highlightedRow, setHighlightedRow] = useState<string | null>(null);
+  const [expandedPackages, setExpandedPackages] = useState<Record<string, boolean>>({});
+
+  // Mobile Comparison Selectors (default Kickstart vs Accelerate)
+  const [comparePkgA, setComparePkgA] = useState<string>("kickstart");
+  const [comparePkgB, setComparePkgB] = useState<string>("accelerate");
+
+  // Service Explorer State (Desktop tabs & Mobile accordion)
+  const [activeServiceId, setActiveServiceId] = useState<string>(services[0]?.id || "marketing-consultancy");
+  const [mobileExpandedService, setMobileExpandedService] = useState<string | null>(services[0]?.id || "marketing-consultancy");
+
   const [heroEntered, setHeroEntered] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
 
@@ -66,6 +79,60 @@ function ServicesPage() {
     return () => observer.disconnect();
   }, []);
 
+  const togglePackageExpanded = (id: string) => {
+    setExpandedPackages((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
+  const handleSelectCompareA = (pkgId: string) => {
+    setComparePkgA(pkgId);
+    if (pkgId === comparePkgB) {
+      // Auto-switch B to another package so they are never identical
+      const fallback = packages.find((p) => p.id !== pkgId)?.id || "accelerate";
+      setComparePkgB(fallback);
+    }
+  };
+
+  const handleSelectCompareB = (pkgId: string) => {
+    setComparePkgB(pkgId);
+    if (pkgId === comparePkgA) {
+      const fallback = packages.find((p) => p.id !== pkgId)?.id || "kickstart";
+      setComparePkgA(fallback);
+    }
+  };
+
+  const handleSeeWhichPackageIncludes = (svcId: string) => {
+    setShowComparison(true);
+    const featureMap: Record<string, string> = {
+      "marketing-consultancy": "feature-strategy",
+      "website-development": "feature-website",
+      "content-creation": "feature-social-content",
+      "social-media-marketing": "feature-social-content",
+      "seo": "feature-seo",
+      "email-marketing": "feature-email-marketing",
+    };
+
+    const targetId = featureMap[svcId] || "package-comparison";
+    setHighlightedRow(targetId);
+
+    setTimeout(() => {
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }, 150);
+
+    setTimeout(() => {
+      setHighlightedRow(null);
+    }, 3200);
+  };
+
+  const activeService = services.find((s) => s.id === activeServiceId) || services[0];
+  const pkgAData = packages.find((p) => p.id === comparePkgA) || packages[0];
+  const pkgBData = packages.find((p) => p.id === comparePkgB) || packages[1];
+
   return (
     <div className="min-h-screen bg-[#08080B] text-white selection:bg-[#0052FF] selection:text-white">
       {/* Global Navigation Header */}
@@ -73,14 +140,14 @@ function ServicesPage() {
 
       <main className="flex flex-col">
         {/* ========================================================
-            1. CINEMATIC SERVICES HERO
+            1. REFINED CINEMATIC SERVICES HERO
            ======================================================== */}
         <div className="mx-auto w-full max-w-[1440px] px-3 sm:px-4 md:px-6 pt-2 pb-4">
           <section
             ref={heroRef}
             id="services-hero"
             aria-label="Services & Packages Hero Overview"
-            className="relative mx-auto w-full overflow-hidden rounded-[36px] sm:rounded-[44px] md:rounded-[52px] bg-[#000000] border border-white/[0.08] min-h-[580px] lg:h-[calc(100vh-140px)] lg:min-h-[650px] lg:max-h-[740px] shadow-2xl flex flex-col justify-center items-center text-center px-4 sm:px-6 md:px-8 py-16 sm:py-20 select-none"
+            className="relative mx-auto w-full overflow-hidden rounded-[36px] sm:rounded-[44px] md:rounded-[52px] bg-[#000000] border border-white/[0.08] min-h-[560px] lg:h-[calc(100vh-160px)] lg:min-h-[620px] lg:max-h-[700px] shadow-2xl flex flex-col justify-center items-center text-center px-4 sm:px-6 md:px-8 py-16 sm:py-20 select-none"
           >
             {/* Background Artwork - servicehero.png */}
             <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
@@ -93,20 +160,20 @@ function ServicesPage() {
                 }`}
                 loading="eager"
               />
-              {/* Subtle dark vignette to ensure crisp readability while keeping vibrant cobalt metallic flanks */}
+              {/* Restrained dark vignette ensuring crisp readability while preserving metallic ribbon detail */}
               <div
                 aria-hidden="true"
                 className="absolute inset-0 bg-gradient-to-b from-[#000000]/75 via-[#000000]/30 to-[#000000]/85"
               />
               <div
                 aria-hidden="true"
-                className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,#000000_90%)] opacity-70"
+                className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,#000000_90%)] opacity-70"
               />
             </div>
 
             {/* Content Container (Centered in dark negative space) */}
             <div className="relative z-10 flex flex-col items-center max-w-4xl">
-              {/* Small Restrained Eyebrow */}
+              {/* Restrained Eyebrow */}
               <div
                 style={{
                   transitionDelay: heroEntered ? "0ms" : "0ms",
@@ -126,7 +193,7 @@ function ServicesPage() {
                 style={{
                   transitionDelay: heroEntered ? "80ms" : "0ms",
                 }}
-                className={`mt-5 select-none font-display text-[clamp(42px,5.8vw,88px)] font-extrabold tracking-[-0.04em] text-[#F4F4F5] leading-[0.96] transition-all duration-700 ease-out motion-reduce:transform-none motion-reduce:transition-none ${
+                className={`mt-4 sm:mt-5 select-none font-display text-[clamp(40px,5.8vw,86px)] font-extrabold tracking-[-0.04em] text-[#F4F4F5] leading-[0.96] transition-all duration-700 ease-out motion-reduce:transform-none motion-reduce:transition-none ${
                   heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 }`}
               >
@@ -141,7 +208,7 @@ function ServicesPage() {
                 style={{
                   transitionDelay: heroEntered ? "160ms" : "0ms",
                 }}
-                className={`mt-5 sm:mt-6 max-w-[580px] font-sans text-[15px] sm:text-[17px] text-[#A1A1AA] leading-relaxed transition-all duration-700 ease-out motion-reduce:transform-none motion-reduce:transition-none ${
+                className={`mt-4 sm:mt-5 max-w-[580px] font-sans text-[15px] sm:text-[17px] text-[#A1A1AA] leading-relaxed transition-all duration-700 ease-out motion-reduce:transform-none motion-reduce:transition-none ${
                   heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 }`}
               >
@@ -153,7 +220,7 @@ function ServicesPage() {
                 style={{
                   transitionDelay: heroEntered ? "240ms" : "0ms",
                 }}
-                className={`mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5 w-full transition-all duration-700 ease-out motion-reduce:transform-none motion-reduce:transition-none ${
+                className={`mt-7 sm:mt-9 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5 w-full transition-all duration-700 ease-out motion-reduce:transform-none motion-reduce:transition-none ${
                   heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 }`}
               >
@@ -182,91 +249,109 @@ function ServicesPage() {
         </div>
 
         {/* ========================================================
-            2. THE 3 PACKAGES
+            2. GROWTH STAGES — THE MAIN DECISION SECTION
            ======================================================== */}
         <section
           id="packages"
           className="scroll-mt-28 py-20 md:py-28 bg-[#08080B]"
         >
           <div className="mx-auto max-w-[1440px] px-4 sm:px-6 md:px-8">
-            <div className="max-w-2xl">
+            <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
               <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1 text-xs font-mono font-semibold uppercase tracking-wider text-[#0052FF]">
                 <Sparkles size={13} className="text-[#0052FF]" />
-                <span>01 • GROWTH STAGES</span>
+                <span>Growth Stages</span>
               </div>
 
-              <h2 className="mt-4 font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
+              <h2 className="mt-3.5 font-display text-[clamp(32px,4vw,54px)] font-extrabold tracking-tight text-white leading-tight">
                 Start with a package,{" "}
                 <span className="font-serif italic font-normal text-white">
                   not a guess
                 </span>
               </h2>
 
-              <p className="mt-3 text-[15px] sm:text-[16px] text-neutral-400 leading-relaxed max-w-xl">
-                Every business scales at a different cadence. Pick the tier that matches your current pipeline and upgrade seamlessly as you expand.
+              <p className="mt-3 text-[15px] sm:text-[16px] text-neutral-400 leading-relaxed">
+                Clear scope, fixed timelines, and verified deliverables. Select your current growth stage and expand as pipeline demands.
               </p>
             </div>
 
-            {/* 3 Packages Cards Grid */}
-            <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-7 items-stretch">
-              {packages.map((pkg) => {
-                const isFeatured = pkg.isPopular;
+            {/* 3 Packages Composition (Aligned baseline, independent card expansion) */}
+            <div className="mt-12 sm:mt-14 grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+              {packages.map((pkg, idx) => {
+                const isAccelerate = pkg.id === "accelerate";
+                const isAuthority = pkg.id === "authority";
+                const isExpanded = !!expandedPackages[pkg.id];
+                const stageNum = `0${idx + 1}`;
+
+                // Selection of decision-relevant key deliverables
+                const keyDeliverables = isAccelerate
+                  ? pkg.deliverables.slice(0, 4)
+                  : isAuthority
+                  ? pkg.deliverables.slice(0, 4)
+                  : pkg.deliverables.slice(0, 3);
 
                 return (
                   <div
                     key={pkg.id}
-                    className={`relative flex flex-col justify-between rounded-[32px] border p-7 sm:p-9 transition-all duration-300 hover:border-white/20 shadow-xl ${
-                      isFeatured
-                        ? "border-[#0052FF]/60 bg-gradient-to-b from-[#0F1426] to-[#0A0D18] shadow-[0_0_35px_rgba(0,82,255,0.22)] ring-1 ring-[#0052FF]/40 hover:border-[#0052FF]"
-                        : "border-white/[0.08] bg-[#0C0C10]"
+                    className={`relative rounded-[32px] border transition-all duration-300 p-6 sm:p-8 flex flex-col justify-between shadow-2xl ${
+                      isAccelerate
+                        ? "border-[#0052FF]/60 bg-gradient-to-b from-[#0F1428] via-[#0B0F1E] to-[#070A14] shadow-[0_0_35px_rgba(0,82,255,0.2)] ring-1 ring-[#0052FF]/40"
+                        : isAuthority
+                        ? "border-white/[0.12] bg-[#0C0D12] hover:border-white/25"
+                        : "border-white/[0.08] bg-[#0A0A0E] hover:border-white/20"
                     }`}
                   >
-                    {/* Specular top highlight */}
+                    {/* Top specular highlight */}
                     <div
                       aria-hidden="true"
                       className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent"
                     />
 
-                    {/* Featured Popular Badge */}
-                    {pkg.badge && (
-                      <div className="absolute -top-3.5 right-8 inline-flex items-center gap-1.5 rounded-full bg-[#0052FF] px-4 py-1 text-xs font-mono font-bold uppercase tracking-wider text-white shadow-[0_0_15px_rgba(0,82,255,0.5)]">
-                        <Sparkles size={12} />
-                        <span>{pkg.badge}</span>
+                    {/* Most Popular Label for Accelerate */}
+                    {isAccelerate && (
+                      <div className="absolute -top-3.5 right-6 sm:right-8 inline-flex items-center gap-1.5 rounded-full bg-[#0052FF] px-3.5 py-1 text-[11px] font-mono font-bold uppercase tracking-wider text-white shadow-[0_0_15px_rgba(0,82,255,0.5)]">
+                        <Sparkles size={11} />
+                        <span>Most Popular</span>
                       </div>
                     )}
 
+                    {/* Authority Custom Indicator */}
+                    {isAuthority && (
+                      <div className="absolute -top-3.5 right-6 sm:right-8 inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-[#161722] px-3 py-1 text-[11px] font-mono font-medium text-neutral-300">
+                        <span>Custom Scaled</span>
+                      </div>
+                    )}
+
+                    {/* Header Info */}
                     <div>
-                      <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#0052FF]">
-                        {pkg.tagline}
-                      </span>
-
-                      <h3 className="mt-2 font-display text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                        {pkg.name}
-                      </h3>
-
-                      <p className="mt-2.5 text-[14.5px] font-medium leading-snug text-neutral-300">
-                        {pkg.heading}
-                      </p>
-
-                      {/* The Problem Box */}
-                      <div className="mt-5 rounded-2xl bg-[#07070A] border border-white/[0.06] p-4 text-[13px] text-neutral-300 leading-relaxed">
-                        <span className="font-bold text-white">The problem: </span>
-                        {pkg.theProblem}
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#0052FF]">
+                          {stageNum} / {pkg.name}
+                        </span>
                       </div>
 
-                      {/* Deliverables List */}
-                      <div className="mt-6">
-                        <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-neutral-400">
-                          What you get:
+                      {/* Quoted Customer Situation */}
+                      <p className="mt-2 font-serif italic text-[14px] text-neutral-400 leading-snug">
+                        {pkg.tagline}
+                      </p>
+
+                      {/* Approved One-Sentence Outcome */}
+                      <h3 className="mt-3 font-display text-[22px] sm:text-[24px] font-bold text-white tracking-tight leading-snug">
+                        {pkg.heading}
+                      </h3>
+
+                      {/* Compact Decision-Relevant Deliverables */}
+                      <div className="mt-5 pt-4 border-t border-white/[0.08]">
+                        <span className="font-mono text-[10.5px] font-bold uppercase tracking-wider text-neutral-400 block mb-2.5">
+                          Core Inclusions
                         </span>
-                        <ul className="mt-3 space-y-2.5">
-                          {pkg.deliverables.map((del, idx) => (
+                        <ul className="space-y-2">
+                          {keyDeliverables.map((del, dIdx) => (
                             <li
-                              key={idx}
-                              className="flex items-start gap-2.5 text-[13.5px] text-neutral-300"
+                              key={dIdx}
+                              className="flex items-start gap-2 text-[13px] text-neutral-300 leading-snug"
                             >
                               <Check
-                                size={15}
+                                size={14}
                                 className="text-[#0052FF] shrink-0 mt-0.5"
                               />
                               <span>{del}</span>
@@ -275,138 +360,331 @@ function ServicesPage() {
                         </ul>
                       </div>
 
-                      {/* Timeline, Payment & Promise */}
-                      <div className="mt-7 space-y-2.5 pt-5 border-t border-white/[0.08] text-xs text-neutral-400">
-                        <div className="flex items-center justify-between">
-                          <span className="font-semibold text-neutral-300">Timeline:</span>
-                          <span className="text-white font-medium">{pkg.timeline}</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="font-semibold text-neutral-300">Payment:</span>
-                          <span className="text-white font-medium">{pkg.payment}</span>
-                        </div>
-                        <div className="pt-2 text-[12px] leading-relaxed text-neutral-400 italic">
-                          <span className="font-semibold not-italic text-neutral-300">
-                            Our promise:{" "}
+                      {/* Compact Timeline & Payment Information Row with Fine Divider */}
+                      <div className="mt-5 rounded-xl border border-white/[0.07] bg-[#06070B] p-3 flex items-center justify-between text-xs font-mono">
+                        <div className="pr-2">
+                          <span className="block text-[10px] text-neutral-500 uppercase">
+                            Timeline
                           </span>
-                          {pkg.promise}
+                          <span className="text-white font-medium text-[11.5px] line-clamp-1">
+                            {pkg.timeline}
+                          </span>
+                        </div>
+                        <div className="h-6 w-[1px] bg-white/10 shrink-0" />
+                        <div className="pl-3">
+                          <span className="block text-[10px] text-neutral-500 uppercase">
+                            Payment
+                          </span>
+                          <span className="text-white font-medium text-[11.5px] line-clamp-1">
+                            {pkg.payment}
+                          </span>
                         </div>
                       </div>
+
+                      {/* Full Package Details Disclosure */}
+                      {isExpanded && (
+                        <div
+                          id={`pkg-details-${pkg.id}`}
+                          className="mt-5 pt-4 border-t border-white/[0.08] space-y-4 animate-in fade-in duration-200"
+                        >
+                          {/* The Problem Statement */}
+                          <div className="rounded-xl bg-[#08090D] border border-white/[0.06] p-3 text-[12.5px] text-neutral-300 leading-relaxed">
+                            <span className="font-bold text-white">The problem: </span>
+                            {pkg.theProblem}
+                          </div>
+
+                          {/* Full Deliverables List */}
+                          <div>
+                            <span className="font-mono text-[10.5px] font-bold uppercase tracking-wider text-neutral-400 block mb-2">
+                              Full Deliverables List ({pkg.deliverables.length})
+                            </span>
+                            <ul className="space-y-2">
+                              {pkg.deliverables.map((del, fullIdx) => (
+                                <li
+                                  key={fullIdx}
+                                  className="flex items-start gap-2 text-[12.5px] text-neutral-300 leading-snug"
+                                >
+                                  <Check
+                                    size={13}
+                                    className="text-emerald-400 shrink-0 mt-0.5"
+                                  />
+                                  <span>{del}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          {/* Guarantee / Promise */}
+                          <div className="pt-2 text-[12px] leading-relaxed text-neutral-400 italic">
+                            <span className="font-semibold not-italic text-neutral-300">
+                              Our promise:{" "}
+                            </span>
+                            {pkg.promise}
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    {/* Card CTA & Investment */}
-                    <div className="mt-8 pt-6 border-t border-white/[0.08]">
+                    {/* Bottom CTA, Pricing & Disclosure Toggle */}
+                    <div className="mt-6 pt-5 border-t border-white/[0.08]">
+                      {/* Prominent Investment Language */}
                       <div className="flex items-center justify-between mb-4">
-                        <span className="font-mono text-xs text-neutral-400">Investment:</span>
-                        <span className="font-mono text-sm font-bold text-white">
-                          {pkg.investment}
+                        <span className="font-mono text-[11px] text-neutral-400 uppercase tracking-wider">
+                          Investment
+                        </span>
+                        <span className="font-mono text-[13px] font-bold text-white">
+                          {isAuthority ? "Custom, confirmed on your call" : "Enquire for pricing"}
                         </span>
                       </div>
 
+                      {/* Primary Package CTA */}
                       <a
                         href={`/contact?package=${pkg.id}`}
-                        className={`inline-flex w-full h-[50px] items-center justify-center gap-2 rounded-full font-bold text-[14px] transition-all cursor-pointer ${
-                          isFeatured
-                            ? "bg-[#0052FF] text-white hover:bg-[#0043DB] shadow-[0_0_20px_rgba(0,82,255,0.4)]"
-                            : "bg-white/[0.05] text-white hover:bg-white/[0.12] border border-white/10 hover:border-white/20"
+                        className={`inline-flex w-full h-[48px] sm:h-[50px] items-center justify-center gap-2 rounded-full font-bold text-[14px] transition-all cursor-pointer ${
+                          isAccelerate
+                            ? "bg-[#0052FF] text-white hover:bg-[#0043DB] shadow-[0_0_18px_rgba(0,82,255,0.4)]"
+                            : "bg-white/[0.06] text-white hover:bg-white/[0.12] border border-white/10 hover:border-white/20"
                         }`}
                       >
                         <span>{pkg.ctaText}</span>
-                        <ArrowUpRight size={16} className="stroke-[2.5]" />
+                        <ArrowUpRight size={15} className="stroke-[2.5]" />
                       </a>
+
+                      {/* View Full Package Disclosure Button */}
+                      <button
+                        type="button"
+                        onClick={() => togglePackageExpanded(pkg.id)}
+                        aria-expanded={isExpanded}
+                        aria-controls={`pkg-details-${pkg.id}`}
+                        className="mt-3 w-full flex items-center justify-center gap-1.5 py-2 text-[11px] font-mono font-semibold uppercase tracking-wider text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                      >
+                        <span>{isExpanded ? "Hide full details" : "View full package"}</span>
+                        <ChevronDown
+                          size={13}
+                          className={`transition-transform duration-200 ${
+                            isExpanded ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
                     </div>
                   </div>
                 );
               })}
             </div>
 
-            {/* Free Call Recommendation Banner */}
-            <div className="mt-12 rounded-3xl bg-gradient-to-r from-[#0C0F1E] via-[#0E132A] to-[#0A0D18] border border-[#0052FF]/30 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-5 shadow-2xl">
-              <div>
-                <h4 className="font-display text-lg sm:text-xl font-bold text-white">
-                  Not sure which tier fits your business?
-                </h4>
-                <p className="text-sm sm:text-base text-neutral-300 mt-1">
-                  Tell us where your business is today and we’ll map out the exact package on a free 30-minute call.
+            {/* ========================================================
+                3. HELP VISITORS CHOOSE (ASSISTANCE STRIP)
+               ======================================================== */}
+            <div className="mt-12 sm:mt-14 rounded-3xl border border-white/[0.08] bg-gradient-to-r from-[#0B0D18] via-[#0E1328] to-[#080A12] p-7 sm:p-9 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl relative overflow-hidden">
+              <div className="relative z-10 max-w-xl text-center md:text-left">
+                <span className="font-mono text-xs font-semibold uppercase tracking-widest text-[#0052FF]">
+                  Guidance &amp; Discovery
+                </span>
+                <h3 className="mt-1 font-display text-2xl sm:text-3xl font-extrabold text-white">
+                  Not sure which fits?
+                </h3>
+                <p className="mt-2 text-sm sm:text-base text-neutral-300 leading-relaxed">
+                  Tell us where your business is today and we’ll recommend the right one on a free call.
                 </p>
               </div>
-              <a
-                href="/contact"
-                className="inline-flex h-[48px] shrink-0 items-center justify-center rounded-full bg-[#0052FF] px-7 text-sm font-bold text-white transition-all hover:bg-[#0043DB] shadow-[0_0_18px_rgba(0,82,255,0.4)] cursor-pointer"
-              >
-                Book a Free Strategy Call
-              </a>
+
+              <div className="relative z-10 shrink-0 w-full sm:w-auto flex justify-center">
+                <HeroButton
+                  href="/contact"
+                  leftText="Book a"
+                  rightText="Free Strategy Call"
+                  ariaLabel="Book a Free Strategy Call"
+                />
+              </div>
             </div>
 
             {/* ========================================================
-                PACKAGE COMPARISON TABLE
+                4. PACKAGE COMPARISON — USEFUL ON EVERY SCREEN
                ======================================================== */}
-            <div className="mt-16 sm:mt-24">
+            <div id="package-comparison" className="mt-16 sm:mt-24 scroll-mt-28">
               <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
                 <div>
                   <h3 className="font-display text-2xl sm:text-3xl font-bold text-white">
                     Compare Packages
                   </h3>
                   <p className="text-sm text-neutral-400 mt-1">
-                    Side-by-side breakdown of scope, deliverables, and turnaround schedules.
+                    Side-by-side breakdown of scope, research depths, deliverables, and timelines.
                   </p>
                 </div>
+
+                {/* Show/Hide Comparison Real Button */}
                 <button
                   type="button"
-                  onClick={() => setShowTable((s) => !s)}
-                  className="inline-flex items-center gap-2 font-mono text-xs font-bold text-[#0052FF] hover:text-blue-400 uppercase tracking-wider cursor-pointer"
+                  onClick={() => setShowComparison((s) => !s)}
+                  aria-expanded={showComparison}
+                  aria-controls="comparison-matrix-container"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 font-mono text-xs font-bold text-[#0052FF] hover:text-blue-400 hover:bg-white/[0.08] uppercase tracking-wider transition-colors cursor-pointer"
                 >
-                  <span>{showTable ? "Hide Matrix" : "Show Matrix"}</span>
+                  <Layers size={14} />
+                  <span>{showComparison ? "Hide comparison" : "Show comparison"}</span>
                   <ChevronDown
-                    size={16}
+                    size={14}
                     className={`transition-transform duration-200 ${
-                      showTable ? "rotate-180" : ""
+                      showComparison ? "rotate-180" : ""
                     }`}
                   />
                 </button>
               </div>
 
-              {showTable && (
-                <div className="overflow-x-auto rounded-3xl border border-white/[0.08] bg-[#0C0C10] shadow-2xl">
-                  <table className="w-full text-left text-sm">
-                    <thead>
-                      <tr className="border-b border-white/[0.08] bg-[#07070A]">
-                        <th className="py-4 px-6 font-display font-bold text-white w-1/4">
-                          Deliverable
-                        </th>
-                        <th className="py-4 px-6 font-display font-bold text-white w-1/4">
-                          Kickstart
-                        </th>
-                        <th className="py-4 px-6 font-display font-black text-[#0052FF] bg-[#0052FF]/[0.08] w-1/4">
-                          Accelerate (Featured)
-                        </th>
-                        <th className="py-4 px-6 font-display font-bold text-white w-1/4">
-                          Authority
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-white/[0.06]">
-                      {packageComparisonRows.map((row, idx) => (
-                        <tr
-                          key={idx}
-                          className={idx % 2 === 0 ? "bg-[#0C0C10]" : "bg-[#0E0E14]"}
-                        >
-                          <td className="py-4 px-6 font-semibold text-neutral-200">
-                            {row.feature}
-                          </td>
-                          <td className="py-4 px-6 text-neutral-400">
-                            {row.kickstart}
-                          </td>
-                          <td className="py-4 px-6 font-medium text-white bg-[#0052FF]/[0.04]">
-                            {row.accelerate}
-                          </td>
-                          <td className="py-4 px-6 text-neutral-400">
-                            {row.authority}
-                          </td>
+              {showComparison && (
+                <div
+                  id="comparison-matrix-container"
+                  className="animate-in fade-in duration-300"
+                >
+                  {/* DESKTOP TABLE (>= 768px / md) */}
+                  <div className="hidden md:block overflow-x-auto rounded-3xl border border-white/[0.08] bg-[#0C0C10] shadow-2xl">
+                    <table className="w-full text-left text-sm">
+                      <thead>
+                        <tr className="border-b border-white/[0.08] bg-[#07070A] sticky top-0 z-10">
+                          <th className="py-4 px-6 font-display font-bold text-white w-1/4">
+                            Feature / Scope
+                          </th>
+                          <th className="py-4 px-6 font-display font-bold text-white w-1/4">
+                            01 / Kickstart
+                          </th>
+                          <th className="py-4 px-6 font-display font-black text-[#0052FF] bg-[#0052FF]/[0.08] w-1/4">
+                            02 / Accelerate (Featured)
+                          </th>
+                          <th className="py-4 px-6 font-display font-bold text-white w-1/4">
+                            03 / Authority
+                          </th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-white/[0.06]">
+                        {packageComparisonRows.map((row, idx) => {
+                          const rowSlugMap: Record<string, string> = {
+                            "Strategy": "feature-strategy",
+                            "Website": "feature-website",
+                            "Social & Content": "feature-social-content",
+                            "Paid Campaigns": "feature-paid-campaigns",
+                            "SEO": "feature-seo",
+                            "Email Marketing": "feature-email-marketing",
+                          };
+                          const rowId = rowSlugMap[row.feature] || `row-${idx}`;
+                          const isHighlighted = highlightedRow === rowId;
+
+                          return (
+                            <tr
+                              key={idx}
+                              id={rowId}
+                              className={`transition-colors duration-300 ${
+                                isHighlighted
+                                  ? "bg-[#0052FF]/20 ring-1 ring-[#0052FF]"
+                                  : idx % 2 === 0
+                                  ? "bg-[#0C0C10]"
+                                  : "bg-[#0E0E14]"
+                              }`}
+                            >
+                              <td className="py-4 px-6 font-semibold text-neutral-200">
+                                {row.feature}
+                              </td>
+                              <td className="py-4 px-6 text-neutral-400">
+                                {row.kickstart}
+                              </td>
+                              <td className="py-4 px-6 font-medium text-white bg-[#0052FF]/[0.04]">
+                                {row.accelerate}
+                              </td>
+                              <td className="py-4 px-6 text-neutral-400">
+                                {row.authority}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* MOBILE INTERACTIVE COMPARISON (< 768px) */}
+                  <div className="block md:hidden space-y-4">
+                    {/* Dual Package Selectors */}
+                    <div className="grid grid-cols-2 gap-2.5 p-3 rounded-2xl border border-white/[0.08] bg-[#0C0C10]">
+                      <div>
+                        <span className="block font-mono text-[10px] uppercase text-neutral-400 mb-1.5 font-bold">
+                          Compare:
+                        </span>
+                        <div className="space-y-1">
+                          {packages.map((p) => (
+                            <button
+                              key={p.id}
+                              type="button"
+                              onClick={() => handleSelectCompareA(p.id)}
+                              className={`w-full py-1.5 px-2 rounded-lg text-left text-xs font-mono font-bold transition-all ${
+                                comparePkgA === p.id
+                                  ? "bg-[#0052FF] text-white"
+                                  : "bg-white/[0.03] text-neutral-400 hover:text-white"
+                              }`}
+                            >
+                              {p.name}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <span className="block font-mono text-[10px] uppercase text-neutral-400 mb-1.5 font-bold">
+                          Against:
+                        </span>
+                        <div className="space-y-1">
+                          {packages.map((p) => (
+                            <button
+                              key={p.id}
+                              type="button"
+                              onClick={() => handleSelectCompareB(p.id)}
+                              className={`w-full py-1.5 px-2 rounded-lg text-left text-xs font-mono font-bold transition-all ${
+                                comparePkgB === p.id
+                                  ? "bg-[#0052FF] text-white"
+                                  : "bg-white/[0.03] text-neutral-400 hover:text-white"
+                              }`}
+                            >
+                              {p.name}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Stacked Feature Rows for Selected Pair */}
+                    <div className="space-y-2.5">
+                      {packageComparisonRows.map((row, idx) => {
+                        const valA = row[comparePkgA as keyof typeof row];
+                        const valB = row[comparePkgB as keyof typeof row];
+
+                        return (
+                          <div
+                            key={idx}
+                            className="rounded-xl border border-white/[0.07] bg-[#0A0B10] p-3.5"
+                          >
+                            <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#0052FF] block mb-2">
+                              {row.feature}
+                            </span>
+                            <div className="grid grid-cols-2 gap-3 text-xs">
+                              <div className="border-r border-white/10 pr-2">
+                                <span className="block text-[10px] font-mono text-neutral-500 mb-0.5">
+                                  {pkgAData.name}
+                                </span>
+                                <span className="text-white font-medium">
+                                  {valA}
+                                </span>
+                              </div>
+                              <div className="pl-1">
+                                <span className="block text-[10px] font-mono text-neutral-500 mb-0.5">
+                                  {pkgBData.name}
+                                </span>
+                                <span className="text-white font-medium">
+                                  {valB}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -414,46 +692,52 @@ function ServicesPage() {
         </section>
 
         {/* ========================================================
-            3. HOW IT WORKS & WHAT HAPPENS WHEN YOU JOIN
+            5. HOW IT WORKS — EDITORIAL, NOT THREE MORE CARDS
            ======================================================== */}
         <section className="py-20 md:py-28 bg-[#060608] border-t border-b border-white/[0.06]">
           <div className="mx-auto max-w-[1440px] px-4 sm:px-6 md:px-8">
-            {/* Part A: How It Works */}
             <div className="max-w-2xl">
               <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1 text-xs font-mono font-semibold uppercase tracking-wider text-[#0052FF]">
-                <span>02 • SIMPLE PROCESS</span>
+                <span>02 • Simple Process</span>
               </div>
 
-              <h2 className="mt-4 font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white">
+              <h2 className="mt-3.5 font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white">
                 How It Works
               </h2>
             </div>
 
-            <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            {/* DESKTOP: Horizontal Editorial Sequence with Oversized Numbers */}
+            <div className="hidden md:grid md:grid-cols-3 gap-8 mt-14 relative">
+              {/* Fine connecting horizontal rule */}
+              <div
+                aria-hidden="true"
+                className="absolute top-8 left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none"
+              />
+
               {[
                 {
                   step: "01",
                   title: "Free strategy call",
-                  desc: "30 minutes. We review your current marketing, market positioning, and growth levers.",
+                  desc: "30 minutes. We review your current marketing, market positioning, and commercial levers.",
                 },
                 {
                   step: "02",
-                  title: "Your custom plan",
-                  desc: "We recommend the package and commercial priorities that will make the biggest revenue difference.",
+                  title: "Your plan",
+                  desc: "We recommend the package and priorities that will make the biggest difference.",
                 },
                 {
                   step: "03",
-                  title: "We build & launch",
-                  desc: "You get a locked timeline, delivery milestones, and high-tempo execution from day one.",
+                  title: "We build",
+                  desc: "You get a clear timeline, delivery dates, and a proper kickoff.",
                 },
               ].map((item) => (
-                <div
-                  key={item.step}
-                  className="rounded-[28px] border border-white/[0.08] bg-[#0C0C10] p-8 hover:border-white/20 transition-all duration-300 shadow-xl"
-                >
-                  <span className="font-display text-3xl sm:text-4xl font-black text-[#0052FF]">
-                    {item.step}
-                  </span>
+                <div key={item.step} className="relative z-10 flex flex-col">
+                  <div className="flex items-baseline gap-3">
+                    <span className="font-display text-6xl lg:text-7xl font-black text-white/10 select-none">
+                      {item.step}
+                    </span>
+                    <span className="h-2 w-2 rounded-full bg-[#0052FF]" />
+                  </div>
                   <h3 className="mt-4 font-display text-2xl font-bold text-white">
                     {item.title}
                   </h3>
@@ -464,49 +748,117 @@ function ServicesPage() {
               ))}
             </div>
 
-            {/* Part B: What Happens When You Join */}
-            <div className="mt-20 pt-16 border-t border-white/[0.08]">
-              <div className="max-w-3xl">
-                <span className="font-mono text-xs font-semibold uppercase tracking-widest text-[#0052FF]">
-                  Client Onboarding
-                </span>
-                <h3 className="mt-3 font-display text-2xl sm:text-3xl md:text-4xl font-bold text-white">
-                  A smooth start, because the first two weeks set the tone
-                </h3>
-              </div>
+            {/* MOBILE: Vertical sequence with connecting line (< 768px) */}
+            <div className="block md:hidden mt-10 space-y-8 relative pl-6 border-l border-white/15 ml-3">
+              {[
+                {
+                  step: "01",
+                  title: "Free strategy call",
+                  desc: "30 minutes. We review your current marketing, market positioning, and commercial levers.",
+                },
+                {
+                  step: "02",
+                  title: "Your plan",
+                  desc: "We recommend the package and priorities that will make the biggest difference.",
+                },
+                {
+                  step: "03",
+                  title: "We build",
+                  desc: "You get a clear timeline, delivery dates, and a proper kickoff.",
+                },
+              ].map((item) => (
+                <div key={item.step} className="relative">
+                  <div className="absolute -left-[31px] top-1 h-3.5 w-3.5 rounded-full bg-[#0052FF] ring-4 ring-[#060608]" />
+                  <span className="font-mono text-xs font-bold text-[#0052FF] uppercase">
+                    Step {item.step}
+                  </span>
+                  <h3 className="mt-1 font-display text-xl font-bold text-white">
+                    {item.title}
+                  </h3>
+                  <p className="mt-1.5 text-sm text-neutral-400 leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
 
-              <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                {whatHappensWhenYouJoin.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="rounded-2xl border border-white/[0.07] bg-[#0E0E14] p-6 hover:border-white/20 transition-all duration-300"
-                  >
-                    <div className="grid h-8 w-8 place-items-center rounded-full bg-[#0052FF]/15 text-[#0052FF] font-mono font-bold text-xs mb-4 border border-[#0052FF]/30">
-                      0{idx + 1}
+            {/* ========================================================
+                6. CLIENT ONBOARDING — CLEAR AND REASSURING
+               ======================================================== */}
+            <div className="mt-24 pt-16 border-t border-white/[0.08]">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                {/* Left: Section Heading and Restrained Visual Anchor */}
+                <div className="lg:col-span-5">
+                  <span className="font-mono text-xs font-semibold uppercase tracking-widest text-[#0052FF]">
+                    03 • Client Onboarding
+                  </span>
+                  <h3 className="mt-3 font-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-white leading-tight">
+                    A smooth start, because the first two weeks set the tone
+                  </h3>
+                  <p className="mt-3 text-neutral-400 text-sm sm:text-base leading-relaxed">
+                    No guesswork, no communication black holes. We establish structured check-ins, rapid feedback loops, and clear delivery roadmaps from day one.
+                  </p>
+
+                  <div className="mt-8 hidden lg:flex items-center gap-3 p-4 rounded-2xl border border-white/[0.07] bg-[#0B0D14]">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#0052FF] text-white font-black text-lg shadow-[0_0_15px_rgba(0,82,255,0.5)]">
+                      t.
                     </div>
-                    <h4 className="font-display text-lg font-bold text-white">
-                      {item.title}
-                    </h4>
-                    <p className="mt-2 text-sm leading-relaxed text-neutral-400">
-                      {item.desc}
-                    </p>
+                    <div>
+                      <span className="font-display font-bold text-sm text-white block">
+                        On-Purpose Kickoff
+                      </span>
+                      <span className="text-xs text-neutral-400 font-mono">
+                        Structured 14-day momentum guarantee
+                      </span>
+                    </div>
                   </div>
-                ))}
+                </div>
+
+                {/* Right: Four Neatly Structured Rows with Fine Rules */}
+                <div className="lg:col-span-7 divide-y divide-white/[0.08]">
+                  {whatHappensWhenYouJoin.map((item, idx) => (
+                    <div key={idx} className="py-5 first:pt-0 last:pb-0 flex items-start gap-4">
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#0052FF]/15 text-[#0052FF] font-mono text-xs font-bold border border-[#0052FF]/30 mt-0.5">
+                        0{idx + 1}
+                      </div>
+                      <div>
+                        <h4 className="font-display text-lg font-bold text-white">
+                          {item.title}
+                        </h4>
+                        <p className="mt-1 text-sm leading-relaxed text-neutral-400">
+                          {item.desc}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
-            {/* Part C: What It’s Like to Work With Thrides */}
-            <div className="mt-16 rounded-3xl border border-white/[0.08] bg-gradient-to-b from-[#0F1017] to-[#07070A] p-8 sm:p-12 text-white shadow-2xl">
-              <h3 className="font-display text-2xl sm:text-3xl font-bold">
-                What It’s Like to Work With Thrides
-              </h3>
-              <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* ========================================================
+                7. WHAT IT’S LIKE TO WORK WITH THRIDES
+               ======================================================== */}
+            <div className="mt-20 pt-16 border-t border-white/[0.08]">
+              <div className="mb-10 max-w-2xl">
+                <span className="font-mono text-xs font-semibold uppercase tracking-widest text-[#0052FF]">
+                  04 • Operational Principles
+                </span>
+                <h3 className="mt-2 font-display text-2xl sm:text-3xl font-extrabold text-white">
+                  What It’s Like to Work With Thrides
+                </h3>
+              </div>
+
+              {/* 3-Column Text Composition on Desktop, Compact Stacked on Mobile */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {whatItsLikeToWork.map((item, idx) => (
-                  <div key={idx} className="border-l-2 border-[#0052FF] pl-6">
-                    <h4 className="font-display text-lg font-bold text-white">
+                  <div
+                    key={idx}
+                    className="border-l-2 border-[#0052FF] pl-5 sm:pl-6"
+                  >
+                    <h4 className="font-display text-lg sm:text-xl font-bold text-white">
                       {item.title}
                     </h4>
-                    <p className="mt-2 text-sm text-neutral-400 leading-relaxed">
+                    <p className="mt-2 text-sm sm:text-[14.5px] text-neutral-400 leading-relaxed">
                       {item.desc}
                     </p>
                   </div>
@@ -517,7 +869,7 @@ function ServicesPage() {
         </section>
 
         {/* ========================================================
-            4. WHAT’S INSIDE EVERY PACKAGE (The 6 Services)
+            8. SERVICE BREAKDOWN — AN INTERACTIVE SERVICE INDEX
            ======================================================== */}
         <section
           id="services-details"
@@ -526,108 +878,241 @@ function ServicesPage() {
           <div className="mx-auto max-w-[1440px] px-4 sm:px-6 md:px-8">
             <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1 text-xs font-mono font-semibold uppercase tracking-wider text-[#0052FF]">
-                <span>03 • SERVICE BREAKDOWN</span>
+                <span>05 • Interactive Index</span>
               </div>
 
-              <h2 className="mt-4 font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white">
+              <h2 className="mt-3.5 font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white">
                 The services that put your brand in front of your customers
               </h2>
 
               <p className="mt-3 text-neutral-400 text-[15px] sm:text-[16px]">
-                Each service is engineered around business intent, conversion psychology, and measurable pipeline.
+                Explore individual capabilities below to understand scope, deliverables, and exact package mappings.
               </p>
             </div>
 
-            {/* The 6 Services Expanded Cards */}
-            <div className="mt-14 space-y-10">
-              {services.map((svc) => {
-                const proof = svc.proofCaseStudyId
-                  ? caseStudies.find((cs) => cs.id === svc.proofCaseStudyId)
-                  : undefined;
+            {/* DESKTOP: Two-Column Service Explorer (>= 1024px / lg) */}
+            <div className="hidden lg:grid lg:grid-cols-12 gap-8 mt-14 items-start">
+              {/* Left Column: Vertical Service Index */}
+              <div
+                role="tablist"
+                aria-label="Services Index"
+                className="lg:col-span-4 space-y-1.5"
+              >
+                {services.map((svc, idx) => {
+                  const isActive = activeServiceId === svc.id;
+                  const numStr = `0${idx + 1}`;
+
+                  return (
+                    <button
+                      key={svc.id}
+                      type="button"
+                      role="tab"
+                      id={`tab-${svc.id}`}
+                      aria-selected={isActive}
+                      aria-controls={`panel-${svc.id}`}
+                      onClick={() => setActiveServiceId(svc.id)}
+                      className={`w-full flex items-center justify-between p-4 rounded-2xl text-left transition-all duration-200 cursor-pointer ${
+                        isActive
+                          ? "bg-[#0052FF]/15 border border-[#0052FF]/40 text-white shadow-lg"
+                          : "bg-white/[0.02] border border-white/[0.06] text-neutral-400 hover:text-white hover:bg-white/[0.05]"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span
+                          className={`font-mono text-xs font-bold ${
+                            isActive ? "text-[#0052FF]" : "text-neutral-500"
+                          }`}
+                        >
+                          {numStr}
+                        </span>
+                        <span className="font-display text-base font-bold text-white">
+                          {svc.title}
+                        </span>
+                      </div>
+                      <ChevronRight
+                        size={16}
+                        className={`transition-transform ${
+                          isActive ? "text-[#0052FF] translate-x-1" : "text-neutral-600"
+                        }`}
+                      />
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Right Column: Selected Service Detail Panel */}
+              <div
+                role="tabpanel"
+                id={`panel-${activeService.id}`}
+                aria-labelledby={`tab-${activeService.id}`}
+                className="lg:col-span-8 rounded-[32px] border border-white/[0.08] bg-[#0C0C10] p-8 sm:p-10 shadow-2xl relative transition-all duration-200"
+              >
+                {/* Top specular highlight */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent"
+                />
+
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+                  {/* Visual Preview */}
+                  <div className="md:col-span-5">
+                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 bg-[#07070A]">
+                      <img
+                        src={activeService.image}
+                        alt={activeService.title}
+                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Service Text & Inclusions */}
+                  <div className="md:col-span-7 flex flex-col justify-between">
+                    <div>
+                      {/* Package Inclusion Badge */}
+                      <div className="inline-flex items-center gap-2 rounded-full bg-[#0052FF]/15 text-[#0052FF] border border-[#0052FF]/30 px-3.5 py-1 text-xs font-mono font-bold">
+                        <span>Included in: {activeService.includedIn}</span>
+                      </div>
+
+                      {/* Single Service Heading */}
+                      <h3 className="mt-3.5 font-display text-2xl sm:text-3xl font-extrabold text-white">
+                        {activeService.title}
+                      </h3>
+
+                      {/* Approved Description */}
+                      <p className="mt-3 text-[14.5px] leading-relaxed text-neutral-300">
+                        {activeService.summary}
+                      </p>
+
+                      {/* Bullet Points */}
+                      <ul className="mt-5 space-y-2">
+                        {activeService.bullets.map((bullet, bIdx) => (
+                          <li
+                            key={bIdx}
+                            className="flex items-start gap-2.5 text-xs sm:text-[13px] text-neutral-300"
+                          >
+                            <Check
+                              size={14}
+                              className="text-[#0052FF] shrink-0 mt-0.5"
+                            />
+                            <span>{bullet}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="mt-8 pt-6 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-4">
+                      <a
+                        href={`/contact?service=${activeService.slug}`}
+                        className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-[#0052FF] hover:underline cursor-pointer"
+                      >
+                        <span>Request relevant sample deliverables</span>
+                        <ArrowUpRight size={13} />
+                      </a>
+
+                      <button
+                        type="button"
+                        onClick={() => handleSeeWhichPackageIncludes(activeService.id)}
+                        className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-white hover:text-[#0052FF] uppercase tracking-wider transition-colors cursor-pointer"
+                      >
+                        <span>See Which Package Includes This</span>
+                        <ArrowRight size={13} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* MOBILE: Vertical Accordion (< 1024px) */}
+            <div className="block lg:hidden mt-8 space-y-3">
+              {services.map((svc, sIdx) => {
+                const isOpen = mobileExpandedService === svc.id;
+                const numStr = `0${sIdx + 1}`;
 
                 return (
                   <div
                     key={svc.id}
-                    id={svc.slug}
-                    className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center rounded-[32px] border border-white/[0.08] bg-[#0C0C10] p-7 sm:p-10 transition-all duration-300 hover:border-white/20 shadow-xl"
+                    className="rounded-2xl border border-white/[0.08] bg-[#0C0C10] overflow-hidden"
                   >
-                    {/* Visual Preview */}
-                    <div className="lg:col-span-5">
-                      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[22px] border border-white/10 bg-[#07070A]">
-                        <img
-                          src={svc.image}
-                          alt={svc.title}
-                          loading="lazy"
-                          className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                        />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setMobileExpandedService(isOpen ? null : svc.id)
+                      }
+                      aria-expanded={isOpen}
+                      className="w-full flex items-center justify-between p-4 sm:p-5 text-left cursor-pointer"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="font-mono text-xs font-bold text-[#0052FF]">
+                          {numStr}
+                        </span>
+                        <h3 className="font-display text-lg font-bold text-white">
+                          {svc.title}
+                        </h3>
                       </div>
-                    </div>
+                      <span className="text-xl font-mono text-neutral-400">
+                        {isOpen ? "−" : "+"}
+                      </span>
+                    </button>
 
-                    {/* Service Info */}
-                    <div className="lg:col-span-7 flex flex-col justify-between">
-                      <div>
-                        <div className="inline-flex items-center gap-2 rounded-full bg-[#0052FF]/15 text-[#0052FF] border border-[#0052FF]/30 px-3.5 py-1 text-xs font-mono font-bold">
+                    {isOpen && (
+                      <div className="px-4 pb-5 pt-1 border-t border-white/[0.06] space-y-4 animate-in fade-in duration-200">
+                        {/* Inclusion Info */}
+                        <div className="inline-flex items-center rounded-full bg-[#0052FF]/15 text-[#0052FF] border border-[#0052FF]/30 px-3 py-0.5 text-[11px] font-mono font-bold">
                           <span>Included in: {svc.includedIn}</span>
                         </div>
 
-                        <h3 className="mt-4 font-display text-2xl sm:text-3xl font-bold text-white">
-                          {svc.title}
-                        </h3>
+                        {/* Image Preview */}
+                        <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl border border-white/10 bg-[#07070A]">
+                          <img
+                            src={svc.image}
+                            alt={svc.title}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
 
-                        <p className="mt-3 text-[15px] sm:text-[16px] leading-relaxed text-neutral-300">
+                        {/* Summary */}
+                        <p className="text-sm text-neutral-300 leading-relaxed">
                           {svc.summary}
                         </p>
 
-                        <ul className="mt-6 space-y-2.5">
-                          {svc.bullets.map((bullet, idx) => (
+                        {/* Bullets */}
+                        <ul className="space-y-2">
+                          {svc.bullets.map((bullet, mbIdx) => (
                             <li
-                              key={idx}
-                              className="flex items-start gap-2.5 text-sm text-neutral-300"
+                              key={mbIdx}
+                              className="flex items-start gap-2 text-xs text-neutral-300"
                             >
                               <Check
-                                size={15}
+                                size={14}
                                 className="text-[#0052FF] shrink-0 mt-0.5"
                               />
                               <span>{bullet}</span>
                             </li>
                           ))}
                         </ul>
-                      </div>
 
-                      {/* Service Proof Preview Link */}
-                      <div className="mt-8 pt-6 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-4">
-                        {proof && proof.isPublished ? (
-                          <div className="flex items-center gap-3">
-                            <span className="font-mono text-xs font-semibold text-neutral-400">
-                              Documented Proof:
-                            </span>
-                            <a
-                              href={`/case-studies/${proof.slug}`}
-                              className="inline-flex items-center gap-1 text-xs font-bold text-[#0052FF] hover:underline"
-                            >
-                              <span>{proof.client}</span>
-                              <ArrowUpRight size={13} />
-                            </a>
-                          </div>
-                        ) : (
+                        {/* Actions */}
+                        <div className="pt-3 border-t border-white/[0.06] flex flex-col gap-2.5">
                           <a
-                            href="/contact"
-                            className="inline-flex items-center gap-1 text-xs font-semibold text-[#0052FF] hover:underline"
+                            href={`/contact?service=${svc.slug}`}
+                            className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-[#0052FF] hover:underline"
                           >
                             <span>Request relevant sample deliverables</span>
                             <ArrowUpRight size={13} />
                           </a>
-                        )}
 
-                        <a
-                          href="#packages"
-                          className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-neutral-300 uppercase tracking-wider hover:text-[#0052FF] transition-colors"
-                        >
-                          <span>See Which Package Includes This</span>
-                          <span aria-hidden="true">→</span>
-                        </a>
+                          <button
+                            type="button"
+                            onClick={() => handleSeeWhichPackageIncludes(svc.id)}
+                            className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-white hover:text-[#0052FF] uppercase tracking-wider"
+                          >
+                            <span>See Which Package Includes This →</span>
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 );
               })}
@@ -636,12 +1121,12 @@ function ServicesPage() {
         </section>
 
         {/* ========================================================
-            5. QUESTIONS BEFORE YOU BOOK (FAQ)
+            9. QUESTIONS BEFORE YOU BOOK (FAQ)
            ======================================================== */}
         <FAQ />
 
         {/* ========================================================
-            6. FINAL CTA
+            10. FINAL STRATEGY CALL CTA
            ======================================================== */}
         <section className="py-20 md:py-28 bg-[#060608] border-t border-white/[0.06]">
           <div className="mx-auto max-w-[1440px] px-4 sm:px-6 md:px-8">
