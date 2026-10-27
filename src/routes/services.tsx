@@ -3,15 +3,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { HeroButton } from "@/components/site/HeroButton";
-import FAQ from "@/components/FAQ";
 import {
   ArrowUpRight,
   Check,
   Sparkles,
   ChevronDown,
   ChevronRight,
-  Layers,
-  ArrowRight,
+  Plus,
+  Minus,
 } from "lucide-react";
 import {
   packages,
@@ -19,6 +18,7 @@ import {
   services,
   whatHappensWhenYouJoin,
   whatItsLikeToWork,
+  faqs,
 } from "@/content/site";
 
 export const Route = createFileRoute("/services")({
@@ -45,26 +45,145 @@ export const Route = createFileRoute("/services")({
   component: ServicesPage,
 });
 
+// tiny scroll-reveal hook
+function useReveal(threshold = 0.12) {
+  const ref = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { threshold }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [threshold]);
+  return { ref, visible };
+}
+
+// Abstract artwork for each package
+function KickstartArt() {
+  return (
+    <svg viewBox="0 0 280 160" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full" aria-hidden="true">
+      <defs>
+        <radialGradient id="kg1" cx="30%" cy="60%" r="70%">
+          <stop offset="0%" stopColor="#0052FF" stopOpacity="0.18" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="kl1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#0052FF" stopOpacity="0.7" />
+          <stop offset="100%" stopColor="#0052FF" stopOpacity="0.15" />
+        </linearGradient>
+      </defs>
+      <rect width="280" height="160" fill="url(#kg1)" />
+      {[35,75,115].map((y) => (
+        <line key={y} x1="0" y1={y} x2="280" y2={y} stroke="white" strokeOpacity="0.04" strokeWidth="1" />
+      ))}
+      {[20, 60, 100, 140, 180, 220].map((x, i) => {
+        const h = [28, 52, 38, 70, 50, 85][i];
+        return (
+          <rect key={x} x={x} y={160 - h} width="20" height={h} rx="4"
+            fill="#0052FF" fillOpacity={0.1 + i * 0.045} />
+        );
+      })}
+      <rect x="220" y="75" width="20" height="85" rx="4" fill="url(#kl1)" />
+      {[20,60,100,140,180,220].map((x,i)=>{const h=[28,52,38,70,50,85][i];return <circle key={`d${x}`} cx={x+10} cy={160-h} r="3" fill="#0052FF" fillOpacity={0.4+i*0.1}/>;})}
+      <text x="14" y="20" fill="white" fillOpacity="0.25" fontSize="9" fontFamily="monospace" letterSpacing="2">STAGE 01</text>
+    </svg>
+  );
+}
+
+function AccelerateArt() {
+  return (
+    <svg viewBox="0 0 280 160" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full" aria-hidden="true">
+      <defs>
+        <radialGradient id="ag1" cx="60%" cy="40%" r="80%">
+          <stop offset="0%" stopColor="#0052FF" stopOpacity="0.3" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="al1" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0%" stopColor="#0052FF" stopOpacity="0" />
+          <stop offset="50%" stopColor="#0052FF" stopOpacity="0.9" />
+          <stop offset="100%" stopColor="#60a5fa" stopOpacity="0.7" />
+        </linearGradient>
+      </defs>
+      <rect width="280" height="160" fill="url(#ag1)" />
+      {[120,90,60,30].map((r,i)=>(
+        <circle key={r} cx="280" cy="160" r={r} stroke="#0052FF" strokeOpacity={0.06+i*0.07} strokeWidth="1" fill="none"/>
+      ))}
+      {[0,56,112,168,224].map((x)=>(
+        <line key={x} x1={x} y1="0" x2={x} y2="160" stroke="white" strokeOpacity="0.025" strokeWidth="1"/>
+      ))}
+      <path d="M10 145 C60 145 80 110 120 90 C160 70 200 50 270 12" stroke="url(#al1)" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      <circle cx="270" cy="12" r="5" fill="#0052FF" fillOpacity="0.95"/>
+      <circle cx="270" cy="12" r="11" fill="#0052FF" fillOpacity="0.18"/>
+      <text x="14" y="20" fill="white" fillOpacity="0.25" fontSize="9" fontFamily="monospace" letterSpacing="2">STAGE 02</text>
+    </svg>
+  );
+}
+
+function AuthorityArt() {
+  const nodes: [number,number][] = [[140,80],[55,45],[225,45],[38,130],[242,130],[140,22],[85,118],[195,118]];
+  const edges: [[number,number],[number,number]][] = [
+    [[140,80],[55,45]],[[140,80],[225,45]],[[140,80],[38,130]],[[140,80],[242,130]],
+    [[140,80],[140,22]],[[140,80],[85,118]],[[140,80],[195,118]],
+    [[55,45],[140,22]],[[225,45],[140,22]],[[55,45],[38,130]],[[225,45],[242,130]],
+  ];
+  return (
+    <svg viewBox="0 0 280 160" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full" aria-hidden="true">
+      <defs>
+        <radialGradient id="aag1" cx="50%" cy="50%" r="70%">
+          <stop offset="0%" stopColor="#0052FF" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="280" height="160" fill="url(#aag1)"/>
+      {edges.map(([[x1,y1],[x2,y2]],i)=>(
+        <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#0052FF" strokeOpacity="0.13" strokeWidth="1"/>
+      ))}
+      {nodes.map(([cx,cy],i)=>(
+        <g key={i}>
+          <circle cx={cx} cy={cy} r="4" fill="#0052FF" fillOpacity={0.28+i*0.08}/>
+          <circle cx={cx} cy={cy} r="8" fill="#0052FF" fillOpacity="0.055"/>
+        </g>
+      ))}
+      <circle cx="140" cy="80" r="7" fill="#0052FF" fillOpacity="0.9"/>
+      <circle cx="140" cy="80" r="14" fill="#0052FF" fillOpacity="0.17"/>
+      <text x="14" y="20" fill="white" fillOpacity="0.25" fontSize="9" fontFamily="monospace" letterSpacing="2">STAGE 03</text>
+    </svg>
+  );
+}
+
+const pkgArtMap: Record<string, React.ReactNode> = {
+  kickstart: <KickstartArt />,
+  accelerate: <AccelerateArt />,
+  authority: <AuthorityArt />,
+};
+
 function ServicesPage() {
-  const [showComparison, setShowComparison] = useState(false);
-  const [highlightedRow, setHighlightedRow] = useState<string | null>(null);
   const [expandedPackages, setExpandedPackages] = useState<Record<string, boolean>>({});
-
-  // Mobile Comparison Selectors (default Kickstart vs Accelerate)
-  const [comparePkgA, setComparePkgA] = useState<string>("kickstart");
-  const [comparePkgB, setComparePkgB] = useState<string>("accelerate");
-
-  // Service Explorer State (Desktop tabs & Mobile accordion)
-  const [activeServiceId, setActiveServiceId] = useState<string>(services[0]?.id || "marketing-consultancy");
-  const [mobileExpandedService, setMobileExpandedService] = useState<string | null>(services[0]?.id || "marketing-consultancy");
+  const [showComparison, setShowComparison] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [mobileExpandedService, setMobileExpandedService] = useState<string | null>(services[0]?.id || "");
 
   const [heroEntered, setHeroEntered] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
 
+  const packagesReveal = useReveal();
+  const processReveal = useReveal();
+  const servicesReveal = useReveal();
+  const faqReveal = useReveal();
+  const ctaReveal = useReveal();
+
   useEffect(() => {
     const el = heroRef.current;
     if (!el) return;
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -74,113 +193,44 @@ function ServicesPage() {
       },
       { threshold: 0.1 }
     );
-
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
-  const togglePackageExpanded = (id: string) => {
-    setExpandedPackages((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  };
-
-  const handleSelectCompareA = (pkgId: string) => {
-    setComparePkgA(pkgId);
-    if (pkgId === comparePkgB) {
-      // Auto-switch B to another package so they are never identical
-      const fallback = packages.find((p) => p.id !== pkgId)?.id || "accelerate";
-      setComparePkgB(fallback);
-    }
-  };
-
-  const handleSelectCompareB = (pkgId: string) => {
-    setComparePkgB(pkgId);
-    if (pkgId === comparePkgA) {
-      const fallback = packages.find((p) => p.id !== pkgId)?.id || "kickstart";
-      setComparePkgA(fallback);
-    }
-  };
-
-  const handleSeeWhichPackageIncludes = (svcId: string) => {
-    setShowComparison(true);
-    const featureMap: Record<string, string> = {
-      "marketing-consultancy": "feature-strategy",
-      "website-development": "feature-website",
-      "content-creation": "feature-social-content",
-      "social-media-marketing": "feature-social-content",
-      "seo": "feature-seo",
-      "email-marketing": "feature-email-marketing",
-    };
-
-    const targetId = featureMap[svcId] || "package-comparison";
-    setHighlightedRow(targetId);
-
-    setTimeout(() => {
-      const el = document.getElementById(targetId);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    }, 150);
-
-    setTimeout(() => {
-      setHighlightedRow(null);
-    }, 3200);
-  };
-
-  const activeService = services.find((s) => s.id === activeServiceId) || services[0];
-  const pkgAData = packages.find((p) => p.id === comparePkgA) || packages[0];
-  const pkgBData = packages.find((p) => p.id === comparePkgB) || packages[1];
+  const togglePkg = (id: string) =>
+    setExpandedPackages((prev) => ({ ...prev, [id]: !prev[id] }));
 
   return (
     <div className="min-h-screen bg-[#08080B] text-white selection:bg-[#0052FF] selection:text-white">
-      {/* Global Navigation Header */}
       <Header />
-
       <main className="flex flex-col">
-        {/* ========================================================
-            1. REFINED CINEMATIC SERVICES HERO
-           ======================================================== */}
+
+        {/* ═══════════════════════════════════════════════════════
+            1. CINEMATIC HERO (PRESERVED)
+           ═══════════════════════════════════════════════════════ */}
         <div className="mx-auto w-full max-w-[1440px] px-3 sm:px-4 md:px-6 pt-2 pb-4">
           <section
             ref={heroRef}
             id="services-hero"
-            aria-label="Services & Packages Hero Overview"
+            aria-label="Services & Packages Hero"
             className="relative mx-auto w-full overflow-hidden rounded-[36px] sm:rounded-[44px] md:rounded-[52px] bg-[#000000] border border-white/[0.08] min-h-[560px] lg:h-[calc(100vh-160px)] lg:min-h-[620px] lg:max-h-[700px] shadow-2xl flex flex-col justify-center items-center text-center px-4 sm:px-6 md:px-8 py-16 sm:py-20 select-none"
           >
-            {/* Background Artwork - servicehero.png */}
             <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
               <img
                 src="/servicehero.png"
                 alt=""
                 aria-hidden="true"
-                className={`h-full w-full object-cover object-bottom transition-transform duration-1000 ease-out will-change-transform motion-reduce:transform-none ${
-                  heroEntered ? "scale-100" : "scale-105"
-                }`}
+                className={`h-full w-full object-cover object-bottom transition-transform duration-1000 ease-out will-change-transform motion-reduce:transform-none ${heroEntered ? "scale-100" : "scale-105"}`}
                 loading="eager"
               />
-              {/* Restrained dark vignette ensuring crisp readability while preserving metallic ribbon detail */}
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-b from-[#000000]/75 via-[#000000]/30 to-[#000000]/85"
-              />
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,#000000_90%)] opacity-70"
-              />
+              <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-b from-[#000000]/75 via-[#000000]/30 to-[#000000]/85" />
+              <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,#000000_90%)] opacity-70" />
             </div>
 
-            {/* Content Container (Centered in dark negative space) */}
             <div className="relative z-10 flex flex-col items-center max-w-4xl">
-              {/* Restrained Eyebrow */}
               <div
-                style={{
-                  transitionDelay: heroEntered ? "0ms" : "0ms",
-                }}
-                className={`inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 backdrop-blur-md transition-all duration-700 ease-out motion-reduce:transform-none motion-reduce:transition-none ${
-                  heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                }`}
+                style={{ transitionDelay: heroEntered ? "0ms" : "0ms" }}
+                className={`inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 backdrop-blur-md transition-all duration-700 ease-out ${heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-[#0052FF] animate-pulse" />
                 <span className="font-mono text-[11px] sm:text-[12px] font-semibold tracking-[0.16em] uppercase text-neutral-300">
@@ -188,14 +238,9 @@ function ServicesPage() {
                 </span>
               </div>
 
-              {/* Main Headline */}
               <h1
-                style={{
-                  transitionDelay: heroEntered ? "80ms" : "0ms",
-                }}
-                className={`mt-4 sm:mt-5 select-none font-display text-[clamp(40px,5.8vw,86px)] font-extrabold tracking-[-0.04em] text-[#F4F4F5] leading-[0.96] transition-all duration-700 ease-out motion-reduce:transform-none motion-reduce:transition-none ${
-                  heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                }`}
+                style={{ transitionDelay: heroEntered ? "80ms" : "0ms" }}
+                className={`mt-4 sm:mt-5 select-none font-display text-[clamp(40px,5.8vw,86px)] font-extrabold tracking-[-0.04em] text-[#F4F4F5] leading-[0.96] transition-all duration-700 ease-out ${heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
               >
                 <span className="block">Start where you are.</span>
                 <span className="block font-serif font-normal italic tracking-[-0.025em] text-[#0052FF] mt-1 sm:mt-2">
@@ -203,972 +248,609 @@ function ServicesPage() {
                 </span>
               </h1>
 
-              {/* Supporting Paragraph */}
               <p
-                style={{
-                  transitionDelay: heroEntered ? "160ms" : "0ms",
-                }}
-                className={`mt-4 sm:mt-5 max-w-[580px] font-sans text-[15px] sm:text-[17px] text-[#A1A1AA] leading-relaxed transition-all duration-700 ease-out motion-reduce:transform-none motion-reduce:transition-none ${
-                  heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                }`}
+                style={{ transitionDelay: heroEntered ? "160ms" : "0ms" }}
+                className={`mt-4 sm:mt-5 max-w-[580px] font-sans text-[15px] sm:text-[17px] text-[#A1A1AA] leading-relaxed transition-all duration-700 ease-out ${heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
               >
-                Choose the support your business needs today. We’ll bring the strategy, creative, and execution to help you grow.
+                Choose the support your business needs today. We'll bring the strategy, creative, and execution to help you grow.
               </p>
 
-              {/* CTAs */}
               <div
-                style={{
-                  transitionDelay: heroEntered ? "240ms" : "0ms",
-                }}
-                className={`mt-7 sm:mt-9 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5 w-full transition-all duration-700 ease-out motion-reduce:transform-none motion-reduce:transition-none ${
-                  heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                }`}
+                style={{ transitionDelay: heroEntered ? "240ms" : "0ms" }}
+                className={`mt-7 sm:mt-9 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5 w-full transition-all duration-700 ease-out ${heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
               >
-                {/* Primary CTA reusing the exact homepage HeroButton */}
-                <HeroButton
-                  href="/contact"
-                  leftText="Book a"
-                  rightText="Free Strategy Call"
-                  ariaLabel="Book a Free Strategy Call"
-                />
-
-                {/* Secondary CTA: Explore Packages */}
+                <HeroButton href="/contact" leftText="Book a" rightText="Free Strategy Call" ariaLabel="Book a Free Strategy Call" />
                 <a
                   href="#packages"
                   className="group inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-7 py-4 text-[14px] sm:text-[15px] font-semibold text-neutral-300 backdrop-blur-sm transition-all duration-200 hover:border-white/30 hover:bg-white/[0.08] hover:text-white focus-visible:outline-2 focus-visible:outline-[#0052FF] cursor-pointer"
                 >
                   <span>Explore Packages</span>
-                  <ChevronDown
-                    size={16}
-                    className="text-neutral-400 transition-transform duration-200 group-hover:translate-y-0.5 group-hover:text-white"
-                  />
+                  <ChevronDown size={16} className="text-neutral-400 transition-transform duration-200 group-hover:translate-y-0.5 group-hover:text-white" />
                 </a>
               </div>
             </div>
           </section>
         </div>
 
-        {/* ========================================================
-            2. GROWTH STAGES — THE MAIN DECISION SECTION
-           ======================================================== */}
+        {/* ═══════════════════════════════════════════════════════
+            2. THE GROWTH COLLECTION — 3 EDITORIAL PACKAGE CARDS
+           ═══════════════════════════════════════════════════════ */}
         <section
           id="packages"
-          className="scroll-mt-28 py-20 md:py-28 bg-[#08080B]"
+          ref={packagesReveal.ref as React.RefObject<HTMLElement>}
+          className="scroll-mt-24 py-24 md:py-32 bg-[#08080B]"
         >
-          <div className="mx-auto max-w-[1440px] px-4 sm:px-6 md:px-8">
-            <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1 text-xs font-mono font-semibold uppercase tracking-wider text-[#0052FF]">
-                <Sparkles size={13} className="text-[#0052FF]" />
-                <span>Growth Stages</span>
-              </div>
+          <div className="mx-auto max-w-[1240px] px-4 sm:px-6 md:px-8">
 
-              <h2 className="mt-3.5 font-display text-[clamp(32px,4vw,54px)] font-extrabold tracking-tight text-white leading-tight">
+            <div className={`flex flex-col items-center text-center max-w-2xl mx-auto transition-all duration-700 ${packagesReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+              <span className="inline-flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-[#0052FF]">
+                <Sparkles size={12} />
+                THE GROWTH COLLECTION
+              </span>
+              <h2 className="mt-4 font-display text-[clamp(32px,4vw,54px)] font-extrabold tracking-[-0.04em] text-white leading-tight">
                 Start with a package,{" "}
-                <span className="font-serif italic font-normal text-white">
-                  not a guess
-                </span>
+                <span className="font-serif font-normal italic text-white/60">not a guess</span>
               </h2>
-
-              <p className="mt-3 text-[15px] sm:text-[16px] text-neutral-400 leading-relaxed">
-                Clear scope, fixed timelines, and verified deliverables. Select your current growth stage and expand as pipeline demands.
+              <p className="mt-4 text-[15px] text-neutral-400 leading-relaxed max-w-lg">
+                Clear scope. Fixed timelines. Every package comes with approved delivery dates and revisions until you're satisfied.
               </p>
             </div>
 
-            {/* 3 Packages Composition (Aligned baseline, independent card expansion) */}
-            <div className="mt-12 sm:mt-14 grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+            {/* 3 Package Cards */}
+            <div className="mt-14 grid grid-cols-1 lg:grid-cols-3 gap-5 items-start">
               {packages.map((pkg, idx) => {
                 const isAccelerate = pkg.id === "accelerate";
                 const isAuthority = pkg.id === "authority";
                 const isExpanded = !!expandedPackages[pkg.id];
-                const stageNum = `0${idx + 1}`;
-
-                // Selection of decision-relevant key deliverables
-                const keyDeliverables = isAccelerate
-                  ? pkg.deliverables.slice(0, 4)
-                  : isAuthority
-                  ? pkg.deliverables.slice(0, 4)
-                  : pkg.deliverables.slice(0, 3);
+                const art = pkgArtMap[pkg.id];
 
                 return (
                   <div
                     key={pkg.id}
-                    className={`relative rounded-[32px] border transition-all duration-300 p-6 sm:p-8 flex flex-col justify-between shadow-2xl ${
+                    style={{ transitionDelay: `${idx * 80 + 100}ms` }}
+                    className={`relative flex flex-col rounded-[28px] border overflow-hidden transition-all duration-700 ${packagesReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"} ${
                       isAccelerate
-                        ? "border-[#0052FF]/60 bg-gradient-to-b from-[#0F1428] via-[#0B0F1E] to-[#070A14] shadow-[0_0_35px_rgba(0,82,255,0.2)] ring-1 ring-[#0052FF]/40"
-                        : isAuthority
-                        ? "border-white/[0.12] bg-[#0C0D12] hover:border-white/25"
-                        : "border-white/[0.08] bg-[#0A0A0E] hover:border-white/20"
+                        ? "border-[#0052FF]/50 bg-gradient-to-b from-[#0D1226] to-[#070A14] shadow-[0_0_52px_rgba(0,82,255,0.2)] ring-1 ring-[#0052FF]/25"
+                        : "border-white/[0.09] bg-[#0B0B0F] hover:border-white/20"
                     }`}
                   >
-                    {/* Top specular highlight */}
-                    <div
-                      aria-hidden="true"
-                      className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent"
-                    />
+                    {/* Top specular */}
+                    <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
-                    {/* Most Popular Label for Accelerate */}
+                    {/* Badge */}
                     {isAccelerate && (
-                      <div className="absolute -top-3.5 right-6 sm:right-8 inline-flex items-center gap-1.5 rounded-full bg-[#0052FF] px-3.5 py-1 text-[11px] font-mono font-bold uppercase tracking-wider text-white shadow-[0_0_15px_rgba(0,82,255,0.5)]">
-                        <Sparkles size={11} />
-                        <span>Most Popular</span>
+                      <div className="absolute -top-px left-0 right-0 flex justify-center pointer-events-none z-10">
+                        <div className="inline-flex items-center gap-1.5 bg-[#0052FF] text-white text-[9.5px] font-mono font-black uppercase tracking-widest px-4 py-1 rounded-b-xl shadow-[0_4px_24px_rgba(0,82,255,0.55)]">
+                          <Sparkles size={9} />
+                          Most Popular
+                        </div>
                       </div>
                     )}
-
-                    {/* Authority Custom Indicator */}
                     {isAuthority && (
-                      <div className="absolute -top-3.5 right-6 sm:right-8 inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-[#161722] px-3 py-1 text-[11px] font-mono font-medium text-neutral-300">
-                        <span>Custom Scaled</span>
+                      <div className="absolute -top-px left-0 right-0 flex justify-center pointer-events-none z-10">
+                        <div className="inline-flex items-center gap-1.5 border border-white/15 bg-[#131420] text-neutral-400 text-[9.5px] font-mono font-bold uppercase tracking-widest px-4 py-1 rounded-b-xl">
+                          Custom-Built
+                        </div>
                       </div>
                     )}
 
-                    {/* Header Info */}
-                    <div>
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#0052FF]">
-                          {stageNum} / {pkg.name}
+                    {/* Abstract art strip */}
+                    <div className={`w-full overflow-hidden ${isAccelerate ? "h-[120px]" : "h-[100px]"} bg-[#07080D]`}>
+                      {art}
+                    </div>
+
+                    {/* Card body */}
+                    <div className="flex flex-col flex-1 p-6 sm:p-7">
+
+                      {/* Stage + name row */}
+                      <div className="flex items-center gap-2.5 mb-3">
+                        <span className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-[#0052FF]">
+                          0{idx + 1}
+                        </span>
+                        <span className="h-px flex-1 bg-white/[0.07]" />
+                        <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-neutral-500">
+                          {pkg.name}
                         </span>
                       </div>
 
-                      {/* Quoted Customer Situation */}
-                      <p className="mt-2 font-serif italic text-[14px] text-neutral-400 leading-snug">
+                      {/* Tagline */}
+                      <p className="font-serif italic text-[13px] text-neutral-500 leading-snug mb-2">
                         {pkg.tagline}
                       </p>
 
-                      {/* Approved One-Sentence Outcome */}
-                      <h3 className="mt-3 font-display text-[22px] sm:text-[24px] font-bold text-white tracking-tight leading-snug">
+                      {/* Main heading — large and editorial */}
+                      <h3 className={`font-display font-extrabold tracking-[-0.03em] text-white leading-snug ${isAccelerate ? "text-[26px] sm:text-[28px]" : "text-[22px] sm:text-[24px]"}`}>
                         {pkg.heading}
                       </h3>
 
-                      {/* Compact Decision-Relevant Deliverables */}
-                      <div className="mt-5 pt-4 border-t border-white/[0.08]">
-                        <span className="font-mono text-[10.5px] font-bold uppercase tracking-wider text-neutral-400 block mb-2.5">
+                      {/* Core deliverables */}
+                      <div className="mt-5 pt-4 border-t border-white/[0.07]">
+                        <span className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-neutral-500 block mb-3">
                           Core Inclusions
                         </span>
                         <ul className="space-y-2">
-                          {keyDeliverables.map((del, dIdx) => (
-                            <li
-                              key={dIdx}
-                              className="flex items-start gap-2 text-[13px] text-neutral-300 leading-snug"
-                            >
-                              <Check
-                                size={14}
-                                className="text-[#0052FF] shrink-0 mt-0.5"
-                              />
+                          {pkg.deliverables.slice(0, isAccelerate ? 5 : 4).map((del, dIdx) => (
+                            <li key={dIdx} className="flex items-start gap-2 text-[13px] text-neutral-300 leading-snug">
+                              <Check size={13} className="text-[#0052FF] shrink-0 mt-0.5" />
                               <span>{del}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
 
-                      {/* Compact Timeline & Payment Information Row with Fine Divider */}
-                      <div className="mt-5 rounded-xl border border-white/[0.07] bg-[#06070B] p-3 flex items-center justify-between text-xs font-mono">
-                        <div className="pr-2">
-                          <span className="block text-[10px] text-neutral-500 uppercase">
-                            Timeline
-                          </span>
-                          <span className="text-white font-medium text-[11.5px] line-clamp-1">
-                            {pkg.timeline}
-                          </span>
+                      {/* Timeline + Payment grid */}
+                      <div className="mt-5 grid grid-cols-2 gap-2">
+                        <div className="rounded-xl bg-white/[0.03] border border-white/[0.06] p-3">
+                          <span className="block font-mono text-[9px] uppercase tracking-wider text-neutral-500 mb-0.5">Timeline</span>
+                          <span className="text-white font-semibold text-[12px] leading-snug">{pkg.timeline}</span>
                         </div>
-                        <div className="h-6 w-[1px] bg-white/10 shrink-0" />
-                        <div className="pl-3">
-                          <span className="block text-[10px] text-neutral-500 uppercase">
-                            Payment
-                          </span>
-                          <span className="text-white font-medium text-[11.5px] line-clamp-1">
-                            {pkg.payment}
-                          </span>
+                        <div className="rounded-xl bg-white/[0.03] border border-white/[0.06] p-3">
+                          <span className="block font-mono text-[9px] uppercase tracking-wider text-neutral-500 mb-0.5">Payment</span>
+                          <span className="text-white font-semibold text-[12px] leading-snug">{pkg.payment}</span>
                         </div>
                       </div>
 
-                      {/* Full Package Details Disclosure */}
+                      {/* Expandable full details */}
                       {isExpanded && (
-                        <div
-                          id={`pkg-details-${pkg.id}`}
-                          className="mt-5 pt-4 border-t border-white/[0.08] space-y-4 animate-in fade-in duration-200"
-                        >
-                          {/* The Problem Statement */}
-                          <div className="rounded-xl bg-[#08090D] border border-white/[0.06] p-3 text-[12.5px] text-neutral-300 leading-relaxed">
+                        <div id={`pkg-details-${pkg.id}`} className="mt-5 pt-4 border-t border-white/[0.07] space-y-4 animate-in fade-in duration-200">
+                          <div className="rounded-xl bg-[#06070B] border border-white/[0.05] p-3.5 text-[12.5px] text-neutral-300 leading-relaxed">
                             <span className="font-bold text-white">The problem: </span>
                             {pkg.theProblem}
                           </div>
-
-                          {/* Full Deliverables List */}
                           <div>
-                            <span className="font-mono text-[10.5px] font-bold uppercase tracking-wider text-neutral-400 block mb-2">
-                              Full Deliverables List ({pkg.deliverables.length})
+                            <span className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-neutral-500 block mb-2.5">
+                              Full Scope ({pkg.deliverables.length} deliverables)
                             </span>
                             <ul className="space-y-2">
                               {pkg.deliverables.map((del, fullIdx) => (
-                                <li
-                                  key={fullIdx}
-                                  className="flex items-start gap-2 text-[12.5px] text-neutral-300 leading-snug"
-                                >
-                                  <Check
-                                    size={13}
-                                    className="text-emerald-400 shrink-0 mt-0.5"
-                                  />
+                                <li key={fullIdx} className="flex items-start gap-2 text-[12.5px] text-neutral-300 leading-snug">
+                                  <Check size={12} className="text-emerald-400 shrink-0 mt-0.5" />
                                   <span>{del}</span>
                                 </li>
                               ))}
                             </ul>
                           </div>
-
-                          {/* Guarantee / Promise */}
-                          <div className="pt-2 text-[12px] leading-relaxed text-neutral-400 italic">
-                            <span className="font-semibold not-italic text-neutral-300">
-                              Our promise:{" "}
-                            </span>
+                          <p className="text-[12px] leading-relaxed text-neutral-400 italic">
+                            <span className="font-semibold not-italic text-neutral-300">Our promise: </span>
                             {pkg.promise}
-                          </div>
+                          </p>
                         </div>
                       )}
-                    </div>
 
-                    {/* Bottom CTA, Pricing & Disclosure Toggle */}
-                    <div className="mt-6 pt-5 border-t border-white/[0.08]">
-                      {/* Prominent Investment Language */}
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="font-mono text-[11px] text-neutral-400 uppercase tracking-wider">
-                          Investment
-                        </span>
-                        <span className="font-mono text-[13px] font-bold text-white">
-                          {isAuthority ? "Custom, confirmed on your call" : "Enquire for pricing"}
-                        </span>
-                      </div>
+                      <div className="flex-1" />
 
-                      {/* Primary Package CTA */}
-                      <a
-                        href={`/contact?package=${pkg.id}`}
-                        className={`inline-flex w-full h-[48px] sm:h-[50px] items-center justify-center gap-2 rounded-full font-bold text-[14px] transition-all cursor-pointer ${
-                          isAccelerate
-                            ? "bg-[#0052FF] text-white hover:bg-[#0043DB] shadow-[0_0_18px_rgba(0,82,255,0.4)]"
-                            : "bg-white/[0.06] text-white hover:bg-white/[0.12] border border-white/10 hover:border-white/20"
-                        }`}
-                      >
-                        <span>{pkg.ctaText}</span>
-                        <ArrowUpRight size={15} className="stroke-[2.5]" />
-                      </a>
+                      {/* Bottom CTA block */}
+                      <div className="mt-6 pt-5 border-t border-white/[0.07]">
+                        <div className="flex items-center justify-between mb-4">
+                          <span className="font-mono text-[9px] uppercase tracking-wider text-neutral-500">Investment</span>
+                          <span className="font-mono text-[12px] font-bold text-white">
+                            {isAuthority ? "Custom, confirmed on your call" : "Enquire for pricing"}
+                          </span>
+                        </div>
 
-                      {/* View Full Package Disclosure Button */}
-                      <button
-                        type="button"
-                        onClick={() => togglePackageExpanded(pkg.id)}
-                        aria-expanded={isExpanded}
-                        aria-controls={`pkg-details-${pkg.id}`}
-                        className="mt-3 w-full flex items-center justify-center gap-1.5 py-2 text-[11px] font-mono font-semibold uppercase tracking-wider text-neutral-400 hover:text-white transition-colors cursor-pointer"
-                      >
-                        <span>{isExpanded ? "Hide full details" : "View full package"}</span>
-                        <ChevronDown
-                          size={13}
-                          className={`transition-transform duration-200 ${
-                            isExpanded ? "rotate-180" : ""
+                        <a
+                          href={`/contact?package=${pkg.id}`}
+                          className={`inline-flex w-full h-[48px] items-center justify-center gap-2 rounded-full font-bold text-[14px] transition-all cursor-pointer ${
+                            isAccelerate
+                              ? "bg-[#0052FF] text-white hover:bg-[#0043DB] shadow-[0_0_28px_rgba(0,82,255,0.45)]"
+                              : "bg-white/[0.05] text-white hover:bg-white/[0.10] border border-white/[0.09] hover:border-white/20"
                           }`}
-                        />
-                      </button>
+                        >
+                          <span>{pkg.ctaText}</span>
+                          <ArrowUpRight size={15} className="stroke-[2.5]" />
+                        </a>
+
+                        <button
+                          type="button"
+                          onClick={() => togglePkg(pkg.id)}
+                          aria-expanded={isExpanded}
+                          aria-controls={`pkg-details-${pkg.id}`}
+                          className="mt-3 w-full flex items-center justify-center gap-1.5 py-2 text-[10px] font-mono font-semibold uppercase tracking-wider text-neutral-500 hover:text-neutral-200 transition-colors cursor-pointer"
+                        >
+                          <span>{isExpanded ? "Hide details" : "View full scope"}</span>
+                          <ChevronDown size={12} className={`transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 );
               })}
             </div>
 
-            {/* ========================================================
-                3. HELP VISITORS CHOOSE (ASSISTANCE STRIP)
-               ======================================================== */}
-            <div className="mt-12 sm:mt-14 rounded-3xl border border-white/[0.08] bg-gradient-to-r from-[#0B0D18] via-[#0E1328] to-[#080A12] p-7 sm:p-9 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl relative overflow-hidden">
-              <div className="relative z-10 max-w-xl text-center md:text-left">
-                <span className="font-mono text-xs font-semibold uppercase tracking-widest text-[#0052FF]">
-                  Guidance &amp; Discovery
-                </span>
-                <h3 className="mt-1 font-display text-2xl sm:text-3xl font-extrabold text-white">
-                  Not sure which fits?
-                </h3>
-                <p className="mt-2 text-sm sm:text-base text-neutral-300 leading-relaxed">
-                  Tell us where your business is today and we’ll recommend the right one on a free call.
-                </p>
+            {/* Not sure strip */}
+            <div className={`mt-10 rounded-2xl border border-white/[0.07] bg-white/[0.02] px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all duration-700 delay-300 ${packagesReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+              <div>
+                <p className="font-display font-bold text-white text-[15px]">Not sure which fits?</p>
+                <p className="text-[13px] text-neutral-400 mt-0.5">Tell us where your business is today — we'll recommend the right one on a free call.</p>
               </div>
-
-              <div className="relative z-10 shrink-0 w-full sm:w-auto flex justify-center">
-                <HeroButton
-                  href="/contact"
-                  leftText="Book a"
-                  rightText="Free Strategy Call"
-                  ariaLabel="Book a Free Strategy Call"
-                />
-              </div>
+              <a
+                href="/contact"
+                className="shrink-0 inline-flex items-center gap-2 rounded-full border border-[#0052FF]/40 bg-[#0052FF]/10 text-[#0052FF] hover:bg-[#0052FF]/20 px-5 py-2.5 text-[13px] font-bold transition-all cursor-pointer"
+              >
+                Book free call <ArrowUpRight size={14} />
+              </a>
             </div>
 
-            {/* ========================================================
-                4. PACKAGE COMPARISON — USEFUL ON EVERY SCREEN
-               ======================================================== */}
-            <div id="package-comparison" className="mt-16 sm:mt-24 scroll-mt-28">
-              <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-                <div>
-                  <h3 className="font-display text-2xl sm:text-3xl font-bold text-white">
-                    Compare Packages
-                  </h3>
-                  <p className="text-sm text-neutral-400 mt-1">
-                    Side-by-side breakdown of scope, research depths, deliverables, and timelines.
-                  </p>
-                </div>
-
-                {/* Show/Hide Comparison Real Button */}
-                <button
-                  type="button"
-                  onClick={() => setShowComparison((s) => !s)}
-                  aria-expanded={showComparison}
-                  aria-controls="comparison-matrix-container"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 font-mono text-xs font-bold text-[#0052FF] hover:text-blue-400 hover:bg-white/[0.08] uppercase tracking-wider transition-colors cursor-pointer"
-                >
-                  <Layers size={14} />
-                  <span>{showComparison ? "Hide comparison" : "Show comparison"}</span>
-                  <ChevronDown
-                    size={14}
-                    className={`transition-transform duration-200 ${
-                      showComparison ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
-              </div>
+            {/* Collapsible comparison matrix */}
+            <div className={`mt-14 transition-all duration-700 delay-200 ${packagesReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+              <button
+                type="button"
+                onClick={() => setShowComparison((s) => !s)}
+                aria-expanded={showComparison}
+                aria-controls="comparison-matrix"
+                className="group flex items-center gap-3 text-neutral-500 hover:text-white transition-colors cursor-pointer"
+              >
+                <span className="font-mono text-[11px] uppercase tracking-widest font-bold">{showComparison ? "Hide" : "Show"} full comparison</span>
+                <ChevronDown size={14} className={`transition-transform duration-300 ${showComparison ? "rotate-180" : ""}`} />
+              </button>
 
               {showComparison && (
-                <div
-                  id="comparison-matrix-container"
-                  className="animate-in fade-in duration-300"
-                >
-                  {/* DESKTOP TABLE (>= 768px / md) */}
-                  <div className="hidden md:block overflow-x-auto rounded-3xl border border-white/[0.08] bg-[#0C0C10] shadow-2xl">
-                    <table className="w-full text-left text-sm">
-                      <thead>
-                        <tr className="border-b border-white/[0.08] bg-[#07070A] sticky top-0 z-10">
-                          <th className="py-4 px-6 font-display font-bold text-white w-1/4">
-                            Feature / Scope
-                          </th>
-                          <th className="py-4 px-6 font-display font-bold text-white w-1/4">
-                            01 / Kickstart
-                          </th>
-                          <th className="py-4 px-6 font-display font-black text-[#0052FF] bg-[#0052FF]/[0.08] w-1/4">
-                            02 / Accelerate (Featured)
-                          </th>
-                          <th className="py-4 px-6 font-display font-bold text-white w-1/4">
-                            03 / Authority
-                          </th>
+                <div id="comparison-matrix" className="mt-6 animate-in fade-in duration-300 overflow-x-auto rounded-2xl border border-white/[0.08] bg-[#0B0B0F]">
+                  <table className="w-full text-left text-sm min-w-[600px]">
+                    <thead>
+                      <tr className="border-b border-white/[0.07]">
+                        <th className="py-3.5 px-5 font-mono text-[10px] uppercase tracking-wider text-neutral-400">Feature</th>
+                        <th className="py-3.5 px-5 font-display font-bold text-white text-[13px]">Kickstart</th>
+                        <th className="py-3.5 px-5 font-display font-bold text-[#0052FF] text-[13px] bg-[#0052FF]/[0.06]">Accelerate</th>
+                        <th className="py-3.5 px-5 font-display font-bold text-white text-[13px]">Authority</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/[0.05]">
+                      {packageComparisonRows.map((row, idx) => (
+                        <tr key={idx} className={idx % 2 === 0 ? "bg-transparent" : "bg-white/[0.015]"}>
+                          <td className="py-3.5 px-5 font-semibold text-[12px] text-neutral-300">{row.feature}</td>
+                          <td className="py-3.5 px-5 text-[12px] text-neutral-400">{row.kickstart}</td>
+                          <td className="py-3.5 px-5 text-[12px] text-white bg-[#0052FF]/[0.04]">{row.accelerate}</td>
+                          <td className="py-3.5 px-5 text-[12px] text-neutral-400">{row.authority}</td>
                         </tr>
-                      </thead>
-                      <tbody className="divide-y divide-white/[0.06]">
-                        {packageComparisonRows.map((row, idx) => {
-                          const rowSlugMap: Record<string, string> = {
-                            "Strategy": "feature-strategy",
-                            "Website": "feature-website",
-                            "Social & Content": "feature-social-content",
-                            "Paid Campaigns": "feature-paid-campaigns",
-                            "SEO": "feature-seo",
-                            "Email Marketing": "feature-email-marketing",
-                          };
-                          const rowId = rowSlugMap[row.feature] || `row-${idx}`;
-                          const isHighlighted = highlightedRow === rowId;
-
-                          return (
-                            <tr
-                              key={idx}
-                              id={rowId}
-                              className={`transition-colors duration-300 ${
-                                isHighlighted
-                                  ? "bg-[#0052FF]/20 ring-1 ring-[#0052FF]"
-                                  : idx % 2 === 0
-                                  ? "bg-[#0C0C10]"
-                                  : "bg-[#0E0E14]"
-                              }`}
-                            >
-                              <td className="py-4 px-6 font-semibold text-neutral-200">
-                                {row.feature}
-                              </td>
-                              <td className="py-4 px-6 text-neutral-400">
-                                {row.kickstart}
-                              </td>
-                              <td className="py-4 px-6 font-medium text-white bg-[#0052FF]/[0.04]">
-                                {row.accelerate}
-                              </td>
-                              <td className="py-4 px-6 text-neutral-400">
-                                {row.authority}
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  {/* MOBILE INTERACTIVE COMPARISON (< 768px) */}
-                  <div className="block md:hidden space-y-4">
-                    {/* Dual Package Selectors */}
-                    <div className="grid grid-cols-2 gap-2.5 p-3 rounded-2xl border border-white/[0.08] bg-[#0C0C10]">
-                      <div>
-                        <span className="block font-mono text-[10px] uppercase text-neutral-400 mb-1.5 font-bold">
-                          Compare:
-                        </span>
-                        <div className="space-y-1">
-                          {packages.map((p) => (
-                            <button
-                              key={p.id}
-                              type="button"
-                              onClick={() => handleSelectCompareA(p.id)}
-                              className={`w-full py-1.5 px-2 rounded-lg text-left text-xs font-mono font-bold transition-all ${
-                                comparePkgA === p.id
-                                  ? "bg-[#0052FF] text-white"
-                                  : "bg-white/[0.03] text-neutral-400 hover:text-white"
-                              }`}
-                            >
-                              {p.name}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div>
-                        <span className="block font-mono text-[10px] uppercase text-neutral-400 mb-1.5 font-bold">
-                          Against:
-                        </span>
-                        <div className="space-y-1">
-                          {packages.map((p) => (
-                            <button
-                              key={p.id}
-                              type="button"
-                              onClick={() => handleSelectCompareB(p.id)}
-                              className={`w-full py-1.5 px-2 rounded-lg text-left text-xs font-mono font-bold transition-all ${
-                                comparePkgB === p.id
-                                  ? "bg-[#0052FF] text-white"
-                                  : "bg-white/[0.03] text-neutral-400 hover:text-white"
-                              }`}
-                            >
-                              {p.name}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Stacked Feature Rows for Selected Pair */}
-                    <div className="space-y-2.5">
-                      {packageComparisonRows.map((row, idx) => {
-                        const valA = row[comparePkgA as keyof typeof row];
-                        const valB = row[comparePkgB as keyof typeof row];
-
-                        return (
-                          <div
-                            key={idx}
-                            className="rounded-xl border border-white/[0.07] bg-[#0A0B10] p-3.5"
-                          >
-                            <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#0052FF] block mb-2">
-                              {row.feature}
-                            </span>
-                            <div className="grid grid-cols-2 gap-3 text-xs">
-                              <div className="border-r border-white/10 pr-2">
-                                <span className="block text-[10px] font-mono text-neutral-500 mb-0.5">
-                                  {pkgAData.name}
-                                </span>
-                                <span className="text-white font-medium">
-                                  {valA}
-                                </span>
-                              </div>
-                              <div className="pl-1">
-                                <span className="block text-[10px] font-mono text-neutral-500 mb-0.5">
-                                  {pkgBData.name}
-                                </span>
-                                <span className="text-white font-medium">
-                                  {valB}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </div>
+
           </div>
         </section>
 
-        {/* ========================================================
-            5. HOW IT WORKS — EDITORIAL, NOT THREE MORE CARDS
-           ======================================================== */}
-        <section className="py-20 md:py-28 bg-[#060608] border-t border-b border-white/[0.06]">
-          <div className="mx-auto max-w-[1440px] px-4 sm:px-6 md:px-8">
-            <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1 text-xs font-mono font-semibold uppercase tracking-wider text-[#0052FF]">
-                <span>02 • Simple Process</span>
+        {/* ═══════════════════════════════════════════════════════
+            3. HOW IT WORKS + CLIENT ONBOARDING (unified)
+           ═══════════════════════════════════════════════════════ */}
+        <section
+          ref={processReveal.ref as React.RefObject<HTMLElement>}
+          className="py-24 md:py-32 bg-[#060608] border-t border-b border-white/[0.05]"
+        >
+          <div className="mx-auto max-w-[1240px] px-4 sm:px-6 md:px-8">
+
+            {/* How It Works */}
+            <div className={`transition-all duration-700 ${processReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-14">
+                <div>
+                  <span className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-[#0052FF]">Simple Process</span>
+                  <h2 className="mt-3 font-display text-[clamp(28px,3.5vw,46px)] font-extrabold tracking-[-0.04em] text-white leading-tight">
+                    How It Works
+                  </h2>
+                </div>
+                <p className="text-[14px] text-neutral-400 max-w-xs leading-relaxed sm:text-right">
+                  Three steps from your first conversation to results in progress.
+                </p>
               </div>
 
-              <h2 className="mt-3.5 font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white">
-                How It Works
-              </h2>
-            </div>
-
-            {/* DESKTOP: Horizontal Editorial Sequence with Oversized Numbers */}
-            <div className="hidden md:grid md:grid-cols-3 gap-8 mt-14 relative">
-              {/* Fine connecting horizontal rule */}
-              <div
-                aria-hidden="true"
-                className="absolute top-8 left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none"
-              />
-
-              {[
-                {
-                  step: "01",
-                  title: "Free strategy call",
-                  desc: "30 minutes. We review your current marketing, market positioning, and commercial levers.",
-                },
-                {
-                  step: "02",
-                  title: "Your plan",
-                  desc: "We recommend the package and priorities that will make the biggest difference.",
-                },
-                {
-                  step: "03",
-                  title: "We build",
-                  desc: "You get a clear timeline, delivery dates, and a proper kickoff.",
-                },
-              ].map((item) => (
-                <div key={item.step} className="relative z-10 flex flex-col">
-                  <div className="flex items-baseline gap-3">
-                    <span className="font-display text-6xl lg:text-7xl font-black text-white/10 select-none">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-0 md:divide-x divide-white/[0.06]">
+                {[
+                  { step: "01", title: "Free strategy call", desc: "30 minutes. We review your current marketing, positioning, and goals. No obligation." },
+                  { step: "02", title: "Your plan", desc: "We recommend the package and priorities that will make the biggest difference for your business." },
+                  { step: "03", title: "We build", desc: "You get a clear timeline, delivery dates, and a structured kickoff. Then we get to work." },
+                ].map((item, i) => (
+                  <div
+                    key={item.step}
+                    style={{ transitionDelay: `${i * 100 + 80}ms` }}
+                    className={`px-0 md:px-10 first:pl-0 last:pr-0 py-6 md:py-0 border-b md:border-b-0 border-white/[0.06] last:border-0 transition-all duration-700 ${processReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
+                  >
+                    <span className="font-display text-[72px] font-black text-white/[0.045] leading-none select-none block">
                       {item.step}
                     </span>
-                    <span className="h-2 w-2 rounded-full bg-[#0052FF]" />
-                  </div>
-                  <h3 className="mt-4 font-display text-2xl font-bold text-white">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 text-[14.5px] leading-relaxed text-neutral-400">
-                    {item.desc}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {/* MOBILE: Vertical sequence with connecting line (< 768px) */}
-            <div className="block md:hidden mt-10 space-y-8 relative pl-6 border-l border-white/15 ml-3">
-              {[
-                {
-                  step: "01",
-                  title: "Free strategy call",
-                  desc: "30 minutes. We review your current marketing, market positioning, and commercial levers.",
-                },
-                {
-                  step: "02",
-                  title: "Your plan",
-                  desc: "We recommend the package and priorities that will make the biggest difference.",
-                },
-                {
-                  step: "03",
-                  title: "We build",
-                  desc: "You get a clear timeline, delivery dates, and a proper kickoff.",
-                },
-              ].map((item) => (
-                <div key={item.step} className="relative">
-                  <div className="absolute -left-[31px] top-1 h-3.5 w-3.5 rounded-full bg-[#0052FF] ring-4 ring-[#060608]" />
-                  <span className="font-mono text-xs font-bold text-[#0052FF] uppercase">
-                    Step {item.step}
-                  </span>
-                  <h3 className="mt-1 font-display text-xl font-bold text-white">
-                    {item.title}
-                  </h3>
-                  <p className="mt-1.5 text-sm text-neutral-400 leading-relaxed">
-                    {item.desc}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {/* ========================================================
-                6. CLIENT ONBOARDING — CLEAR AND REASSURING
-               ======================================================== */}
-            <div className="mt-24 pt-16 border-t border-white/[0.08]">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-                {/* Left: Section Heading and Restrained Visual Anchor */}
-                <div className="lg:col-span-5">
-                  <span className="font-mono text-xs font-semibold uppercase tracking-widest text-[#0052FF]">
-                    03 • Client Onboarding
-                  </span>
-                  <h3 className="mt-3 font-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-white leading-tight">
-                    A smooth start, because the first two weeks set the tone
-                  </h3>
-                  <p className="mt-3 text-neutral-400 text-sm sm:text-base leading-relaxed">
-                    No guesswork, no communication black holes. We establish structured check-ins, rapid feedback loops, and clear delivery roadmaps from day one.
-                  </p>
-
-                  <div className="mt-8 hidden lg:flex items-center gap-3 p-4 rounded-2xl border border-white/[0.07] bg-[#0B0D14]">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#0052FF] text-white font-black text-lg shadow-[0_0_15px_rgba(0,82,255,0.5)]">
-                      t.
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#0052FF]" />
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-[#0052FF]">Step {item.step}</span>
                     </div>
-                    <div>
-                      <span className="font-display font-bold text-sm text-white block">
-                        On-Purpose Kickoff
-                      </span>
-                      <span className="text-xs text-neutral-400 font-mono">
-                        Structured 14-day momentum guarantee
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right: Four Neatly Structured Rows with Fine Rules */}
-                <div className="lg:col-span-7 divide-y divide-white/[0.08]">
-                  {whatHappensWhenYouJoin.map((item, idx) => (
-                    <div key={idx} className="py-5 first:pt-0 last:pb-0 flex items-start gap-4">
-                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#0052FF]/15 text-[#0052FF] font-mono text-xs font-bold border border-[#0052FF]/30 mt-0.5">
-                        0{idx + 1}
-                      </div>
-                      <div>
-                        <h4 className="font-display text-lg font-bold text-white">
-                          {item.title}
-                        </h4>
-                        <p className="mt-1 text-sm leading-relaxed text-neutral-400">
-                          {item.desc}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* ========================================================
-                7. WHAT IT’S LIKE TO WORK WITH THRIDES
-               ======================================================== */}
-            <div className="mt-20 pt-16 border-t border-white/[0.08]">
-              <div className="mb-10 max-w-2xl">
-                <span className="font-mono text-xs font-semibold uppercase tracking-widest text-[#0052FF]">
-                  04 • Operational Principles
-                </span>
-                <h3 className="mt-2 font-display text-2xl sm:text-3xl font-extrabold text-white">
-                  What It’s Like to Work With Thrides
-                </h3>
-              </div>
-
-              {/* 3-Column Text Composition on Desktop, Compact Stacked on Mobile */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {whatItsLikeToWork.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="border-l-2 border-[#0052FF] pl-5 sm:pl-6"
-                  >
-                    <h4 className="font-display text-lg sm:text-xl font-bold text-white">
-                      {item.title}
-                    </h4>
-                    <p className="mt-2 text-sm sm:text-[14.5px] text-neutral-400 leading-relaxed">
-                      {item.desc}
-                    </p>
+                    <h3 className="mt-3 font-display text-[21px] font-extrabold text-white tracking-[-0.02em]">{item.title}</h3>
+                    <p className="mt-2 text-[14px] leading-relaxed text-neutral-400">{item.desc}</p>
                   </div>
                 ))}
               </div>
             </div>
+
+            {/* Divider */}
+            <div aria-hidden="true" className="my-20 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+            {/* Client Onboarding */}
+            <div className={`transition-all duration-700 delay-100 ${processReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+
+                {/* Left copy + principles */}
+                <div>
+                  <span className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-[#0052FF]">Client Onboarding</span>
+                  <h2 className="mt-3 font-display text-[clamp(26px,3vw,40px)] font-extrabold tracking-[-0.04em] text-white leading-tight">
+                    A smooth start, because the first two weeks set the tone
+                  </h2>
+                  <p className="mt-4 text-[14px] sm:text-[15px] leading-relaxed text-neutral-400">
+                    No guesswork, no communication black holes. We establish structured check-ins, rapid feedback loops, and clear delivery roadmaps from day one.
+                  </p>
+
+                  <div className="mt-8 space-y-4">
+                    {whatItsLikeToWork.map((item, i) => (
+                      <div key={i} className="flex items-start gap-3">
+                        <div className="mt-0.5 h-5 w-5 flex items-center justify-center rounded-full bg-[#0052FF]/12 border border-[#0052FF]/30 shrink-0">
+                          <Check size={11} className="text-[#0052FF]" />
+                        </div>
+                        <div>
+                          <p className="font-display font-bold text-[14px] text-white leading-snug">{item.title}</p>
+                          <p className="text-[13px] text-neutral-400 mt-0.5 leading-relaxed">{item.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Right: onboarding timeline */}
+                <div className="space-y-0">
+                  {whatHappensWhenYouJoin.map((item, i) => (
+                    <div key={i} className="relative flex items-start gap-5 pb-8 last:pb-0">
+                      {i < whatHappensWhenYouJoin.length - 1 && (
+                        <div aria-hidden="true" className="absolute left-[17px] top-9 bottom-0 w-[1px] bg-gradient-to-b from-[#0052FF]/35 to-transparent" />
+                      )}
+                      <div className="relative z-10 shrink-0 h-[35px] w-[35px] flex items-center justify-center rounded-full bg-[#0052FF]/10 border border-[#0052FF]/30 text-[#0052FF] font-mono text-[10px] font-black">
+                        0{i + 1}
+                      </div>
+                      <div className="pt-1">
+                        <h4 className="font-display font-bold text-[16px] text-white leading-snug">{item.title}</h4>
+                        <p className="mt-1 text-[13.5px] leading-relaxed text-neutral-400">{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* ========================================================
-            8. SERVICE BREAKDOWN — AN INTERACTIVE SERVICE INDEX
-           ======================================================== */}
+        {/* ═══════════════════════════════════════════════════════
+            4. EDITORIAL SERVICE ROWS
+           ═══════════════════════════════════════════════════════ */}
         <section
           id="services-details"
-          className="scroll-mt-28 py-20 md:py-28 bg-[#08080B]"
+          ref={servicesReveal.ref as React.RefObject<HTMLElement>}
+          className="scroll-mt-24 py-24 md:py-32 bg-[#08080B]"
         >
-          <div className="mx-auto max-w-[1440px] px-4 sm:px-6 md:px-8">
-            <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1 text-xs font-mono font-semibold uppercase tracking-wider text-[#0052FF]">
-                <span>05 • Interactive Index</span>
-              </div>
+          <div className="mx-auto max-w-[1240px] px-4 sm:px-6 md:px-8">
 
-              <h2 className="mt-3.5 font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white">
+            <div className={`max-w-2xl mb-16 transition-all duration-700 ${servicesReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-[#0052FF]">What We Do</span>
+              <h2 className="mt-3 font-display text-[clamp(28px,3.5vw,46px)] font-extrabold tracking-[-0.04em] text-white leading-tight">
                 The services that put your brand in front of your customers
               </h2>
-
-              <p className="mt-3 text-neutral-400 text-[15px] sm:text-[16px]">
-                Explore individual capabilities below to understand scope, deliverables, and exact package mappings.
+              <p className="mt-4 text-[14px] sm:text-[15px] text-neutral-400 leading-relaxed">
+                Six capabilities. Every one tied to a package so you know exactly what you're getting.
               </p>
             </div>
 
-            {/* DESKTOP: Two-Column Service Explorer (>= 1024px / lg) */}
-            <div className="hidden lg:grid lg:grid-cols-12 gap-8 mt-14 items-start">
-              {/* Left Column: Vertical Service Index */}
-              <div
-                role="tablist"
-                aria-label="Services Index"
-                className="lg:col-span-4 space-y-1.5"
-              >
-                {services.map((svc, idx) => {
-                  const isActive = activeServiceId === svc.id;
-                  const numStr = `0${idx + 1}`;
-
-                  return (
-                    <button
-                      key={svc.id}
-                      type="button"
-                      role="tab"
-                      id={`tab-${svc.id}`}
-                      aria-selected={isActive}
-                      aria-controls={`panel-${svc.id}`}
-                      onClick={() => setActiveServiceId(svc.id)}
-                      className={`w-full flex items-center justify-between p-4 rounded-2xl text-left transition-all duration-200 cursor-pointer ${
-                        isActive
-                          ? "bg-[#0052FF]/15 border border-[#0052FF]/40 text-white shadow-lg"
-                          : "bg-white/[0.02] border border-white/[0.06] text-neutral-400 hover:text-white hover:bg-white/[0.05]"
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <span
-                          className={`font-mono text-xs font-bold ${
-                            isActive ? "text-[#0052FF]" : "text-neutral-500"
-                          }`}
-                        >
-                          {numStr}
-                        </span>
-                        <span className="font-display text-base font-bold text-white">
-                          {svc.title}
-                        </span>
-                      </div>
-                      <ChevronRight
-                        size={16}
-                        className={`transition-transform ${
-                          isActive ? "text-[#0052FF] translate-x-1" : "text-neutral-600"
-                        }`}
-                      />
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Right Column: Selected Service Detail Panel */}
-              <div
-                role="tabpanel"
-                id={`panel-${activeService.id}`}
-                aria-labelledby={`tab-${activeService.id}`}
-                className="lg:col-span-8 rounded-[32px] border border-white/[0.08] bg-[#0C0C10] p-8 sm:p-10 shadow-2xl relative transition-all duration-200"
-              >
-                {/* Top specular highlight */}
+            {/* Desktop: editorial stacked rows */}
+            <div className="hidden lg:block divide-y divide-white/[0.06]">
+              {services.map((svc, idx) => (
                 <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent"
-                />
-
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-                  {/* Visual Preview */}
-                  <div className="md:col-span-5">
-                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 bg-[#07070A]">
-                      <img
-                        src={activeService.image}
-                        alt={activeService.title}
-                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                      />
+                  key={svc.id}
+                  style={{ transitionDelay: `${idx * 60}ms` }}
+                  className={`group py-10 grid grid-cols-12 gap-8 items-start transition-all duration-700 ${servicesReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
+                >
+                  {/* Number + title */}
+                  <div className="col-span-4 flex items-start gap-5">
+                    <span className="font-display text-[56px] font-black text-white/[0.05] leading-none select-none shrink-0 group-hover:text-white/[0.09] transition-colors duration-300">
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                    <div className="pt-2.5">
+                      <div className="inline-flex items-center rounded-full bg-[#0052FF]/10 border border-[#0052FF]/25 px-2.5 py-0.5 text-[9px] font-mono font-bold text-[#0052FF] uppercase tracking-wider mb-2 leading-relaxed">
+                        {svc.includedIn}
+                      </div>
+                      <h3 className="font-display text-[20px] font-extrabold text-white tracking-[-0.02em] leading-snug">
+                        {svc.title}
+                      </h3>
                     </div>
                   </div>
 
-                  {/* Service Text & Inclusions */}
-                  <div className="md:col-span-7 flex flex-col justify-between">
-                    <div>
-                      {/* Package Inclusion Badge */}
-                      <div className="inline-flex items-center gap-2 rounded-full bg-[#0052FF]/15 text-[#0052FF] border border-[#0052FF]/30 px-3.5 py-1 text-xs font-mono font-bold">
-                        <span>Included in: {activeService.includedIn}</span>
-                      </div>
+                  {/* Summary + bullets */}
+                  <div className="col-span-5">
+                    <p className="text-[14px] leading-relaxed text-neutral-300">{svc.summary}</p>
+                    <ul className="mt-4 space-y-1.5">
+                      {svc.bullets.map((bullet, bIdx) => (
+                        <li key={bIdx} className="flex items-start gap-2 text-[13px] text-neutral-400">
+                          <ChevronRight size={13} className="text-[#0052FF] shrink-0 mt-0.5" />
+                          <span>{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
 
-                      {/* Single Service Heading */}
-                      <h3 className="mt-3.5 font-display text-2xl sm:text-3xl font-extrabold text-white">
-                        {activeService.title}
-                      </h3>
-
-                      {/* Approved Description */}
-                      <p className="mt-3 text-[14.5px] leading-relaxed text-neutral-300">
-                        {activeService.summary}
-                      </p>
-
-                      {/* Bullet Points */}
-                      <ul className="mt-5 space-y-2">
-                        {activeService.bullets.map((bullet, bIdx) => (
-                          <li
-                            key={bIdx}
-                            className="flex items-start gap-2.5 text-xs sm:text-[13px] text-neutral-300"
-                          >
-                            <Check
-                              size={14}
-                              className="text-[#0052FF] shrink-0 mt-0.5"
-                            />
-                            <span>{bullet}</span>
-                          </li>
-                        ))}
-                      </ul>
+                  {/* Image */}
+                  <div className="col-span-3">
+                    <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/[0.07] bg-[#07070A]">
+                      <img
+                        src={svc.image}
+                        alt={svc.title}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
                     </div>
-
-                    {/* Actions */}
-                    <div className="mt-8 pt-6 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-4">
-                      <a
-                        href={`/contact?service=${activeService.slug}`}
-                        className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-[#0052FF] hover:underline cursor-pointer"
-                      >
-                        <span>Request relevant sample deliverables</span>
-                        <ArrowUpRight size={13} />
-                      </a>
-
-                      <button
-                        type="button"
-                        onClick={() => handleSeeWhichPackageIncludes(activeService.id)}
-                        className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-white hover:text-[#0052FF] uppercase tracking-wider transition-colors cursor-pointer"
-                      >
-                        <span>See Which Package Includes This</span>
-                        <ArrowRight size={13} />
-                      </button>
-                    </div>
+                    <a
+                      href={`/contact?service=${svc.slug}`}
+                      className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold text-[#0052FF] hover:text-blue-300 transition-colors cursor-pointer"
+                    >
+                      Enquire about this service
+                      <ArrowUpRight size={12} />
+                    </a>
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
 
-            {/* MOBILE: Vertical Accordion (< 1024px) */}
-            <div className="block lg:hidden mt-8 space-y-3">
+            {/* Mobile accordion */}
+            <div className="block lg:hidden space-y-3">
               {services.map((svc, sIdx) => {
                 const isOpen = mobileExpandedService === svc.id;
-                const numStr = `0${sIdx + 1}`;
-
                 return (
-                  <div
-                    key={svc.id}
-                    className="rounded-2xl border border-white/[0.08] bg-[#0C0C10] overflow-hidden"
-                  >
+                  <div key={svc.id} className="rounded-2xl border border-white/[0.08] bg-[#0C0C10] overflow-hidden">
                     <button
                       type="button"
-                      onClick={() =>
-                        setMobileExpandedService(isOpen ? null : svc.id)
-                      }
+                      onClick={() => setMobileExpandedService(isOpen ? null : svc.id)}
                       aria-expanded={isOpen}
-                      className="w-full flex items-center justify-between p-4 sm:p-5 text-left cursor-pointer"
+                      className="w-full flex items-center justify-between p-5 text-left cursor-pointer"
                     >
                       <div className="flex items-center gap-3">
                         <span className="font-mono text-xs font-bold text-[#0052FF]">
-                          {numStr}
+                          {String(sIdx + 1).padStart(2, "0")}
                         </span>
-                        <h3 className="font-display text-lg font-bold text-white">
-                          {svc.title}
-                        </h3>
+                        <h3 className="font-display text-[17px] font-bold text-white">{svc.title}</h3>
                       </div>
-                      <span className="text-xl font-mono text-neutral-400">
-                        {isOpen ? "−" : "+"}
+                      <span className="text-neutral-400">
+                        {isOpen ? <Minus size={17} /> : <Plus size={17} />}
                       </span>
                     </button>
-
                     {isOpen && (
-                      <div className="px-4 pb-5 pt-1 border-t border-white/[0.06] space-y-4 animate-in fade-in duration-200">
-                        {/* Inclusion Info */}
-                        <div className="inline-flex items-center rounded-full bg-[#0052FF]/15 text-[#0052FF] border border-[#0052FF]/30 px-3 py-0.5 text-[11px] font-mono font-bold">
-                          <span>Included in: {svc.includedIn}</span>
+                      <div className="px-5 pb-5 pt-1 border-t border-white/[0.06] space-y-4 animate-in fade-in duration-200">
+                        <div className="inline-flex items-center rounded-full bg-[#0052FF]/10 border border-[#0052FF]/25 px-3 py-0.5 text-[10px] font-mono font-bold text-[#0052FF] uppercase tracking-wider">
+                          {svc.includedIn}
                         </div>
-
-                        {/* Image Preview */}
-                        <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl border border-white/10 bg-[#07070A]">
-                          <img
-                            src={svc.image}
-                            alt={svc.title}
-                            className="h-full w-full object-cover"
-                          />
+                        <div className="aspect-[16/9] w-full overflow-hidden rounded-xl border border-white/[0.07]">
+                          <img src={svc.image} alt={svc.title} className="h-full w-full object-cover" />
                         </div>
-
-                        {/* Summary */}
-                        <p className="text-sm text-neutral-300 leading-relaxed">
-                          {svc.summary}
-                        </p>
-
-                        {/* Bullets */}
-                        <ul className="space-y-2">
+                        <p className="text-[13.5px] text-neutral-300 leading-relaxed">{svc.summary}</p>
+                        <ul className="space-y-1.5">
                           {svc.bullets.map((bullet, mbIdx) => (
-                            <li
-                              key={mbIdx}
-                              className="flex items-start gap-2 text-xs text-neutral-300"
-                            >
-                              <Check
-                                size={14}
-                                className="text-[#0052FF] shrink-0 mt-0.5"
-                              />
+                            <li key={mbIdx} className="flex items-start gap-2 text-[13px] text-neutral-400">
+                              <ChevronRight size={13} className="text-[#0052FF] shrink-0 mt-0.5" />
                               <span>{bullet}</span>
                             </li>
                           ))}
                         </ul>
-
-                        {/* Actions */}
-                        <div className="pt-3 border-t border-white/[0.06] flex flex-col gap-2.5">
-                          <a
-                            href={`/contact?service=${svc.slug}`}
-                            className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-[#0052FF] hover:underline"
-                          >
-                            <span>Request relevant sample deliverables</span>
-                            <ArrowUpRight size={13} />
-                          </a>
-
-                          <button
-                            type="button"
-                            onClick={() => handleSeeWhichPackageIncludes(svc.id)}
-                            className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-white hover:text-[#0052FF] uppercase tracking-wider"
-                          >
-                            <span>See Which Package Includes This →</span>
-                          </button>
-                        </div>
+                        <a
+                          href={`/contact?service=${svc.slug}`}
+                          className="inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold text-[#0052FF] hover:underline cursor-pointer"
+                        >
+                          Enquire about this service <ArrowUpRight size={12} />
+                        </a>
                       </div>
                     )}
                   </div>
                 );
               })}
             </div>
+
           </div>
         </section>
 
-        {/* ========================================================
-            9. QUESTIONS BEFORE YOU BOOK (FAQ)
-           ======================================================== */}
-        <FAQ />
+        {/* ═══════════════════════════════════════════════════════
+            5. TWO-COLUMN FAQ
+           ═══════════════════════════════════════════════════════ */}
+        <section
+          ref={faqReveal.ref as React.RefObject<HTMLElement>}
+          className="py-24 md:py-32 bg-[#060608] border-t border-white/[0.05]"
+        >
+          <div className="mx-auto max-w-[1240px] px-4 sm:px-6 md:px-8">
+            <div className={`grid grid-cols-1 lg:grid-cols-12 gap-12 transition-all duration-700 ${faqReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
 
-        {/* ========================================================
-            10. FINAL STRATEGY CALL CTA
-           ======================================================== */}
-        <section className="py-20 md:py-28 bg-[#060608] border-t border-white/[0.06]">
-          <div className="mx-auto max-w-[1440px] px-4 sm:px-6 md:px-8">
-            <div className="relative overflow-hidden rounded-[36px] border border-white/[0.08] bg-gradient-to-b from-[#0E1018] to-[#060608] p-8 sm:p-14 lg:p-16 text-center text-white shadow-2xl">
-              {/* Radial ambient glow */}
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#0052FF]/10 blur-[130px] rounded-full"
-              />
+              {/* Left */}
+              <div className="lg:col-span-4">
+                <span className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-[#0052FF]">FAQ</span>
+                <h2 className="mt-3 font-display text-[clamp(26px,3vw,40px)] font-extrabold tracking-[-0.04em] text-white leading-tight">
+                  Questions before you book
+                </h2>
+                <p className="mt-4 text-[14px] text-neutral-400 leading-relaxed">
+                  Can't find what you're looking for? Book a free call and ask us anything.
+                </p>
+                <a
+                  href="/contact"
+                  className="mt-6 inline-flex items-center gap-2 rounded-full border border-[#0052FF]/40 bg-[#0052FF]/10 text-[#0052FF] hover:bg-[#0052FF]/20 px-5 py-2.5 text-[13px] font-bold transition-all cursor-pointer"
+                >
+                  Book free call <ArrowUpRight size={14} />
+                </a>
+              </div>
 
-              <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
-                <div className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-4 py-1 text-xs font-mono font-semibold uppercase tracking-wider text-white mb-4">
-                  <span>START WHERE YOU ARE</span>
+              {/* Right accordion */}
+              <div className="lg:col-span-8">
+                <div className="divide-y divide-white/[0.07]">
+                  {faqs.map((item, i) => {
+                    const isOpen = openFaq === i;
+                    return (
+                      <div key={i}>
+                        <button
+                          type="button"
+                          onClick={() => setOpenFaq(isOpen ? null : i)}
+                          aria-expanded={isOpen}
+                          className="w-full flex items-start justify-between py-5 text-left gap-4 cursor-pointer group"
+                        >
+                          <span className="font-display font-bold text-[15px] sm:text-[16px] text-white group-hover:text-[#0052FF] transition-colors leading-snug">
+                            {item.q}
+                          </span>
+                          <span className="shrink-0 mt-0.5 text-neutral-500 group-hover:text-[#0052FF] transition-colors">
+                            {isOpen ? <Minus size={16} /> : <Plus size={16} />}
+                          </span>
+                        </button>
+                        {isOpen && (
+                          <div className="pb-5 text-[14px] leading-relaxed text-neutral-300 animate-in fade-in duration-200">
+                            {item.a}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
+              </div>
 
-                <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold text-white">
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════
+            6. FINAL STRATEGY CALL CTA
+           ═══════════════════════════════════════════════════════ */}
+        <section
+          ref={ctaReveal.ref as React.RefObject<HTMLElement>}
+          className="py-20 md:py-28 bg-[#08080B]"
+        >
+          <div className="mx-auto max-w-[1240px] px-4 sm:px-6 md:px-8">
+            <div className={`relative overflow-hidden rounded-[36px] border border-white/[0.08] bg-gradient-to-b from-[#0D1120] to-[#060608] p-10 sm:p-16 text-center shadow-2xl transition-all duration-700 ${ctaReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+              <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[280px] bg-[#0052FF]/10 blur-[120px] rounded-full" />
+              <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-[#0052FF]/35 to-transparent" />
+
+              <div className="relative z-10 max-w-2xl mx-auto flex flex-col items-center">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-1.5 font-mono text-[10.5px] font-bold uppercase tracking-widest text-neutral-300 mb-5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#0052FF] animate-pulse" />
+                  Start Where You Are
+                </span>
+
+                <h2 className="font-display text-[clamp(28px,4vw,52px)] font-extrabold tracking-[-0.04em] text-white leading-tight">
                   Not sure which service you need?
                 </h2>
 
-                <p className="mt-4 text-base sm:text-lg text-neutral-300">
-                  Just starting out? → <strong className="text-white">Kickstart</strong> · Want steady leads? → <strong className="text-white">Accelerate</strong> · Want to lead your market? → <strong className="text-white">Authority</strong>
+                <p className="mt-4 text-[15px] sm:text-[16px] text-neutral-300 leading-relaxed max-w-lg">
+                  Just starting out? <strong className="text-white">Kickstart.</strong>{" "}
+                  Want steady leads? <strong className="text-white">Accelerate.</strong>{" "}
+                  Want to lead your market? <strong className="text-white">Authority.</strong>
                 </p>
 
-                <p className="mt-2 text-sm text-neutral-400">
-                  Start with a free 30-minute strategy call. We’ll review your current marketing and recommend what will make the biggest difference for your business.
+                <p className="mt-2 text-[13px] text-neutral-500">
+                  Start with a free 30-minute strategy call. We'll review your marketing and recommend what will make the biggest difference.
                 </p>
 
-                <div className="mt-8 flex justify-center w-full">
-                  <HeroButton
-                    href="/contact"
-                    leftText="Book a"
-                    rightText="Free Strategy Call"
-                    ariaLabel="Book a Free Strategy Call"
-                  />
+                <div className="mt-8 flex justify-center">
+                  <HeroButton href="/contact" leftText="Book a" rightText="Free Strategy Call" ariaLabel="Book a Free Strategy Call" />
                 </div>
               </div>
             </div>
           </div>
         </section>
-      </main>
 
-      {/* Global Footer */}
+      </main>
       <Footer />
     </div>
   );
