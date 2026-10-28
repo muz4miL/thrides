@@ -21,7 +21,17 @@ const indexMap: Record<string, string> = {
   authority: "03",
 };
 
-export function WhoItsFor() {
+export interface WhoItsForProps {
+  id?: string;
+  onCompareClick?: () => void;
+  children?: React.ReactNode;
+}
+
+export function WhoItsFor({
+  id = "packages-overview",
+  onCompareClick,
+  children,
+}: WhoItsForProps = {}) {
   const [activeDetailId, setActiveDetailId] = useState<string | null>(null);
   const [hasEntered, setHasEntered] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
@@ -75,7 +85,7 @@ export function WhoItsFor() {
   return (
     <section
       ref={sectionRef}
-      id="packages-overview"
+      id={id}
       aria-label="Packages Overview"
       className="relative w-full overflow-hidden bg-[#060608] py-16 sm:py-20 select-none border-t border-b border-white/[0.06] scroll-mt-24"
     >
@@ -375,6 +385,9 @@ export function WhoItsFor() {
           </div>
         )}
 
+        {/* Optional children (e.g. comparison matrix) */}
+        {children}
+
         {/* 4. Bottom Comparison and Strategy Call Actions */}
         <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 border-t border-white/10 pt-8 text-center sm:text-left">
           <span className="font-serif text-[22px] sm:text-[26px] italic text-neutral-200">
@@ -396,12 +409,22 @@ export function WhoItsFor() {
 
           <span className="hidden sm:inline-block h-4 w-px bg-white/20" aria-hidden="true" />
 
-          <a
-            href="/services#packages"
-            className="text-[13px] text-neutral-400 hover:text-white transition-colors underline-offset-4 hover:underline"
-          >
-            Compare All Deliverables Matrix
-          </a>
+          {onCompareClick ? (
+            <button
+              type="button"
+              onClick={onCompareClick}
+              className="text-[13px] text-neutral-400 hover:text-white transition-colors underline-offset-4 hover:underline cursor-pointer"
+            >
+              Compare All Deliverables Matrix
+            </button>
+          ) : (
+            <a
+              href="/services#packages"
+              className="text-[13px] text-neutral-400 hover:text-white transition-colors underline-offset-4 hover:underline"
+            >
+              Compare All Deliverables Matrix
+            </a>
+          )}
         </div>
       </div>
     </section>
