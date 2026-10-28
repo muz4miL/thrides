@@ -39,9 +39,17 @@ import {
   AlertCircle,
   Eye,
 } from "lucide-react";
+import { OurWorkManager } from "@/components/admin/OurWorkManager";
 
 type AdminTab =
-  "inbox" | "services" | "portfolio" | "case-studies" | "studio-gear" | "careers" | "settings";
+  | "inbox"
+  | "our-work"
+  | "services"
+  | "portfolio"
+  | "case-studies"
+  | "studio-gear"
+  | "careers"
+  | "settings";
 
 export function AdminDashboard({
   initialData,
@@ -61,6 +69,8 @@ export function AdminDashboard({
   const [categories] = useState<any[]>(initialData.studioCategories || []);
   const [vacancies, setVacancies] = useState<any[]>(initialData.vacancies || []);
   const [siteSettings, setSiteSettings] = useState<any>(initialData.siteSettings || {});
+  const [workProjects, setWorkProjects] = useState<any[]>(initialData.workProjects || []);
+  const [workPageSettings, setWorkPageSettings] = useState<any>(initialData.workPageSettings || {});
 
   // Notification Banner
   const [notice, setNotice] = useState<{ text: string; type: "success" | "error" } | null>(null);
@@ -191,8 +201,14 @@ export function AdminDashboard({
               icon: Inbox,
               count: submissions.filter((s) => s.status === "new").length,
             },
+            {
+              id: "our-work",
+              label: "Our Work & Case Studies",
+              icon: Briefcase,
+              count: workProjects.length,
+            },
             { id: "services", label: "Services", icon: Layers, count: services.length },
-            { id: "portfolio", label: "Portfolio", icon: Briefcase, count: portfolio.length },
+            { id: "portfolio", label: "Legacy Portfolio", icon: Briefcase, count: portfolio.length },
             {
               id: "case-studies",
               label: "Case Studies",
@@ -400,6 +416,15 @@ export function AdminDashboard({
                 </div>
               </div>
             </div>
+          )}
+
+          {/* TAB: OUR WORK & CASE STUDIES CMS */}
+          {activeTab === "our-work" && (
+            <OurWorkManager
+              initialProjects={workProjects}
+              initialSettings={workPageSettings}
+              onNotice={showNotice}
+            />
           )}
 
           {/* TAB 2: SERVICES MANAGER */}

@@ -139,6 +139,42 @@ export async function POST(req: Request) {
           return NextResponse.json({ success: false, error: "CV file not found on disk" }, { status: 404 });
         }
       }
+      case "saveWorkProject": {
+        const { saveAdminWorkProject } = await import("@/server/work-service");
+        const res = await saveAdminWorkProject(data);
+        return NextResponse.json(res);
+      }
+      case "deleteWorkProject": {
+        const { deleteAdminWorkProject } = await import("@/server/work-service");
+        const res = await deleteAdminWorkProject(data.id);
+        return NextResponse.json({ success: res });
+      }
+      case "duplicateWorkProject": {
+        const { getWorkProjectBySlug, saveAdminWorkProject } = await import("@/server/work-service");
+        const original = await getWorkProjectBySlug(data.slug, true);
+        if (!original) {
+          return NextResponse.json({ success: false, error: "Project not found" }, { status: 404 });
+        }
+        const copySlug = `${original.slug}-copy-${Date.now().toString().slice(-4)}`;
+        const { _id, ...rest } = original;
+        const copyProject = {
+          ...rest,
+          slug: copySlug,
+          title: `${original.title} (Draft Copy)`,
+          isPublished: false,
+          isDraft: true,
+          isFeatured: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+        const res = await saveAdminWorkProject(copyProject);
+        return NextResponse.json({ success: true, id: res.id, slug: copySlug });
+      }
+      case "saveWorkPageSettings": {
+        const { saveAdminWorkPageSettings } = await import("@/server/work-service");
+        const res = await saveAdminWorkPageSettings(data);
+        return NextResponse.json({ success: res });
+      }
       default:
         return NextResponse.json({ success: false, error: `Unknown action: ${action}` }, { status: 400 });
     }

@@ -79,6 +79,9 @@ export default async function AdminPage() {
       testimonials.find({}).sort({ order: 1 }).toArray(),
     ]);
 
+    const { getAdminWorkData } = await import("@/server/work-service");
+    const workData = await getAdminWorkData();
+
     initialData = {
       services: allServices.map((s) => ({ ...s, _id: s._id.toString() })),
       portfolio: allPortfolio.map((p) => ({ ...p, _id: p._id.toString() })),
@@ -90,9 +93,19 @@ export default async function AdminPage() {
       siteSettings: settingsDoc ? { ...settingsDoc, _id: settingsDoc._id.toString() } : null,
       faqs: allFaqs.map((f) => ({ ...f, _id: f._id.toString() })),
       testimonials: allTestimonials.map((t) => ({ ...t, _id: t._id.toString() })),
+      workProjects: workData.projects,
+      workPageSettings: workData.settings,
     };
   } catch (err) {
     console.error("Admin dashboard data fetch error:", err);
+    try {
+      const { getAdminWorkData } = await import("@/server/work-service");
+      const workData = await getAdminWorkData();
+      initialData.workProjects = workData.projects;
+      initialData.workPageSettings = workData.settings;
+    } catch (fallbackErr) {
+      console.warn("Could not load fallback admin work data:", fallbackErr);
+    }
   }
 
   return (

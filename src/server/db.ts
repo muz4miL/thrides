@@ -12,6 +12,8 @@ import type {
   VacancyDoc,
   SubmissionDoc,
   AdminUserDoc,
+  WorkProjectDoc,
+  WorkPageSettingsDoc,
 } from "./types";
 
 // Ensure DNS resolution succeeds across Windows Node SRV lookups
@@ -71,6 +73,8 @@ export async function getCollections() {
     vacancies: db.collection<VacancyDoc>("vacancies"),
     submissions: db.collection<SubmissionDoc>("submissions"),
     adminUsers: db.collection<AdminUserDoc>("admin_users"),
+    workProjects: db.collection<WorkProjectDoc>("work_projects"),
+    workPageSettings: db.collection<WorkPageSettingsDoc>("work_page_settings"),
   };
 }
 
@@ -82,6 +86,9 @@ async function createIndexes(db: Db) {
       db.collection("portfolio").createIndex({ order: 1, isPublished: 1 }),
       db.collection("case_studies").createIndex({ slug: 1 }, { unique: true }),
       db.collection("case_studies").createIndex({ isPublished: 1 }),
+      db.collection("work_projects").createIndex({ slug: 1 }, { unique: true }),
+      db.collection("work_projects").createIndex({ order: 1, isPublished: 1 }),
+      db.collection("work_projects").createIndex({ isFeatured: 1, featuredOrder: 1 }),
       db.collection("studio_categories").createIndex({ slug: 1 }, { unique: true }),
       db.collection("studio_categories").createIndex({ order: 1 }),
       db.collection("studio_equipment").createIndex({ categoryId: 1, order: 1 }),

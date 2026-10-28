@@ -51,3 +51,19 @@ export const adminDeleteVacancyFn = ({ data }: { data: { id: string } }) => call
 export const adminUpdateSubmissionStatusFn = ({ data }: { data: { id: string; status: any } }) => callAdminAction("updateSubmissionStatus", data);
 export const adminUpdateSiteSettingsFn = ({ data }: { data: any }) => callAdminAction("updateSiteSettings", data);
 export const adminDownloadCvFn = ({ data }: { data: { cvStorageKey: string } }) => callAdminAction("downloadCv", data);
+
+export const adminSaveWorkProjectFn = ({ data }: { data: any }) => callAdminAction("saveWorkProject", data);
+export const adminDeleteWorkProjectFn = ({ data }: { data: { id: string } }) => callAdminAction("deleteWorkProject", data);
+export const adminDuplicateWorkProjectFn = ({ data }: { data: { slug: string } }) => callAdminAction("duplicateWorkProject", data);
+export const adminSaveWorkPageSettingsFn = ({ data }: { data: any }) => callAdminAction("saveWorkPageSettings", data);
+
+export async function adminUploadMediaFn(formData: FormData) {
+  const res = await fetch("/api/admin/media/upload", {
+    method: "POST",
+    body: formData,
+  });
+  const json = await res.json();
+  if (!json.success) throw new Error(json.error || "Media upload failed");
+  return json;
+}
+

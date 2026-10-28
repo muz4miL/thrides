@@ -174,3 +174,170 @@ export interface AdminUserDoc {
   lastLoginAt?: Date;
   createdAt: Date;
 }
+
+// ──────────────────────────────────────────────────────────
+// MODULAR CASE STUDY BLOCKS & WORK PORTFOLIO MODELS
+// ──────────────────────────────────────────────────────────
+
+export type CaseStudyBlockType =
+  | "full_width_image"
+  | "two_image_split"
+  | "portrait_gallery"
+  | "video"
+  | "text_image_split"
+  | "editorial_text"
+  | "verified_results"
+  | "quote_testimonial";
+
+export interface FullWidthImageBlock {
+  type: "full_width_image";
+  id: string;
+  url: string;
+  altText: string;
+  caption?: string;
+  theme?: "dark" | "light";
+  aspectRatio?: "16/9" | "21/9" | "auto";
+}
+
+export interface TwoImageSplitBlock {
+  type: "two_image_split";
+  id: string;
+  imageLeft: { url: string; altText: string; caption?: string };
+  imageRight: { url: string; altText: string; caption?: string };
+  caption?: string;
+}
+
+export interface PortraitGalleryBlock {
+  type: "portrait_gallery";
+  id: string;
+  heading?: string;
+  items: { url: string; altText: string; caption?: string }[];
+}
+
+export interface VideoBlock {
+  type: "video";
+  id: string;
+  url: string;
+  posterUrl?: string;
+  caption?: string;
+  autoplay?: boolean;
+}
+
+export interface TextImageSplitBlock {
+  type: "text_image_split";
+  id: string;
+  eyebrow?: string;
+  heading: string;
+  body: string;
+  imageUrl: string;
+  altText: string;
+  imagePosition: "left" | "right";
+}
+
+export interface EditorialTextBlock {
+  type: "editorial_text";
+  id: string;
+  eyebrow?: string;
+  heading: string;
+  body: string;
+  highlight?: string;
+}
+
+export interface VerifiedResultsBlock {
+  type: "verified_results";
+  id: string;
+  title?: string;
+  subtitle?: string;
+  metrics: { metric: string; label: string; context?: string }[];
+}
+
+export interface QuoteTestimonialBlock {
+  type: "quote_testimonial";
+  id: string;
+  quote: string;
+  author: string;
+  role: string;
+  company?: string;
+  avatarUrl?: string;
+}
+
+export type CaseStudyBlock =
+  | FullWidthImageBlock
+  | TwoImageSplitBlock
+  | PortraitGalleryBlock
+  | VideoBlock
+  | TextImageSplitBlock
+  | EditorialTextBlock
+  | VerifiedResultsBlock
+  | QuoteTestimonialBlock;
+
+export interface WorkProjectDoc {
+  _id?: ObjectId | string;
+  slug: string;
+  title: string;
+  clientName: string;
+  summary: string;
+  industry: string;
+  services: string[];
+  categories: string[];
+  year: string;
+  externalUrl?: string;
+  isPublished: boolean;
+  isDraft?: boolean;
+  isFeatured: boolean;
+  featuredOrder: number;
+  order: number;
+  mediaType: "image" | "video";
+  thumbnailUrl: string;
+  heroMediaUrl: string;
+  mobileMediaUrl?: string;
+  posterUrl?: string;
+  altText: string;
+  focalPoint?: { x: number; y: number };
+  accentColor?: string;
+  isConceptWork?: boolean;
+  challenge: string;
+  approach: string;
+  results: { metric: string; label: string; context?: string }[];
+  testimonial?: {
+    quote: string;
+    clientName: string;
+    clientTitle: string;
+    companyName: string;
+  };
+  blocks: CaseStudyBlock[];
+  seo: {
+    title: string;
+    description: string;
+    ogImage?: string;
+  };
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt?: Date;
+}
+
+export interface WorkPageSettingsDoc {
+  _id?: ObjectId | string;
+  heroEyebrow: string;
+  heroHeadingLine1: string;
+  heroHeadingLine2: string;
+  heroSupportingCopy: string;
+  heroMediaUrl: string;
+  heroProjectAnnotation: string;
+  heroProjectSlug?: string;
+  galleryIntro: string;
+  closingCtaHeadingLine1: string;
+  closingCtaHeadingLine2: string;
+  closingCtaCopy: string;
+  closingCtaButtonText: string;
+  closingCtaDestination: string;
+  motionPreset: "subtle" | "standard" | "reduced";
+  categoryOrder: string[];
+  seo: {
+    title: string;
+    description: string;
+    ogImage?: string;
+  };
+  updatedAt: Date;
+}
+
