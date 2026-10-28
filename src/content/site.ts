@@ -241,7 +241,7 @@ export interface ServiceDetail {
   includedIn: string;
   summary: string;
   bullets: string[];
-  image: string;
+  image: any;
   proofCaseStudyId?: string;
 }
 
@@ -351,8 +351,8 @@ export interface CaseStudy {
   client: string;
   industry: string;
   categories: ServiceCategory[];
-  cover: string;
-  gallery: string[];
+  cover: any;
+  gallery: any[];
   summary: string;
   challenge: string;
   delivered: string[];
@@ -646,8 +646,47 @@ export const serviceInterestOptions = [
   "Not sure yet",
 ];
 
+export const serviceOptions = serviceInterestOptions;
+
 export function getCaseStudy(slug: string): CaseStudy | undefined {
   return caseStudies.find(
     (cs) => (cs.slug === slug || cs.id === slug) && cs.isPublished === true,
   );
 }
+
+export const aboutImages: string[] = [
+  "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&auto=format&fit=crop&q=80",
+];
+
+export const heroTiles: string[] = [];
+
+export type Category = "identity" | "social" | "ads" | "packages";
+export type Contribution =
+  | "Logo only"
+  | "Full visual identity"
+  | "Social content"
+  | "Ad creative"
+  | "Campaign management"
+  | "Complete package";
+export const categoryLabels: Record<Category, string> = {
+  identity: "Logos & Identity",
+  social: "Social Content",
+  ads: "Ads & Campaigns",
+  packages: "Full Packages",
+};
+export type Project = {
+  id: string;
+  title: string;
+  categories: Category[];
+  contribution: Contribution;
+  summary: string;
+  deliverables: string[];
+  cover: string;
+  gallery: string[];
+  isConcept: boolean;
+  featured: boolean;
+};
+export const projects: Project[] = [];

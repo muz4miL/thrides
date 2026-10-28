@@ -1,30 +1,34 @@
-import { QueryClient } from "@tanstack/react-query";
-import { createRouter, rootRouteId } from "@tanstack/react-router";
 import { describe, expect, it } from "vitest";
 
-import { routeTree } from "@/routeTree.gen";
+import HomePage from "@/app/page";
+import AboutPage from "@/app/about/page";
+import ServicesPage from "@/app/services/page";
+import OurWorkPage from "@/app/our-work/page";
+import CaseStudiesPage from "@/app/case-studies/page";
+import StudioPage from "@/app/studio/page";
+import CareersPage from "@/app/careers/page";
+import ContactPage from "@/app/contact/page";
+import AdminLoginPage from "@/app/admin/login/page";
+import NotFoundPage from "@/app/not-found";
 
-describe("App routing", () => {
-  const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
-
+describe("Next.js App Router Routes", () => {
   const routesToTest = [
-    { path: "/", name: "Homepage" },
-    { path: "/about", name: "About" },
-    { path: "/services", name: "Services" },
-    { path: "/our-work", name: "Our Work" },
-    { path: "/case-studies", name: "Case Studies" },
-    { path: "/studio", name: "Studio" },
-    { path: "/careers", name: "Careers" },
-    { path: "/contact", name: "Contact" },
-    { path: "/admin/login", name: "Admin Login" },
-    { path: "/admin", name: "Admin Dashboard" },
+    { name: "Homepage", path: "/", component: HomePage },
+    { name: "About", path: "/about", component: AboutPage },
+    { name: "Services", path: "/services", component: ServicesPage },
+    { name: "Our Work", path: "/our-work", component: OurWorkPage },
+    { name: "Case Studies", path: "/case-studies", component: CaseStudiesPage },
+    { name: "Studio", path: "/studio", component: StudioPage },
+    { name: "Careers", path: "/careers", component: CareersPage },
+    { name: "Contact", path: "/contact", component: ContactPage },
+    { name: "Admin Login", path: "/admin/login", component: AdminLoginPage },
+    { name: "Not Found", path: "/not-found", component: NotFoundPage },
   ];
 
-  routesToTest.forEach(({ path, name }) => {
-    it(`matches a valid route for ${name} (${path}) without falling back to root/not-found`, () => {
-      const matches = router.matchRoutes(path);
-      expect(matches.length).toBeGreaterThan(0);
-      expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
+  routesToTest.forEach(({ name, path, component }) => {
+    it(`exports a valid React component for ${name} (${path})`, () => {
+      expect(component).toBeDefined();
+      expect(typeof component).toBe("function");
     });
   });
 });

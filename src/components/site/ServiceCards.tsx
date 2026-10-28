@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef, useState, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
 
@@ -16,7 +18,7 @@ interface ServiceCardItem {
   id: string;
   titleSans: string;
   titleSerif: string;
-  image: string;
+  image: any;
   alt: string;
   link: string;
 }
@@ -202,7 +204,7 @@ export function ServiceCards() {
             >
               {/* Full-bleed high-end photographic imagery */}
               <img
-                src={item.image}
+                src={typeof item.image === "string" ? item.image : item.image?.src || ""}
                 alt={item.alt}
                 loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-106"

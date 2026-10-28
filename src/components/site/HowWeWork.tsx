@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
 import { SectionBadge } from "./SectionBadge";
 import { ArrowUpRight } from "lucide-react";
@@ -122,7 +124,7 @@ export function HowWeWork() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry?.isIntersecting) {
           setHasEntered(true);
           observer.disconnect();
         }
@@ -147,6 +149,7 @@ export function HowWeWork() {
   const pathD = pointCoords.reduce((acc, curr, idx) => {
     if (idx === 0) return `M ${curr.x} ${curr.y}`;
     const prev = pointCoords[idx - 1];
+    if (!prev) return acc;
     const cpX = (prev.x + curr.x) / 2;
     return `${acc} C ${cpX} ${prev.y}, ${cpX} ${curr.y}, ${curr.x} ${curr.y}`;
   }, "");
@@ -305,10 +308,10 @@ export function HowWeWork() {
                     />
 
                     {/* Endpoint glow dot */}
-                    {pointCoords.length > 0 && (
+                    {pointCoords.length > 0 && pointCoords[pointCoords.length - 1] && (
                       <circle
-                        cx={pointCoords[pointCoords.length - 1].x}
-                        cy={pointCoords[pointCoords.length - 1].y}
+                        cx={pointCoords[pointCoords.length - 1]!.x}
+                        cy={pointCoords[pointCoords.length - 1]!.y}
                         r="4"
                         fill="#FFFFFF"
                         stroke={CHANNEL_DATA[activeChannel].color}

@@ -1,9 +1,10 @@
+"use client";
+
 import { useState, useEffect, useRef, useCallback } from "react";
 import { X, ChevronDown, ArrowUpRight } from "lucide-react";
 import { Wordmark } from "./Wordmark";
 import { cn } from "@/lib/utils";
 import { services as siteServices, siteMeta } from "@/content/site";
-import featuredPhone from "@/assets/services-mega-featured.jpg";
 
 export interface MegaServiceItem {
   id: string;
@@ -11,7 +12,7 @@ export interface MegaServiceItem {
   title: string;
   description: string;
   visibleTags: string[];
-  image: string;
+  image: any;
 }
 
 export const sixServices: MegaServiceItem[] = siteServices.map((s) => ({

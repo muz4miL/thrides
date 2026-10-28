@@ -159,7 +159,7 @@ export interface SubmissionDoc {
   };
   status: "new" | "in_review" | "contacted" | "archived";
   emailNotificationSent: boolean;
-  emailNotificationError?: string;
+  emailNotificationError?: string | null;
   submittedAt: Date;
   ipHash?: string;
 }
@@ -170,7 +170,7 @@ export interface AdminUserDoc {
   passwordHash: string;
   role: "admin" | "editor";
   failedLoginAttempts: number;
-  lockoutUntil?: Date;
+  lockoutUntil?: Date | null;
   lastLoginAt?: Date;
   createdAt: Date;
 }

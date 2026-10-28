@@ -10,10 +10,10 @@ export async function sendEnquiryNotification(payload: NotificationPayload): Pro
   success: boolean;
   error?: string;
 }> {
-  const recipient = process.env.ENQUIRY_NOTIFICATION_EMAIL || "info@thrides.com";
-  const smtpHost = process.env.SMTP_HOST;
-  const smtpUser = process.env.SMTP_USER;
-  const smtpPass = process.env.SMTP_PASS;
+  const recipient = process.env["ENQUIRY_NOTIFICATION_EMAIL"] || "info@thrides.com";
+  const smtpHost = process.env["SMTP_HOST"];
+  const smtpUser = process.env["SMTP_USER"];
+  const smtpPass = process.env["SMTP_PASS"];
 
   if (!smtpHost || !smtpUser || !smtpPass) {
     console.log(
@@ -29,8 +29,8 @@ export async function sendEnquiryNotification(payload: NotificationPayload): Pro
   try {
     const transporter = nodemailer.createTransport({
       host: smtpHost,
-      port: Number(process.env.SMTP_PORT) || 587,
-      secure: Number(process.env.SMTP_PORT) === 465,
+      port: Number(process.env["SMTP_PORT"]) || 587,
+      secure: Number(process.env["SMTP_PORT"]) === 465,
       auth: {
         user: smtpUser,
         pass: smtpPass,
@@ -42,7 +42,7 @@ export async function sendEnquiryNotification(payload: NotificationPayload): Pro
       .join("<br/>");
 
     await transporter.sendMail({
-      from: process.env.SMTP_FROM || `"Thrides Notifications" <no-reply@thrides.com>`,
+      from: process.env["SMTP_FROM"] || `"Thrides Notifications" <no-reply@thrides.com>`,
       to: recipient,
       subject: payload.subject,
       html: `

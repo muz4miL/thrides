@@ -2,7 +2,7 @@ import crypto from "crypto";
 import { getCollections } from "./db";
 
 const JWT_SECRET =
-  process.env.JWT_SECRET || "brandit_secure_fallback_secret_key_32_characters_minimum";
+  process.env["JWT_SECRET"] || "brandit_secure_fallback_secret_key_32_characters_minimum";
 
 export function hashPassword(password: string): string {
   const salt = crypto.randomBytes(16).toString("hex");
@@ -99,7 +99,7 @@ export async function authenticateCredentials(email: string, password: string) {
     const attempts = (user.failedLoginAttempts || 0) + 1;
     const update: Record<string, unknown> = { failedLoginAttempts: attempts };
     if (attempts >= 5) {
-      update.lockoutUntil = new Date(Date.now() + 15 * 60 * 1000); // 15 min lockout
+      update["lockoutUntil"] = new Date(Date.now() + 15 * 60 * 1000); // 15 min lockout
     }
     await adminUsers.updateOne({ _id: user._id }, { $set: update });
     return { success: false, error: "Invalid email or password" };

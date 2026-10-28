@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo, useState } from "react";
 import { categoryLabels, projects, type Category, type Project } from "@/content/site";
 import { SectionHeading } from "./SectionHeading";

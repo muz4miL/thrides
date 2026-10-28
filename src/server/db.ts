@@ -28,7 +28,7 @@ let indexesCreated = false;
 export async function getDb(): Promise<Db> {
   if (cachedDb) return cachedDb;
 
-  const uri = process.env.MONGODB_URI;
+  const uri = process.env["MONGODB_URI"];
   if (!uri) {
     throw new Error(
       "MONGODB_URI environment variable is missing. Please configure it in your server environment or .env.local.",

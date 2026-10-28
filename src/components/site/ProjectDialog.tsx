@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
 import { categoryLabels, type Category, type Project } from "@/content/site";

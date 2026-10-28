@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
 import { ShieldCheck, CheckCircle2, Sparkles, BarChart3, UserCheck, ArrowUpRight } from "lucide-react";
 import { SectionBadge } from "./SectionBadge";
@@ -65,7 +67,7 @@ export function OurCommitments() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry?.isIntersecting) {
           setHasEntered(true);
           observer.disconnect();
         }

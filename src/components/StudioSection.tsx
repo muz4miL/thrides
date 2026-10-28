@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Play } from "lucide-react";
 import { Wordmark } from "@/components/site/Wordmark";

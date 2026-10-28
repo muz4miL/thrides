@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
 import { Pause, Play } from "lucide-react";
 import { siteMeta } from "@/content/site";

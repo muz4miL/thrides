@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, type FormEvent } from "react";
 import { Wordmark } from "./Wordmark";
 import { ArrowRight, Mail, Phone, MapPin, CheckCircle2 } from "lucide-react";

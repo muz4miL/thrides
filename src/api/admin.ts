@@ -1,352 +1,53 @@
-import { createServerFn } from "@tanstack/react-start";
+// Client-side API functions for admin portal (Next.js migrated)
 
-const COOKIE_NAME = "brandit_admin_session";
-
-async function requireAdminSession() {
-  const { getCookie } = await import("@tanstack/react-start/server");
-  const { verifySessionToken } = await import("@/server/auth");
-
-  const token = getCookie(COOKIE_NAME);
-  if (!token) {
-    throw new Error("Unauthorized: Please log in to access the admin portal.");
-  }
-  const session = verifySessionToken(token);
-  if (!session) {
-    throw new Error("Session expired or invalid. Please log in again.");
-  }
-  return session;
+export async function adminLoginFn({ data }: { data: { email: string; password: string } }) {
+  const res = await fetch("/api/admin/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  const json = await res.json();
+  if (!json.success) throw new Error(json.error || "Login failed");
+  return json;
 }
 
-// 1. Admin Login
-export const adminLoginFn = createServerFn({ method: "POST" })
-  .validator((data: unknown) => {
-    const d = data as { email?: string; password?: string };
-    if (!d.email || !d.password) {
-      throw new Error("Email and password are required");
-    }
-    return { email: d.email, password: d.password };
-  })
-  .handler(async ({ data }) => {
-    const { authenticateCredentials } = await import("@/server/auth");
-    const { setCookie } = await import("@tanstack/react-start/server");
+export async function adminLogoutFn() {
+  const res = await fetch("/api/admin/auth/logout", { method: "POST" });
+  return res.json();
+}
 
-    const normalizedEmail = data.email.trim().includes("@")
-      ? data.email.trim()
-      : `${data.email.trim()}@brandit.agency`;
+export async function adminCheckSessionFn() {
+  const res = await fetch("/api/admin/auth/session");
+  return res.json();
+}
 
-    const authResult = await authenticateCredentials(normalizedEmail, data.password);
-    if (!authResult.success || !authResult.token) {
-      throw new Error(authResult.error || "Authentication failed");
-    }
+export async function adminGetDashboardDataFn() {
+  const res = await fetch("/api/admin/dashboard");
+  if (!res.ok) throw new Error("Failed to load dashboard data");
+  return res.json();
+}
 
-    setCookie(COOKIE_NAME, authResult.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7,
-    });
-
-    return { success: true, user: authResult.user };
+async function callAdminAction(action: string, data: any) {
+  const res = await fetch("/api/admin/action", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action, data }),
   });
+  const json = await res.json();
+  if (!json.success) throw new Error(json.error || `Failed to perform ${action}`);
+  return json;
+}
 
-// 2. Admin Logout
-export const adminLogoutFn = createServerFn({ method: "POST" }).handler(async () => {
-  const { deleteCookie } = await import("@tanstack/react-start/server");
-  deleteCookie(COOKIE_NAME, { path: "/" });
-  return { success: true };
-});
-
-// 3. Admin Check Session
-export const adminCheckSessionFn = createServerFn({ method: "GET" }).handler(async () => {
-  try {
-    const { getCookie } = await import("@tanstack/react-start/server");
-    const { verifySessionToken } = await import("@/server/auth");
-
-    const token = getCookie(COOKIE_NAME);
-    if (!token) return { isAuthenticated: false, user: null };
-    const session = verifySessionToken(token);
-    if (!session) return { isAuthenticated: false, user: null };
-    return {
-      isAuthenticated: true,
-      user: { id: session.userId, email: session.email, role: session.role },
-    };
-  } catch {
-    return { isAuthenticated: false, user: null };
-  }
-});
-
-// 4. Admin Get Full Dashboard Data
-export const adminGetDashboardDataFn = createServerFn({ method: "GET" }).handler(async () => {
-  await requireAdminSession();
-  const { getCollections } = await import("@/server/db");
-  const {
-    services,
-    portfolio,
-    caseStudies,
-    studioCategories,
-    studioEquipment,
-    vacancies,
-    submissions,
-    siteSettings,
-    faqs,
-    testimonials,
-  } = await getCollections();
-
-  const [
-    allServices,
-    allPortfolio,
-    allCaseStudies,
-    allCategories,
-    allEquipment,
-    allVacancies,
-    allSubmissions,
-    settingsDoc,
-    allFaqs,
-    allTestimonials,
-  ] = await Promise.all([
-    services.find({}).sort({ order: 1 }).toArray(),
-    portfolio.find({}).sort({ order: 1 }).toArray(),
-    caseStudies.find({}).sort({ updatedAt: -1 }).toArray(),
-    studioCategories.find({}).sort({ order: 1 }).toArray(),
-    studioEquipment.find({}).sort({ order: 1 }).toArray(),
-    vacancies.find({}).sort({ createdAt: -1 }).toArray(),
-    submissions.find({}).sort({ submittedAt: -1 }).limit(100).toArray(),
-    siteSettings.findOne({ agencyName: "brandit." }),
-    faqs.find({}).sort({ order: 1 }).toArray(),
-    testimonials.find({}).sort({ order: 1 }).toArray(),
-  ]);
-
-  return {
-    services: allServices.map((s) => ({ ...s, _id: s._id.toString() })),
-    portfolio: allPortfolio.map((p) => ({ ...p, _id: p._id.toString() })),
-    caseStudies: allCaseStudies.map((c) => ({ ...c, _id: c._id.toString() })),
-    studioCategories: allCategories.map((c) => ({ ...c, _id: c._id.toString() })),
-    studioEquipment: allEquipment.map((e) => ({ ...e, _id: e._id.toString() })),
-    vacancies: allVacancies.map((v) => ({ ...v, _id: v._id.toString() })),
-    submissions: allSubmissions.map((s) => ({ ...s, _id: s._id.toString() })),
-    siteSettings: settingsDoc ? { ...settingsDoc, _id: settingsDoc._id.toString() } : null,
-    faqs: allFaqs.map((f) => ({ ...f, _id: f._id.toString() })),
-    testimonials: allTestimonials.map((t) => ({ ...t, _id: t._id.toString() })),
-  };
-});
-
-// 5. Service Operations
-export const adminSaveServiceFn = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as Record<string, any>)
-  .handler(async ({ data }) => {
-    await requireAdminSession();
-    const { getCollections } = await import("@/server/db");
-    const { ObjectId } = await import("mongodb");
-    const { services } = await getCollections();
-
-    const { _id, ...fields } = data;
-    fields.updatedAt = new Date();
-
-    if (_id && ObjectId.isValid(_id)) {
-      await services.updateOne({ _id: new ObjectId(_id) }, { $set: fields });
-      return { success: true, id: _id };
-    } else {
-      fields.createdAt = new Date();
-      const res = await services.insertOne(fields as any);
-      return { success: true, id: res.insertedId.toString() };
-    }
-  });
-
-export const adminDeleteServiceFn = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as { id: string })
-  .handler(async ({ data }) => {
-    await requireAdminSession();
-    const { getCollections } = await import("@/server/db");
-    const { ObjectId } = await import("mongodb");
-    const { services } = await getCollections();
-    if (!ObjectId.isValid(data.id)) throw new Error("Invalid record ID");
-    await services.deleteOne({ _id: new ObjectId(data.id) });
-    return { success: true };
-  });
-
-// 6. Portfolio Operations
-export const adminSavePortfolioFn = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as Record<string, any>)
-  .handler(async ({ data }) => {
-    await requireAdminSession();
-    const { getCollections } = await import("@/server/db");
-    const { ObjectId } = await import("mongodb");
-    const { portfolio } = await getCollections();
-
-    const { _id, ...fields } = data;
-    if (_id && ObjectId.isValid(_id)) {
-      await portfolio.updateOne({ _id: new ObjectId(_id) }, { $set: fields });
-      return { success: true, id: _id };
-    } else {
-      fields.createdAt = new Date();
-      const res = await portfolio.insertOne(fields as any);
-      return { success: true, id: res.insertedId.toString() };
-    }
-  });
-
-export const adminDeletePortfolioFn = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as { id: string })
-  .handler(async ({ data }) => {
-    await requireAdminSession();
-    const { getCollections } = await import("@/server/db");
-    const { ObjectId } = await import("mongodb");
-    const { portfolio } = await getCollections();
-    if (!ObjectId.isValid(data.id)) throw new Error("Invalid record ID");
-    await portfolio.deleteOne({ _id: new ObjectId(data.id) });
-    return { success: true };
-  });
-
-// 7. Case Study Operations
-export const adminSaveCaseStudyFn = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as Record<string, any>)
-  .handler(async ({ data }) => {
-    await requireAdminSession();
-    const { getCollections } = await import("@/server/db");
-    const { ObjectId } = await import("mongodb");
-    const { caseStudies } = await getCollections();
-
-    const { _id, ...fields } = data;
-    fields.updatedAt = new Date();
-
-    if (_id && ObjectId.isValid(_id)) {
-      await caseStudies.updateOne({ _id: new ObjectId(_id) }, { $set: fields });
-      return { success: true, id: _id };
-    } else {
-      const res = await caseStudies.insertOne(fields as any);
-      return { success: true, id: res.insertedId.toString() };
-    }
-  });
-
-export const adminDeleteCaseStudyFn = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as { id: string })
-  .handler(async ({ data }) => {
-    await requireAdminSession();
-    const { getCollections } = await import("@/server/db");
-    const { ObjectId } = await import("mongodb");
-    const { caseStudies } = await getCollections();
-    if (!ObjectId.isValid(data.id)) throw new Error("Invalid record ID");
-    await caseStudies.deleteOne({ _id: new ObjectId(data.id) });
-    return { success: true };
-  });
-
-// 8. Studio Gear Operations
-export const adminSaveStudioEquipmentFn = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as Record<string, any>)
-  .handler(async ({ data }) => {
-    await requireAdminSession();
-    const { getCollections } = await import("@/server/db");
-    const { ObjectId } = await import("mongodb");
-    const { studioEquipment } = await getCollections();
-
-    const { _id, ...fields } = data;
-    if (_id && ObjectId.isValid(_id)) {
-      await studioEquipment.updateOne({ _id: new ObjectId(_id) }, { $set: fields });
-      return { success: true, id: _id };
-    } else {
-      const res = await studioEquipment.insertOne(fields as any);
-      return { success: true, id: res.insertedId.toString() };
-    }
-  });
-
-export const adminDeleteStudioEquipmentFn = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as { id: string })
-  .handler(async ({ data }) => {
-    await requireAdminSession();
-    const { getCollections } = await import("@/server/db");
-    const { ObjectId } = await import("mongodb");
-    const { studioEquipment } = await getCollections();
-    if (!ObjectId.isValid(data.id)) throw new Error("Invalid record ID");
-    await studioEquipment.deleteOne({ _id: new ObjectId(data.id) });
-    return { success: true };
-  });
-
-// 9. Vacancy Operations
-export const adminSaveVacancyFn = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as Record<string, any>)
-  .handler(async ({ data }) => {
-    await requireAdminSession();
-    const { getCollections } = await import("@/server/db");
-    const { ObjectId } = await import("mongodb");
-    const { vacancies } = await getCollections();
-
-    const { _id, ...fields } = data;
-    fields.updatedAt = new Date();
-
-    if (_id && ObjectId.isValid(_id)) {
-      await vacancies.updateOne({ _id: new ObjectId(_id) }, { $set: fields });
-      return { success: true, id: _id };
-    } else {
-      fields.createdAt = new Date();
-      const res = await vacancies.insertOne(fields as any);
-      return { success: true, id: res.insertedId.toString() };
-    }
-  });
-
-export const adminDeleteVacancyFn = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as { id: string })
-  .handler(async ({ data }) => {
-    await requireAdminSession();
-    const { getCollections } = await import("@/server/db");
-    const { ObjectId } = await import("mongodb");
-    const { vacancies } = await getCollections();
-    if (!ObjectId.isValid(data.id)) throw new Error("Invalid record ID");
-    await vacancies.deleteOne({ _id: new ObjectId(data.id) });
-    return { success: true };
-  });
-
-// 10. Submissions Status Update
-export const adminUpdateSubmissionStatusFn = createServerFn({ method: "POST" })
-  .validator(
-    (data: unknown) =>
-      data as { id: string; status: "new" | "in_review" | "contacted" | "archived" },
-  )
-  .handler(async ({ data }) => {
-    await requireAdminSession();
-    const { getCollections } = await import("@/server/db");
-    const { ObjectId } = await import("mongodb");
-    const { submissions } = await getCollections();
-    if (!ObjectId.isValid(data.id)) throw new Error("Invalid submission ID");
-    await submissions.updateOne({ _id: new ObjectId(data.id) }, { $set: { status: data.status } });
-    return { success: true };
-  });
-
-// 11. Site Settings Update
-export const adminUpdateSiteSettingsFn = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as Record<string, any>)
-  .handler(async ({ data }) => {
-    await requireAdminSession();
-    const { getCollections } = await import("@/server/db");
-    const { siteSettings } = await getCollections();
-    const { _id, ...fields } = data;
-    fields.updatedAt = new Date();
-
-    await siteSettings.updateOne({ agencyName: "brandit." }, { $set: fields }, { upsert: true });
-    return { success: true };
-  });
-
-// 12. Secure CV Download for Admin
-export const adminDownloadCvFn = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as { cvStorageKey: string })
-  .handler(async ({ data }) => {
-    await requireAdminSession();
-    if (!data.cvStorageKey || typeof data.cvStorageKey !== "string") {
-      throw new Error("Invalid CV key");
-    }
-
-    const safeKey = data.cvStorageKey.replace(/[^a-zA-Z0-9._-]/g, "");
-    const fs = await import("fs/promises");
-    const path = await import("path");
-    const filePath = path.resolve(process.cwd(), "uploads", "private", "cv", safeKey);
-
-    try {
-      const fileBuffer = await fs.readFile(filePath);
-      return {
-        success: true,
-        dataBase64: fileBuffer.toString("base64"),
-        filename: safeKey,
-      };
-    } catch {
-      throw new Error("CV file not found on disk");
-    }
-  });
+export const adminSaveServiceFn = ({ data }: { data: any }) => callAdminAction("saveService", data);
+export const adminDeleteServiceFn = ({ data }: { data: { id: string } }) => callAdminAction("deleteService", data);
+export const adminSavePortfolioFn = ({ data }: { data: any }) => callAdminAction("savePortfolio", data);
+export const adminDeletePortfolioFn = ({ data }: { data: { id: string } }) => callAdminAction("deletePortfolio", data);
+export const adminSaveCaseStudyFn = ({ data }: { data: any }) => callAdminAction("saveCaseStudy", data);
+export const adminDeleteCaseStudyFn = ({ data }: { data: { id: string } }) => callAdminAction("deleteCaseStudy", data);
+export const adminSaveStudioEquipmentFn = ({ data }: { data: any }) => callAdminAction("saveStudioEquipment", data);
+export const adminDeleteStudioEquipmentFn = ({ data }: { data: { id: string } }) => callAdminAction("deleteStudioEquipment", data);
+export const adminSaveVacancyFn = ({ data }: { data: any }) => callAdminAction("saveVacancy", data);
+export const adminDeleteVacancyFn = ({ data }: { data: { id: string } }) => callAdminAction("deleteVacancy", data);
+export const adminUpdateSubmissionStatusFn = ({ data }: { data: { id: string; status: any } }) => callAdminAction("updateSubmissionStatus", data);
+export const adminUpdateSiteSettingsFn = ({ data }: { data: any }) => callAdminAction("updateSiteSettings", data);
+export const adminDownloadCvFn = ({ data }: { data: { cvStorageKey: string } }) => callAdminAction("downloadCv", data);

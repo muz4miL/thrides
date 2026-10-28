@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Check, Clock, ChevronDown, Sparkles, X, ShieldCheck } from "lucide-react";
 import { packages, type PackageData } from "@/content/site";
@@ -7,7 +9,7 @@ import ribbon1 from "@/assets/ribbon-fin-1.png";
 import ribbon2 from "@/assets/ribbon-fin-2.png";
 import ribbon3 from "@/assets/ribbon-fin-3.png";
 
-const ribbonMap: Record<string, string> = {
+const ribbonMap: Record<string, any> = {
   kickstart: ribbon1,
   accelerate: ribbon2,
   authority: ribbon3,
@@ -31,7 +33,7 @@ export function WhoItsFor() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry?.isIntersecting) {
           setHasEntered(true);
           observer.disconnect();
         }
@@ -175,7 +177,7 @@ export function WhoItsFor() {
                     {/* Compact 88x88px Transparent Artwork Motif */}
                     <div className="relative h-[80px] w-[80px] sm:h-[88px] sm:w-[88px] shrink-0 flex items-center justify-center pointer-events-none">
                       <img
-                        src={ribbonImg}
+                        src={typeof ribbonImg === "string" ? ribbonImg : ribbonImg?.src || ""}
                         alt=""
                         className="h-full w-full object-contain select-none transition-all duration-250 ease-out group-hover:-translate-y-[3px] group-hover:drop-shadow-[0_8px_18px_rgba(0,82,255,0.45)]"
                         loading="lazy"

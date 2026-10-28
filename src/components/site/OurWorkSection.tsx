@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, ChevronUp, Star, ShieldCheck, Sparkles, ExternalLink } from "lucide-react";
 
@@ -36,7 +38,7 @@ interface EmailCardData {
   sender: string;
   subject: string;
   tag: string;
-  heroImg: string;
+  heroImg: any;
   heading: string;
   subheading: string;
   ctaText: string;
@@ -310,7 +312,7 @@ function EmailCard({ item }: { item: EmailCardData }) {
           {/* Hero Visual */}
           <div className="relative mt-2.5 aspect-[16/10] w-full overflow-hidden rounded-[14px]">
             <img
-              src={item.heroImg}
+              src={typeof item.heroImg === "string" ? item.heroImg : item.heroImg?.src || ""}
               alt={item.heading}
               className="h-full w-full object-cover"
               loading="lazy"

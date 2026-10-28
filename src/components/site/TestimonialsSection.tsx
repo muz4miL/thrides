@@ -63,14 +63,16 @@ export function TestimonialsSection() {
                 </p>
 
                 {/* Growth Metric Badge */}
-                <div className="mt-6 rounded-xl border border-white/[0.06] bg-white/[0.03] p-3.5">
-                  <span className="font-display text-xl font-black text-emerald-400 block">
-                    {t.stat.metric}
-                  </span>
-                  <span className="text-[10px] font-mono font-semibold tracking-wider text-neutral-400 uppercase mt-0.5 block">
-                    {t.stat.label}
-                  </span>
-                </div>
+                {t.stat && (
+                  <div className="mt-6 rounded-xl border border-white/[0.06] bg-white/[0.03] p-3.5">
+                    <span className="font-display text-xl font-black text-emerald-400 block">
+                      {t.stat.metric}
+                    </span>
+                    <span className="text-[10px] font-mono font-semibold tracking-wider text-neutral-400 uppercase mt-0.5 block">
+                      {t.stat.label}
+                    </span>
+                  </div>
+                )}
               </div>
 
               <div className="mt-8 pt-5 border-t border-white/[0.06] flex items-center justify-between">

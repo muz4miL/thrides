@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Shield, Award, Sparkles, CheckCircle2 } from "lucide-react";
 import { SectionBadge } from "./SectionBadge";
@@ -13,7 +15,7 @@ export function Leadership() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry?.isIntersecting) {
           setHasEntered(true);
           observer.disconnect();
         }
