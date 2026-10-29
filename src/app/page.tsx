@@ -6,8 +6,8 @@ import { BrandIntro } from "@/components/site/BrandIntro";
 import { ServiceCards } from "@/components/site/ServiceCards";
 import { WhoItsFor } from "@/components/site/WhoItsFor";
 import { OurWorkSection } from "@/components/site/OurWorkSection";
-import { AboutCEO } from "@/components/site/AboutCEO";
-import { TestimonialsSection } from "@/components/site/TestimonialsSection";
+import { Leadership } from "@/components/site/Leadership";
+import Testimonials from "@/components/site/Testimonials";
 import FAQ from "@/components/FAQ";
 import ReadyToScale from "@/components/ReadyToScale";
 import { Footer } from "@/components/site/Footer";
@@ -54,11 +54,11 @@ export default function HomePage() {
         {/* Section 6 — Selected Proof / Our Work */}
         <OurWorkSection />
 
-        {/* Section 7 — The On-Purpose Method, Guarantees & Team */}
-        <AboutCEO />
+        {/* Section 7 — Executive Leadership */}
+        <Leadership />
 
         {/* Section 8 — Testimonials */}
-        <TestimonialsSection />
+        <Testimonials />
 
         {/* Section 9 — Questions Before You Book (FAQ) */}
         <FAQ />
