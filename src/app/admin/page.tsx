@@ -6,7 +6,7 @@ import { getCollections } from "@/server/db";
 import { AdminDashboard } from "./AdminDashboard";
 
 export const metadata: Metadata = {
-  title: "brandit. — Admin Management Console",
+  title: "Thrides — Admin Management Console",
   robots: {
     index: false,
     follow: false,
@@ -32,8 +32,6 @@ export default async function AdminPage() {
     services: [],
     portfolio: [],
     caseStudies: [],
-    studioCategories: [],
-    studioEquipment: [],
     vacancies: [],
     submissions: [],
     siteSettings: null,
@@ -46,8 +44,6 @@ export default async function AdminPage() {
       services,
       portfolio,
       caseStudies,
-      studioCategories,
-      studioEquipment,
       vacancies,
       submissions,
       siteSettings,
@@ -59,8 +55,6 @@ export default async function AdminPage() {
       allServices,
       allPortfolio,
       allCaseStudies,
-      allCategories,
-      allEquipment,
       allVacancies,
       allSubmissions,
       settingsDoc,
@@ -70,8 +64,6 @@ export default async function AdminPage() {
       services.find({}).sort({ order: 1 }).toArray(),
       portfolio.find({}).sort({ order: 1 }).toArray(),
       caseStudies.find({}).sort({ updatedAt: -1 }).toArray(),
-      studioCategories.find({}).sort({ order: 1 }).toArray(),
-      studioEquipment.find({}).sort({ order: 1 }).toArray(),
       vacancies.find({}).sort({ createdAt: -1 }).toArray(),
       submissions.find({}).sort({ submittedAt: -1 }).limit(100).toArray(),
       siteSettings.findOne({ agencyName: "brandit." }),
@@ -86,8 +78,6 @@ export default async function AdminPage() {
       services: allServices.map((s) => ({ ...s, _id: s._id.toString() })),
       portfolio: allPortfolio.map((p) => ({ ...p, _id: p._id.toString() })),
       caseStudies: allCaseStudies.map((c) => ({ ...c, _id: c._id.toString() })),
-      studioCategories: allCategories.map((c) => ({ ...c, _id: c._id.toString() })),
-      studioEquipment: allEquipment.map((e) => ({ ...e, _id: e._id.toString() })),
       vacancies: allVacancies.map((v) => ({ ...v, _id: v._id.toString() })),
       submissions: allSubmissions.map((s) => ({ ...s, _id: s._id.toString() })),
       siteSettings: settingsDoc ? { ...settingsDoc, _id: settingsDoc._id.toString() } : null,
