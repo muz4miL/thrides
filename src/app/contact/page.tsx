@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import { ContactContent } from "./ContactContent";
 
 export const metadata: Metadata = {
-  title: "Book a Free Strategy Call | Thrides",
+  title: "Contact & Discovery Call | Thrides — Your Brand, Everywhere. On Purpose.",
   description:
-    "Tell us about your business. We reply within 24 hours, and your first 30-minute call is free.",
+    "Good things start with a conversation. Tell us what you’re building, what needs to change, or where you want to go. Free 30-minute strategy call.",
   openGraph: {
-    title: "Book a Free Strategy Call | Thrides",
+    title: "Contact & Discovery Call | Thrides",
     description:
-      "Tell us about your business. We reply within 24 hours, and your first 30-minute call is free.",
+      "Good things start with a conversation. Let’s make your next move count.",
     type: "website",
   },
 };

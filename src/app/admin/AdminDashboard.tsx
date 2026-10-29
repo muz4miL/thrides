@@ -40,6 +40,24 @@ export function AdminDashboard({
     setTimeout(() => setNotice(null), 4000);
   };
 
+  const refreshData = async () => {
+    try {
+      const res = await fetch("/api/admin/dashboard");
+      if (res.ok) {
+        const fresh = await res.json();
+        if (fresh.submissions) setSubmissions(fresh.submissions);
+        if (fresh.services) setServices(fresh.services);
+        if (fresh.portfolio) setPortfolio(fresh.portfolio);
+        if (fresh.caseStudies) setCaseStudies(fresh.caseStudies);
+        if (fresh.vacancies) setVacancies(fresh.vacancies);
+        if (fresh.siteSettings) setSiteSettings(fresh.siteSettings);
+        showNotice("Dashboard synced with latest data.");
+      }
+    } catch (err: any) {
+      showNotice(err?.message || "Failed to sync dashboard", "error");
+    }
+  };
+
   const handleLogout = async () => {
     await adminLogoutFn();
     window.location.href = "/admin/login";
@@ -115,16 +133,26 @@ export function AdminDashboard({
           <div className="font-mono text-xs font-bold uppercase tracking-wider text-neutral-400">
             {activeTab.replace("-", " ")}
           </div>
-          <div className="h-2 w-2 rounded-full bg-emerald-400" />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={refreshData}
+              title="Sync dashboard"
+              className="rounded-xl border border-white/10 bg-white/[0.04] p-2 text-neutral-300 hover:text-white"
+            >
+              <Check size={16} className="text-emerald-400" />
+            </button>
+          </div>
         </header>
 
         {/* Content Body */}
-        <main className="flex-1 p-4 sm:p-8 md:p-10 max-w-[1600px] w-full mx-auto">
+        <main className="flex-1 p-3 sm:p-6 md:p-10 max-w-[1600px] w-full mx-auto">
           {activeTab === "inbox" && (
             <SubmissionsTab
               submissions={submissions}
               onUpdateStatus={handleUpdateStatus}
               onDownloadCv={handleDownloadCv}
+              onNotice={showNotice}
+              onRefresh={refreshData}
             />
           )}
 

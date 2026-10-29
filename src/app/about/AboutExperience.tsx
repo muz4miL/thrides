@@ -13,18 +13,26 @@ type Props = {
 };
 
 const principles = [
-  { title: "One plan. Every move connected.", label: "Direction", icon: Target,
+  {
+    title: "One plan. Every move connected.", label: "Direction", icon: Target,
     description: "Everything we do ties back to your business goals. No random disjointed tasks.",
-    words: ["Your goals", "Our strategy", "Every execution"] },
-  { title: "Insight before instinct.", label: "Intelligence", icon: BrainCircuit,
+    words: ["Your goals", "Our strategy", "Every execution"]
+  },
+  {
+    title: "Insight before instinct.", label: "Intelligence", icon: BrainCircuit,
     description: "We research your market, competitors, and customers before we create anything, so your marketing starts with an edge.",
-    words: ["Your market", "Your audience", "Your advantage"] },
-  { title: "Clarity at every step.", label: "Communication", icon: MessageSquare,
+    words: ["Your market", "Your audience", "Your advantage"]
+  },
+  {
+    title: "Clarity at every step.", label: "Communication", icon: MessageSquare,
     description: "You’ll always know what’s working and what we’re changing, without buzzwords.",
-    words: ["What we see", "What it means", "What comes next"] },
-  { title: "A partner. Not a ticket number.", label: "Partnership", icon: Users,
+    words: ["What we see", "What it means", "What comes next"]
+  },
+  {
+    title: "A partner. Not a ticket number.", label: "Partnership", icon: Users,
     description: "A proper welcome, a clear point of contact, agreed response times, and updates without chasing.",
-    words: ["A real welcome", "A clear contact", "A shared ambition"] },
+    words: ["A real welcome", "A clear contact", "A shared ambition"]
+  },
 ];
 
 export default function AboutExperience({ stats, members }: Props) {

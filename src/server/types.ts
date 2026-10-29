@@ -142,7 +142,11 @@ export interface SubmissionDoc {
     company?: string;
     packageInterest?: string;
     serviceOfInterest?: string;
+    services?: string[];
     budgetRange?: string;
+    timeline?: string;
+    websiteUrl?: string;
+    sourcePage?: string;
     message?: string;
     // Studio
     shootType?: string;
@@ -157,7 +161,9 @@ export interface SubmissionDoc {
     cvStorageKey?: string;
     cvOriginalFilename?: string;
   };
-  status: "new" | "in_review" | "contacted" | "archived";
+  status: "new" | "in_review" | "contacted" | "qualified" | "closed" | "archived";
+  internalNotes?: string;
+  idempotencyKey?: string;
   emailNotificationSent: boolean;
   emailNotificationError?: string | null;
   submittedAt: Date;

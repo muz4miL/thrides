@@ -49,6 +49,8 @@ export const adminDeleteStudioEquipmentFn = ({ data }: { data: { id: string } })
 export const adminSaveVacancyFn = ({ data }: { data: any }) => callAdminAction("saveVacancy", data);
 export const adminDeleteVacancyFn = ({ data }: { data: { id: string } }) => callAdminAction("deleteVacancy", data);
 export const adminUpdateSubmissionStatusFn = ({ data }: { data: { id: string; status: any } }) => callAdminAction("updateSubmissionStatus", data);
+export const adminUpdateSubmissionNotesFn = ({ data }: { data: { id: string; notes: string } }) => callAdminAction("updateSubmissionNotes", data);
+export const adminDeleteSubmissionFn = ({ data }: { data: { id: string } }) => callAdminAction("deleteSubmission", data);
 export const adminUpdateSiteSettingsFn = ({ data }: { data: any }) => callAdminAction("updateSiteSettings", data);
 export const adminDownloadCvFn = ({ data }: { data: { cvStorageKey: string } }) => callAdminAction("downloadCv", data);
 

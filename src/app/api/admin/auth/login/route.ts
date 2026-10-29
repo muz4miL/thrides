@@ -8,13 +8,14 @@ export async function POST(req: Request) {
     const body = await req.json();
     const data = body.data || body;
 
-    if (!data.email || !data.password) {
-      return NextResponse.json({ success: false, error: "Email and password are required" }, { status: 400 });
+    const rawIdentifier = data.email || data.identifier;
+    if (!rawIdentifier || !data.password) {
+      return NextResponse.json({ success: false, error: "Email/username and password are required" }, { status: 400 });
     }
 
-    const normalizedEmail = data.email.trim().includes("@")
-      ? data.email.trim()
-      : `${data.email.trim()}@brandit.agency`;
+    const normalizedEmail = rawIdentifier.trim().includes("@")
+      ? rawIdentifier.trim()
+      : `${rawIdentifier.trim()}@brandit.agency`;
 
     const authResult = await authenticateCredentials(normalizedEmail, data.password);
     if (!authResult.success || !authResult.token) {

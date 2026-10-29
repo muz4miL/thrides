@@ -143,7 +143,6 @@ export function OurWorkManager({
       const res = await adminDuplicateWorkProjectFn({ data: { slug } });
       if (res.success) {
         onNotice(`Duplicated as draft (${res.slug})`);
-        // Refresh local state with copy
         const orig = projects.find((p) => p.slug === slug);
         if (orig) {
           const duplicateItem: WorkProjectDoc = {
@@ -203,7 +202,6 @@ export function OurWorkManager({
   const handleSaveProject = async () => {
     if (!editingProject) return;
 
-    // Validate required fields
     if (!editingProject.title?.trim()) {
       onNotice("Project title is required", "error");
       return;
@@ -217,7 +215,6 @@ export function OurWorkManager({
       return;
     }
 
-    // Publication check
     if (editingProject.isPublished) {
       if (!editingProject.summary?.trim()) {
         onNotice("Published projects require a summary positioning statement", "error");
@@ -245,7 +242,6 @@ export function OurWorkManager({
       const res = await adminSaveWorkProjectFn({ data: payload });
       if (res.success) {
         onNotice(editingProject._id ? "Project updated successfully" : "New project published to portfolio!");
-        // Update local list
         setProjects((prev) => {
           const index = prev.findIndex((p) => p.slug === editingProject.slug || (p._id && p._id === editingProject._id));
           const fullDoc = { ...payload, _id: res.id } as WorkProjectDoc;
@@ -307,30 +303,30 @@ export function OurWorkManager({
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Top Controls & Navigation Sub-Tabs */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-black/[0.08] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.08] pb-5">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-600/15 bg-blue-50 px-3 py-0.5 text-xs font-bold text-blue-700 uppercase tracking-wider mb-1">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#0052FF]/30 bg-[#0052FF]/10 px-3 py-0.5 text-xs font-mono font-bold text-[#4385FF] uppercase tracking-wider mb-2">
             <Sparkles size={12} />
             <span>EXHIBITION MANAGEMENT</span>
           </div>
-          <h2 className="font-display text-2xl font-bold text-[#09090B]">
-            Our Work & Case Studies CMS
+          <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-white">
+            Our Work &amp; Case Studies CMS
           </h2>
-          <p className="text-xs text-[#52525B]">
-            Curate published portfolio projects, modular case studies, and exhibition settings.
+          <p className="text-xs text-neutral-400 mt-1 max-w-xl">
+            Curate published portfolio projects, modular case studies, and cinematic exhibition settings.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={() => setSubTab("projects")}
-            className={`rounded-full px-4 py-2 text-xs font-bold transition-all cursor-pointer ${
+            className={`rounded-xl px-4 py-2 text-xs font-bold transition-all cursor-pointer ${
               subTab === "projects"
-                ? "bg-black text-white shadow-xs"
-                : "bg-white text-[#52525B] border border-black/10 hover:border-black/25 hover:text-black"
+                ? "bg-[#0052FF] text-white shadow-[0_0_16px_rgba(0,82,255,0.4)]"
+                : "bg-white/[0.04] text-neutral-300 border border-white/[0.08] hover:bg-white/[0.08] hover:text-white"
             }`}
           >
             <span>Projects Catalogue ({projects.length})</span>
@@ -339,10 +335,10 @@ export function OurWorkManager({
           <button
             type="button"
             onClick={() => setSubTab("settings")}
-            className={`rounded-full px-4 py-2 text-xs font-bold transition-all cursor-pointer ${
+            className={`rounded-xl px-4 py-2 text-xs font-bold transition-all cursor-pointer ${
               subTab === "settings"
-                ? "bg-black text-white shadow-xs"
-                : "bg-white text-[#52525B] border border-black/10 hover:border-black/25 hover:text-black"
+                ? "bg-[#0052FF] text-white shadow-[0_0_16px_rgba(0,82,255,0.4)]"
+                : "bg-white/[0.04] text-neutral-300 border border-white/[0.08] hover:bg-white/[0.08] hover:text-white"
             }`}
           >
             <Sliders size={13} className="inline mr-1.5" />
@@ -378,9 +374,9 @@ export function OurWorkManager({
                   blocks: [],
                 })
               }
-              className="inline-flex items-center gap-1.5 rounded-full bg-[#0052FF] px-4 py-2 text-xs font-bold text-white hover:bg-blue-600 transition-colors shadow-xs ml-2 cursor-pointer"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.08] border border-white/10 hover:bg-[#0052FF] px-4 py-2 text-xs font-bold text-white transition-all shadow-[0_0_16px_rgba(0,82,255,0.2)] cursor-pointer"
             >
-              <Plus size={14} />
+              <Plus size={14} className="text-[#4385FF]" />
               <span>New Project</span>
             </button>
           )}
@@ -400,20 +396,20 @@ export function OurWorkManager({
                 placeholder="Search by client, title, industry..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-full border border-black/10 bg-white py-2 pl-4 pr-10 text-xs text-[#09090B] focus:border-black focus:outline-hidden"
+                className="w-full rounded-xl border border-white/10 bg-white/[0.03] py-2.5 pl-4 pr-10 text-xs text-white placeholder-neutral-500 focus:border-[#0052FF] focus:outline-hidden transition-colors"
               />
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-2.5 text-neutral-400 hover:text-black"
+                  className="absolute right-3 top-3 text-neutral-400 hover:text-white"
                 >
                   <X size={14} />
                 </button>
               )}
             </div>
 
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 -mx-2 px-2 sm:mx-0 sm:px-0">
               {(
                 [
                   { id: "all", label: "All" },
@@ -426,10 +422,10 @@ export function OurWorkManager({
                   key={tab.id}
                   type="button"
                   onClick={() => setStatusFilter(tab.id)}
-                  className={`rounded-full px-3 py-1.5 text-xs font-semibold cursor-pointer ${
+                  className={`rounded-xl px-3.5 py-1.5 text-xs font-semibold cursor-pointer shrink-0 transition-all ${
                     statusFilter === tab.id
-                      ? "bg-black text-white"
-                      : "bg-white text-neutral-600 border border-black/10 hover:bg-neutral-50"
+                      ? "bg-white text-black font-bold shadow-[0_0_12px_rgba(255,255,255,0.2)]"
+                      : "bg-white/[0.04] text-neutral-400 border border-white/[0.08] hover:bg-white/[0.08] hover:text-white"
                   }`}
                 >
                   {tab.label}
@@ -440,10 +436,10 @@ export function OurWorkManager({
 
           {/* Project List */}
           {filteredProjects.length === 0 ? (
-            <div className="rounded-2xl border border-black/10 bg-white p-12 text-center">
-              <Layers size={32} className="mx-auto text-neutral-400 mb-3" />
-              <h3 className="font-display font-bold text-base text-[#09090B]">No projects found</h3>
-              <p className="text-xs text-[#52525B] mt-1">
+            <div className="rounded-2xl border border-white/[0.08] bg-[#0A0B10] p-12 text-center">
+              <Layers size={32} className="mx-auto text-neutral-500 mb-3" />
+              <h3 className="font-display font-bold text-base text-white">No projects found</h3>
+              <p className="text-xs text-neutral-400 mt-1">
                 {searchQuery ? "Try clearing your search query." : "Click 'New Project' to create your first case study."}
               </p>
             </div>
@@ -452,16 +448,16 @@ export function OurWorkManager({
               {filteredProjects.map((project, idx) => (
                 <div
                   key={project.slug}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-black/10 bg-white p-4 transition-all hover:border-black/20 hover:shadow-xs"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-white/[0.08] bg-[#0A0B12]/90 p-4 transition-all hover:border-white/[0.18] hover:bg-[#0E0F18] shadow-md group"
                 >
                   {/* Left: Reorder controls + Thumbnail + Details */}
-                  <div className="flex items-center gap-4 min-w-0">
-                    <div className="flex flex-col gap-1 text-neutral-400">
+                  <div className="flex items-start sm:items-center gap-3 sm:gap-4 min-w-0">
+                    <div className="flex flex-col gap-1 text-neutral-500 pt-1 sm:pt-0 shrink-0">
                       <button
                         type="button"
                         onClick={() => handleMoveProject(idx, "up")}
                         disabled={idx === 0}
-                        className="hover:text-black disabled:opacity-20 cursor-pointer"
+                        className="hover:text-white disabled:opacity-20 cursor-pointer p-1 rounded hover:bg-white/5 transition-colors"
                         title="Move Up"
                       >
                         <ArrowUp size={13} />
@@ -470,21 +466,21 @@ export function OurWorkManager({
                         type="button"
                         onClick={() => handleMoveProject(idx, "down")}
                         disabled={idx === projects.length - 1}
-                        className="hover:text-black disabled:opacity-20 cursor-pointer"
+                        className="hover:text-white disabled:opacity-20 cursor-pointer p-1 rounded hover:bg-white/5 transition-colors"
                         title="Move Down"
                       >
                         <ArrowDown size={13} />
                       </button>
                     </div>
 
-                    <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-xl border border-black/10 bg-neutral-100">
+                    <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-[#08080C]">
                       <img
                         src={project.thumbnailUrl || project.heroMediaUrl}
                         alt={project.title}
-                        className="h-full w-full object-cover"
+                        className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                       {project.mediaType === "video" && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/30 text-white">
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white">
                           <Film size={14} />
                         </div>
                       )}
@@ -492,52 +488,52 @@ export function OurWorkManager({
 
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-mono text-[11px] font-bold text-[#0052FF]">
+                        <span className="font-mono text-[11px] font-bold text-[#4385FF]">
                           {project.clientName}
                         </span>
-                        <span className="text-neutral-300">•</span>
+                        <span className="text-neutral-600">•</span>
                         <span className="font-mono text-[11px] text-neutral-400">{project.year}</span>
                         {project.isPublished ? (
-                          <span className="rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.2 text-[10px] font-bold">
+                          <span className="rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 text-[10px] font-mono font-semibold">
                             Published
                           </span>
                         ) : (
-                          <span className="rounded-full bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.2 text-[10px] font-bold">
+                          <span className="rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 text-[10px] font-mono font-semibold">
                             Draft
                           </span>
                         )}
                         {project.isFeatured && (
-                          <span className="rounded-full bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.2 text-[10px] font-bold inline-flex items-center gap-1">
-                            <Star size={10} className="fill-current" />
+                          <span className="rounded-full bg-[#0052FF]/15 text-[#4385FF] border border-[#0052FF]/30 px-2 py-0.5 text-[10px] font-mono font-semibold inline-flex items-center gap-1">
+                            <Star size={10} className="fill-current text-amber-400" />
                             Featured
                           </span>
                         )}
                         {project.isConceptWork && (
-                          <span className="rounded-full bg-purple-50 text-purple-700 border border-purple-200 px-2 py-0.2 text-[10px] font-bold">
+                          <span className="rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2 py-0.5 text-[10px] font-mono font-semibold">
                             Concept
                           </span>
                         )}
                       </div>
 
-                      <h3 className="font-display font-bold text-[15px] text-[#09090B] truncate mt-0.5">
+                      <h3 className="font-display font-bold text-sm sm:text-[15px] text-white truncate mt-1 group-hover:text-[#4385FF] transition-colors">
                         {project.title}
                       </h3>
 
-                      <span className="font-mono text-[11px] text-neutral-400 block truncate">
+                      <span className="font-mono text-[10.5px] text-neutral-400 block truncate mt-0.5">
                         /our-work/{project.slug} • {project.industry} • {project.blocks?.length || 0} blocks
                       </span>
                     </div>
                   </div>
 
                   {/* Right: Actions */}
-                  <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                  <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-center pt-2 sm:pt-0 border-t border-white/[0.04] sm:border-0 w-full sm:w-auto justify-end">
                     <button
                       type="button"
                       onClick={() => handleToggleFeatured(project)}
-                      className={`rounded-full p-2 text-xs transition-colors cursor-pointer ${
+                      className={`rounded-xl p-2 text-xs transition-colors cursor-pointer border ${
                         project.isFeatured
-                          ? "bg-blue-50 text-blue-700 border border-blue-200"
-                          : "text-neutral-400 hover:text-black border border-black/10"
+                          ? "bg-amber-400/10 text-amber-400 border-amber-400/30"
+                          : "text-neutral-400 hover:text-white border-white/[0.08] hover:bg-white/[0.05]"
                       }`}
                       title={project.isFeatured ? "Unfeature" : "Feature on Signature Stage"}
                     >
@@ -547,7 +543,7 @@ export function OurWorkManager({
                     <Link
                       href={`/our-work/${project.slug}?preview=true`}
                       target="_blank"
-                      className="rounded-full border border-black/10 p-2 text-neutral-600 hover:text-black hover:border-black/30 transition-colors"
+                      className="rounded-xl border border-white/[0.08] p-2 text-neutral-300 hover:text-white hover:bg-white/[0.05] transition-colors"
                       title="Preview Case Study"
                     >
                       <Eye size={14} />
@@ -556,7 +552,7 @@ export function OurWorkManager({
                     <button
                       type="button"
                       onClick={() => handleDuplicate(project.slug)}
-                      className="rounded-full border border-black/10 p-2 text-neutral-600 hover:text-black hover:border-black/30 transition-colors cursor-pointer"
+                      className="rounded-xl border border-white/[0.08] p-2 text-neutral-300 hover:text-white hover:bg-white/[0.05] transition-colors cursor-pointer"
                       title="Duplicate as Draft"
                     >
                       <Copy size={14} />
@@ -565,7 +561,7 @@ export function OurWorkManager({
                     <button
                       type="button"
                       onClick={() => setEditingProject({ ...project })}
-                      className="inline-flex items-center gap-1 rounded-full bg-black px-3.5 py-1.5 text-xs font-bold text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1 rounded-xl bg-white/[0.08] border border-white/10 hover:bg-[#0052FF] px-3 py-1.5 text-xs font-bold text-white transition-all cursor-pointer"
                     >
                       <Edit2 size={12} />
                       <span>Edit</span>
@@ -574,7 +570,7 @@ export function OurWorkManager({
                     <button
                       type="button"
                       onClick={() => setDeleteConfirmId(String(project._id || project.slug))}
-                      className="rounded-full border border-red-200 p-2 text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                      className="rounded-xl border border-red-500/20 p-2 text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors cursor-pointer"
                       title="Delete Project"
                     >
                       <Trash2 size={14} />
@@ -591,63 +587,63 @@ export function OurWorkManager({
           TAB 2: PAGE SETTINGS
          ───────────────────────────────────────────────────────────── */}
       {subTab === "settings" && (
-        <div className="rounded-2xl border border-black/10 bg-white p-6 sm:p-8 space-y-8 max-w-4xl">
+        <div className="rounded-2xl border border-white/[0.08] bg-[#0A0B12]/90 p-6 sm:p-8 space-y-8 max-w-4xl shadow-xl">
           <div>
-            <h3 className="font-display font-bold text-lg text-[#09090B]">Hero Presentation</h3>
-            <p className="text-xs text-[#52525B]">Customize the typography and dominant media of /our-work</p>
+            <h3 className="font-display font-bold text-lg text-white">Hero Presentation</h3>
+            <p className="text-xs text-neutral-400">Customize the typography and dominant media of /our-work</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="sm:col-span-2">
-              <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+              <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                 Eyebrow Text
               </label>
               <input
                 type="text"
                 value={settings.heroEyebrow}
                 onChange={(e) => setSettings({ ...settings, heroEyebrow: e.target.value })}
-                className="w-full rounded-xl border border-black/10 px-3.5 py-2 text-xs focus:border-black focus:outline-hidden"
+                className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs text-white focus:border-[#0052FF] focus:outline-hidden"
               />
             </div>
 
             <div>
-              <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+              <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                 Heading Line 1 (Bold Sans)
               </label>
               <input
                 type="text"
                 value={settings.heroHeadingLine1}
                 onChange={(e) => setSettings({ ...settings, heroHeadingLine1: e.target.value })}
-                className="w-full rounded-xl border border-black/10 px-3.5 py-2 text-xs focus:border-black focus:outline-hidden"
+                className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs text-white focus:border-[#0052FF] focus:outline-hidden"
               />
             </div>
 
             <div>
-              <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+              <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                 Heading Line 2 (Italic Serif)
               </label>
               <input
                 type="text"
                 value={settings.heroHeadingLine2}
                 onChange={(e) => setSettings({ ...settings, heroHeadingLine2: e.target.value })}
-                className="w-full rounded-xl border border-black/10 px-3.5 py-2 text-xs focus:border-black focus:outline-hidden"
+                className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs text-white focus:border-[#0052FF] focus:outline-hidden"
               />
             </div>
 
             <div className="sm:col-span-2">
-              <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+              <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                 Supporting Copy
               </label>
               <textarea
                 rows={3}
                 value={settings.heroSupportingCopy}
                 onChange={(e) => setSettings({ ...settings, heroSupportingCopy: e.target.value })}
-                className="w-full rounded-xl border border-black/10 px-3.5 py-2 text-xs focus:border-black focus:outline-hidden"
+                className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs text-white focus:border-[#0052FF] focus:outline-hidden"
               />
             </div>
 
             <div className="sm:col-span-2">
-              <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+              <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                 Hero Media URL
               </label>
               <div className="flex items-center gap-2">
@@ -655,10 +651,10 @@ export function OurWorkManager({
                   type="text"
                   value={settings.heroMediaUrl}
                   onChange={(e) => setSettings({ ...settings, heroMediaUrl: e.target.value })}
-                  className="flex-1 rounded-xl border border-black/10 px-3.5 py-2 text-xs focus:border-black focus:outline-hidden"
+                  className="flex-1 rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs text-white focus:border-[#0052FF] focus:outline-hidden"
                 />
-                <label className="inline-flex items-center gap-1.5 rounded-xl border border-black/15 bg-neutral-100 px-4 py-2 text-xs font-bold text-neutral-700 hover:bg-neutral-200 cursor-pointer">
-                  <Upload size={13} />
+                <label className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.06] hover:bg-white/[0.1] px-4 py-2 text-xs font-bold text-white cursor-pointer transition-colors">
+                  <Upload size={13} className="text-[#4385FF]" />
                   <span>Upload</span>
                   <input
                     type="file"
@@ -673,19 +669,19 @@ export function OurWorkManager({
             </div>
 
             <div>
-              <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+              <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                 Hero Project Annotation
               </label>
               <input
                 type="text"
                 value={settings.heroProjectAnnotation}
                 onChange={(e) => setSettings({ ...settings, heroProjectAnnotation: e.target.value })}
-                className="w-full rounded-xl border border-black/10 px-3.5 py-2 text-xs focus:border-black focus:outline-hidden"
+                className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs text-white focus:border-[#0052FF] focus:outline-hidden"
               />
             </div>
 
             <div>
-              <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+              <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                 Motion Preset
               </label>
               <select
@@ -693,7 +689,7 @@ export function OurWorkManager({
                 onChange={(e) =>
                   setSettings({ ...settings, motionPreset: e.target.value as "subtle" | "standard" | "reduced" })
                 }
-                className="w-full rounded-xl border border-black/10 px-3.5 py-2 text-xs focus:border-black focus:outline-hidden bg-white"
+                className="w-full rounded-xl border border-white/10 bg-[#0A0B12] px-3.5 py-2 text-xs text-white focus:border-[#0052FF] focus:outline-hidden"
               >
                 <option value="standard">Standard (Full Cinematic Pinning)</option>
                 <option value="subtle">Subtle (Restrained Transition)</option>
@@ -703,85 +699,85 @@ export function OurWorkManager({
           </div>
 
           {/* Closing Invitation CTA */}
-          <div className="pt-6 border-t border-black/10 space-y-4">
+          <div className="pt-6 border-t border-white/[0.08] space-y-4">
             <div>
-              <h4 className="font-display font-bold text-base text-[#09090B]">Closing Invitation CTA</h4>
-              <p className="text-xs text-[#52525B]">Configurable call-to-action at the bottom of the work page</p>
+              <h4 className="font-display font-bold text-base text-white">Closing Invitation CTA</h4>
+              <p className="text-xs text-neutral-400">Configurable call-to-action at the bottom of the work page</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+                <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                   CTA Line 1
                 </label>
                 <input
                   type="text"
                   value={settings.closingCtaHeadingLine1}
                   onChange={(e) => setSettings({ ...settings, closingCtaHeadingLine1: e.target.value })}
-                  className="w-full rounded-xl border border-black/10 px-3.5 py-2 text-xs focus:border-black focus:outline-hidden"
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs text-white focus:border-[#0052FF] focus:outline-hidden"
                 />
               </div>
 
               <div>
-                <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+                <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                   CTA Line 2
                 </label>
                 <input
                   type="text"
                   value={settings.closingCtaHeadingLine2}
                   onChange={(e) => setSettings({ ...settings, closingCtaHeadingLine2: e.target.value })}
-                  className="w-full rounded-xl border border-black/10 px-3.5 py-2 text-xs focus:border-black focus:outline-hidden"
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs text-white focus:border-[#0052FF] focus:outline-hidden"
                 />
               </div>
 
               <div className="sm:col-span-2">
-                <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+                <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                   Supporting Paragraph
                 </label>
                 <textarea
                   rows={2}
                   value={settings.closingCtaCopy}
                   onChange={(e) => setSettings({ ...settings, closingCtaCopy: e.target.value })}
-                  className="w-full rounded-xl border border-black/10 px-3.5 py-2 text-xs focus:border-black focus:outline-hidden"
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs text-white focus:border-[#0052FF] focus:outline-hidden"
                 />
               </div>
 
               <div>
-                <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+                <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                   Button Text
                 </label>
                 <input
                   type="text"
                   value={settings.closingCtaButtonText}
                   onChange={(e) => setSettings({ ...settings, closingCtaButtonText: e.target.value })}
-                  className="w-full rounded-xl border border-black/10 px-3.5 py-2 text-xs focus:border-black focus:outline-hidden"
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs text-white focus:border-[#0052FF] focus:outline-hidden"
                 />
               </div>
 
               <div>
-                <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+                <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                   Button Destination
                 </label>
                 <input
                   type="text"
                   value={settings.closingCtaDestination}
                   onChange={(e) => setSettings({ ...settings, closingCtaDestination: e.target.value })}
-                  className="w-full rounded-xl border border-black/10 px-3.5 py-2 text-xs focus:border-black focus:outline-hidden"
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs text-white focus:border-[#0052FF] focus:outline-hidden"
                 />
               </div>
             </div>
           </div>
 
           {/* SEO Metadata */}
-          <div className="pt-6 border-t border-black/10 space-y-4">
+          <div className="pt-6 border-t border-white/[0.08] space-y-4">
             <div>
-              <h4 className="font-display font-bold text-base text-[#09090B]">SEO & Meta</h4>
-              <p className="text-xs text-[#52525B]">Search engine indexing and social preview cards</p>
+              <h4 className="font-display font-bold text-base text-white">SEO &amp; Meta</h4>
+              <p className="text-xs text-neutral-400">Search engine indexing and social preview cards</p>
             </div>
 
             <div className="space-y-3">
               <div>
-                <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+                <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                   Meta Title
                 </label>
                 <input
@@ -790,12 +786,12 @@ export function OurWorkManager({
                   onChange={(e) =>
                     setSettings({ ...settings, seo: { ...settings.seo, title: e.target.value } })
                   }
-                  className="w-full rounded-xl border border-black/10 px-3.5 py-2 text-xs focus:border-black focus:outline-hidden"
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs text-white focus:border-[#0052FF] focus:outline-hidden"
                 />
               </div>
 
               <div>
-                <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+                <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                   Meta Description
                 </label>
                 <textarea
@@ -804,18 +800,18 @@ export function OurWorkManager({
                   onChange={(e) =>
                     setSettings({ ...settings, seo: { ...settings.seo, description: e.target.value } })
                   }
-                  className="w-full rounded-xl border border-black/10 px-3.5 py-2 text-xs focus:border-black focus:outline-hidden"
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs text-white focus:border-[#0052FF] focus:outline-hidden"
                 />
               </div>
             </div>
           </div>
 
-          <div className="pt-6 border-t border-black/10 flex justify-end">
+          <div className="pt-6 border-t border-white/[0.08] flex justify-end">
             <button
               type="button"
               disabled={isSaving}
               onClick={handleSaveSettings}
-              className="inline-flex items-center gap-2 rounded-full bg-black px-6 py-2.5 text-xs font-bold text-white hover:bg-neutral-800 transition-colors disabled:opacity-50 cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#0052FF] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#0043DB] shadow-[0_0_20px_rgba(0,82,255,0.4)] transition-all disabled:opacity-50 cursor-pointer"
             >
               <Save size={14} />
               <span>{isSaving ? "Saving..." : "Save Page Settings"}</span>
@@ -828,15 +824,15 @@ export function OurWorkManager({
           MODAL: EDIT OR CREATE MODULAR PROJECT
          ───────────────────────────────────────────────────────────── */}
       {editingProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="relative w-full max-w-4xl rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-black/10 my-8 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-3 sm:p-6 overflow-y-auto">
+          <div className="relative w-full max-w-4xl rounded-3xl bg-[#0A0B12] p-5 sm:p-8 shadow-[0_20px_80px_rgba(0,0,0,0.9)] border border-white/10 my-4 max-h-[92vh] flex flex-col">
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-black/10 pb-4 mb-6">
+            <div className="flex items-center justify-between border-b border-white/[0.08] pb-4 mb-4 shrink-0">
               <div>
-                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#0052FF]">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#4385FF]">
                   {editingProject._id ? "EDIT CASE STUDY" : "CREATE NEW PROJECT"}
                 </span>
-                <h3 className="font-display font-bold text-xl text-[#09090B]">
+                <h3 className="font-display font-bold text-lg sm:text-xl text-white">
                   {editingProject.title || "Untitled Project"}
                 </h3>
               </div>
@@ -844,24 +840,24 @@ export function OurWorkManager({
               <button
                 type="button"
                 onClick={() => setEditingProject(null)}
-                className="rounded-full border border-black/10 p-2 text-neutral-500 hover:text-black cursor-pointer"
+                className="rounded-xl border border-white/10 p-2 text-neutral-400 hover:text-white hover:bg-white/5 cursor-pointer transition-colors"
               >
                 <X size={16} />
               </button>
             </div>
 
             {/* Modal Body */}
-            <div className="space-y-6 text-xs">
+            <div className="flex-1 overflow-y-auto pr-1 sm:pr-2 space-y-6 text-xs custom-scrollbar">
               {/* Publication Status & Concept toggles */}
-              <div className="flex flex-wrap items-center gap-6 rounded-2xl bg-neutral-50 p-4 border border-black/5">
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6 rounded-2xl bg-white/[0.02] p-4 border border-white/[0.06]">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={Boolean(editingProject.isPublished)}
                     onChange={(e) => setEditingProject({ ...editingProject, isPublished: e.target.checked })}
-                    className="rounded border-black/20 text-[#0052FF] focus:ring-0"
+                    className="rounded border-white/20 bg-white/5 text-[#0052FF] focus:ring-0"
                   />
-                  <span className="font-bold text-[#09090B]">Published on Live Site</span>
+                  <span className="font-bold text-white">Published on Live Site</span>
                 </label>
 
                 <label className="flex items-center gap-2 cursor-pointer">
@@ -869,9 +865,9 @@ export function OurWorkManager({
                     type="checkbox"
                     checked={Boolean(editingProject.isFeatured)}
                     onChange={(e) => setEditingProject({ ...editingProject, isFeatured: e.target.checked })}
-                    className="rounded border-black/20 text-[#0052FF] focus:ring-0"
+                    className="rounded border-white/20 bg-white/5 text-[#0052FF] focus:ring-0"
                   />
-                  <span className="font-bold text-[#09090B]">Feature on Signature Stage</span>
+                  <span className="font-bold text-white">Feature on Signature Stage</span>
                 </label>
 
                 <label className="flex items-center gap-2 cursor-pointer">
@@ -879,29 +875,29 @@ export function OurWorkManager({
                     type="checkbox"
                     checked={Boolean(editingProject.isConceptWork)}
                     onChange={(e) => setEditingProject({ ...editingProject, isConceptWork: e.target.checked })}
-                    className="rounded border-black/20 text-[#0052FF] focus:ring-0"
+                    className="rounded border-white/20 bg-white/5 text-[#0052FF] focus:ring-0"
                   />
-                  <span className="font-bold text-[#09090B]">Mark as Concept Work</span>
+                  <span className="font-bold text-white">Mark as Concept Work</span>
                 </label>
               </div>
 
               {/* Core Information */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+                  <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                     Client Name *
                   </label>
                   <input
                     type="text"
                     value={editingProject.clientName || ""}
                     onChange={(e) => setEditingProject({ ...editingProject, clientName: e.target.value })}
-                    className="w-full rounded-xl border border-black/10 px-3.5 py-2 focus:border-black focus:outline-hidden"
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-white focus:border-[#0052FF] focus:outline-hidden"
                     placeholder="e.g. Apex Strategic Advisory"
                   />
                 </div>
 
                 <div>
-                  <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+                  <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                     URL Slug *
                   </label>
                   <input
@@ -913,64 +909,64 @@ export function OurWorkManager({
                         slug: e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, "-"),
                       })
                     }
-                    className="w-full rounded-xl border border-black/10 px-3.5 py-2 font-mono focus:border-black focus:outline-hidden"
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 font-mono text-white focus:border-[#0052FF] focus:outline-hidden"
                     placeholder="e.g. apex-advisory"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+                  <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                     Case Study Title *
                   </label>
                   <input
                     type="text"
                     value={editingProject.title || ""}
                     onChange={(e) => setEditingProject({ ...editingProject, title: e.target.value })}
-                    className="w-full rounded-xl border border-black/10 px-3.5 py-2 font-display font-semibold focus:border-black focus:outline-hidden"
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 font-display font-semibold text-white focus:border-[#0052FF] focus:outline-hidden"
                     placeholder="e.g. Apex Strategic Advisory: Corporate Positioning & Digital Platform"
                   />
                 </div>
 
                 <div>
-                  <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+                  <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                     Industry
                   </label>
                   <input
                     type="text"
                     value={editingProject.industry || ""}
                     onChange={(e) => setEditingProject({ ...editingProject, industry: e.target.value })}
-                    className="w-full rounded-xl border border-black/10 px-3.5 py-2 focus:border-black focus:outline-hidden"
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-white focus:border-[#0052FF] focus:outline-hidden"
                     placeholder="e.g. Management Consultancy"
                   />
                 </div>
 
                 <div>
-                  <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+                  <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                     Year / Timeline
                   </label>
                   <input
                     type="text"
                     value={editingProject.year || "2026"}
                     onChange={(e) => setEditingProject({ ...editingProject, year: e.target.value })}
-                    className="w-full rounded-xl border border-black/10 px-3.5 py-2 focus:border-black focus:outline-hidden"
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-white focus:border-[#0052FF] focus:outline-hidden"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+                  <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                     Positioning Statement / Summary *
                   </label>
                   <textarea
                     rows={3}
                     value={editingProject.summary || ""}
                     onChange={(e) => setEditingProject({ ...editingProject, summary: e.target.value })}
-                    className="w-full rounded-xl border border-black/10 px-3.5 py-2 focus:border-black focus:outline-hidden"
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-white focus:border-[#0052FF] focus:outline-hidden"
                     placeholder="Concise executive narrative of what Thrides engineered and delivered..."
                   />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+                  <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                     Categories
                   </label>
                   <div className="flex flex-wrap gap-2 pt-1">
@@ -985,10 +981,10 @@ export function OurWorkManager({
                             const next = isChecked ? cur.filter((c) => c !== cat.id) : [...cur, cat.id];
                             setEditingProject({ ...editingProject, categories: next });
                           }}
-                          className={`rounded-full px-3 py-1 font-semibold transition-all cursor-pointer ${
+                          className={`rounded-xl px-3 py-1 text-xs font-semibold transition-all cursor-pointer ${
                             isChecked
-                              ? "bg-black text-white"
-                              : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
+                              ? "bg-[#0052FF] text-white shadow-[0_0_12px_rgba(0,82,255,0.4)]"
+                              : "bg-white/[0.04] text-neutral-400 border border-white/[0.08] hover:bg-white/[0.08] hover:text-white"
                           }`}
                         >
                           {cat.label}
@@ -1000,22 +996,22 @@ export function OurWorkManager({
               </div>
 
               {/* Media Settings */}
-              <div className="pt-4 border-t border-black/10 space-y-4">
-                <h4 className="font-display font-bold text-sm text-[#09090B]">Hero & Thumbnail Media</h4>
+              <div className="pt-4 border-t border-white/[0.08] space-y-4">
+                <h4 className="font-display font-bold text-sm text-white">Hero &amp; Thumbnail Media</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
-                      Thumbnail URL (Catalogue & Grid)
+                    <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
+                      Thumbnail URL (Catalogue &amp; Grid)
                     </label>
                     <div className="flex items-center gap-2">
                       <input
                         type="text"
                         value={editingProject.thumbnailUrl || ""}
                         onChange={(e) => setEditingProject({ ...editingProject, thumbnailUrl: e.target.value })}
-                        className="flex-1 rounded-xl border border-black/10 px-3.5 py-2 focus:border-black focus:outline-hidden"
+                        className="flex-1 rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-white focus:border-[#0052FF] focus:outline-hidden"
                       />
-                      <label className="inline-flex items-center gap-1 rounded-xl border border-black/15 bg-neutral-100 px-3 py-2 text-xs font-bold text-neutral-700 hover:bg-neutral-200 cursor-pointer">
-                        <Upload size={12} />
+                      <label className="inline-flex items-center gap-1 rounded-xl border border-white/15 bg-white/[0.06] hover:bg-white/[0.1] px-3 py-2 text-xs font-bold text-white cursor-pointer transition-colors">
+                        <Upload size={12} className="text-[#4385FF]" />
                         <input
                           type="file"
                           accept="image/*"
@@ -1029,7 +1025,7 @@ export function OurWorkManager({
                   </div>
 
                   <div>
-                    <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+                    <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                       Hero Media URL (Dominant Banner)
                     </label>
                     <div className="flex items-center gap-2">
@@ -1037,10 +1033,10 @@ export function OurWorkManager({
                         type="text"
                         value={editingProject.heroMediaUrl || ""}
                         onChange={(e) => setEditingProject({ ...editingProject, heroMediaUrl: e.target.value })}
-                        className="flex-1 rounded-xl border border-black/10 px-3.5 py-2 focus:border-black focus:outline-hidden"
+                        className="flex-1 rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-white focus:border-[#0052FF] focus:outline-hidden"
                       />
-                      <label className="inline-flex items-center gap-1 rounded-xl border border-black/15 bg-neutral-100 px-3 py-2 text-xs font-bold text-neutral-700 hover:bg-neutral-200 cursor-pointer">
-                        <Upload size={12} />
+                      <label className="inline-flex items-center gap-1 rounded-xl border border-white/15 bg-white/[0.06] hover:bg-white/[0.1] px-3 py-2 text-xs font-bold text-white cursor-pointer transition-colors">
+                        <Upload size={12} className="text-[#4385FF]" />
                         <input
                           type="file"
                           accept="image/*,video/*"
@@ -1062,38 +1058,38 @@ export function OurWorkManager({
               </div>
 
               {/* Narrative Sections: Challenge & Approach */}
-              <div className="pt-4 border-t border-black/10 space-y-4">
-                <h4 className="font-display font-bold text-sm text-[#09090B]">Narrative Structure</h4>
+              <div className="pt-4 border-t border-white/[0.08] space-y-4">
+                <h4 className="font-display font-bold text-sm text-white">Narrative Structure</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+                    <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                       The Challenge (Friction Point)
                     </label>
                     <textarea
                       rows={4}
                       value={editingProject.challenge || ""}
                       onChange={(e) => setEditingProject({ ...editingProject, challenge: e.target.value })}
-                      className="w-full rounded-xl border border-black/10 px-3.5 py-2 focus:border-black focus:outline-hidden"
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-white focus:border-[#0052FF] focus:outline-hidden"
                     />
                   </div>
                   <div>
-                    <label className="font-mono text-[11px] font-bold uppercase text-neutral-600 block mb-1">
+                    <label className="font-mono text-[11px] font-bold uppercase text-neutral-400 block mb-1">
                       Our Approach (The Solution)
                     </label>
                     <textarea
                       rows={4}
                       value={editingProject.approach || ""}
                       onChange={(e) => setEditingProject({ ...editingProject, approach: e.target.value })}
-                      className="w-full rounded-xl border border-black/10 px-3.5 py-2 focus:border-black focus:outline-hidden"
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-white focus:border-[#0052FF] focus:outline-hidden"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Verified Results Builder */}
-              <div className="pt-4 border-t border-black/10 space-y-3">
+              <div className="pt-4 border-t border-white/[0.08] space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-display font-bold text-sm text-[#09090B]">Verified Outcomes / Metrics</h4>
+                  <h4 className="font-display font-bold text-sm text-white">Verified Outcomes / Metrics</h4>
                   <button
                     type="button"
                     onClick={() => {
@@ -1103,36 +1099,36 @@ export function OurWorkManager({
                         results: [...cur, { metric: "+50%", label: "Metric Label", context: "Context note" }],
                       });
                     }}
-                    className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-3 py-1 font-bold text-neutral-700 hover:bg-neutral-200 cursor-pointer"
+                    className="inline-flex items-center gap-1 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] px-3 py-1 font-bold text-white cursor-pointer transition-colors"
                   >
-                    <Plus size={12} />
+                    <Plus size={12} className="text-[#4385FF]" />
                     <span>Add Metric</span>
                   </button>
                 </div>
 
                 <div className="space-y-2">
                   {editingProject.results?.map((res, i) => (
-                    <div key={i} className="flex items-center gap-2">
+                    <div key={i} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                       <input
                         type="text"
                         placeholder="Metric (+184%)"
                         value={res.metric}
                         onChange={(e) => updateResultItem(i, "metric", e.target.value)}
-                        className="w-32 rounded-lg border border-black/10 px-2.5 py-1.5 font-bold"
+                        className="w-full sm:w-32 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-1.5 font-mono font-bold text-white"
                       />
                       <input
                         type="text"
                         placeholder="Label (Qualified Pipeline)"
                         value={res.label}
                         onChange={(e) => updateResultItem(i, "label", e.target.value)}
-                        className="flex-1 rounded-lg border border-black/10 px-2.5 py-1.5"
+                        className="flex-1 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-1.5 text-white"
                       />
                       <input
                         type="text"
                         placeholder="Context (Compared to last year)"
                         value={res.context || ""}
                         onChange={(e) => updateResultItem(i, "context", e.target.value)}
-                        className="flex-1 rounded-lg border border-black/10 px-2.5 py-1.5"
+                        className="flex-1 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-1.5 text-white"
                       />
                       <button
                         type="button"
@@ -1140,7 +1136,7 @@ export function OurWorkManager({
                           const updated = (editingProject.results || []).filter((_, idx) => idx !== i);
                           setEditingProject({ ...editingProject, results: updated });
                         }}
-                        className="p-1.5 text-red-500 hover:text-red-700 cursor-pointer"
+                        className="self-end sm:self-center p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg cursor-pointer transition-colors"
                       >
                         <Trash2 size={13} />
                       </button>
@@ -1150,11 +1146,11 @@ export function OurWorkManager({
               </div>
 
               {/* Modular Blocks Builder */}
-              <div className="pt-4 border-t border-black/10 space-y-4">
-                <div className="flex items-center justify-between">
+              <div className="pt-4 border-t border-white/[0.08] space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
-                    <h4 className="font-display font-bold text-sm text-[#09090B]">Modular Content Blocks</h4>
-                    <p className="text-[11px] text-[#52525B]">Full-width images, split layouts, video reels, and editorial highlights</p>
+                    <h4 className="font-display font-bold text-sm text-white">Modular Content Blocks</h4>
+                    <p className="text-[11px] text-neutral-400">Full-width images, split layouts, video reels, and editorial highlights</p>
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -1211,7 +1207,7 @@ export function OurWorkManager({
                         });
                         e.target.value = "";
                       }}
-                      className="rounded-full border border-black/15 bg-white px-3 py-1.5 text-xs font-bold text-[#09090B] cursor-pointer"
+                      className="rounded-xl border border-white/15 bg-[#0C0D16] px-3.5 py-2 text-xs font-bold text-white cursor-pointer"
                     >
                       <option value="">+ Add Content Block...</option>
                       <option value="full_width_image">Full-Width Image</option>
@@ -1227,10 +1223,10 @@ export function OurWorkManager({
                   {(editingProject.blocks || []).map((block, bIdx) => (
                     <div
                       key={block.id || bIdx}
-                      className="rounded-xl border border-black/10 bg-neutral-50 p-4 space-y-3"
+                      className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 space-y-3"
                     >
-                      <div className="flex items-center justify-between border-b border-black/5 pb-2">
-                        <span className="font-mono text-[10px] font-bold uppercase text-[#0052FF]">
+                      <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
+                        <span className="font-mono text-[10px] font-bold uppercase text-[#4385FF]">
                           BLOCK {bIdx + 1}: {block.type.replace(/_/g, " ")}
                         </span>
                         <div className="flex items-center gap-1">
@@ -1243,7 +1239,7 @@ export function OurWorkManager({
                               if (moved) updated.splice(bIdx - 1, 0, moved);
                               setEditingProject({ ...editingProject, blocks: updated });
                             }}
-                            className="p-1 hover:text-black disabled:opacity-20 cursor-pointer"
+                            className="p-1 hover:text-white disabled:opacity-20 cursor-pointer"
                           >
                             <ArrowUp size={12} />
                           </button>
@@ -1256,7 +1252,7 @@ export function OurWorkManager({
                               if (moved) updated.splice(bIdx + 1, 0, moved);
                               setEditingProject({ ...editingProject, blocks: updated });
                             }}
-                            className="p-1 hover:text-black disabled:opacity-20 cursor-pointer"
+                            className="p-1 hover:text-white disabled:opacity-20 cursor-pointer"
                           >
                             <ArrowDown size={12} />
                           </button>
@@ -1266,7 +1262,7 @@ export function OurWorkManager({
                               const updated = (editingProject.blocks || []).filter((_, idx) => idx !== bIdx);
                               setEditingProject({ ...editingProject, blocks: updated });
                             }}
-                            className="p-1 text-red-500 hover:text-red-700 cursor-pointer ml-2"
+                            className="p-1 text-red-400 hover:text-red-300 cursor-pointer ml-2"
                           >
                             <Trash2 size={12} />
                           </button>
@@ -1282,10 +1278,10 @@ export function OurWorkManager({
                               value={block.url}
                               placeholder="Image URL"
                               onChange={(e) => updateBlockItem(bIdx, { url: e.target.value })}
-                              className="flex-1 rounded-lg border border-black/10 px-3 py-1.5 bg-white"
+                              className="flex-1 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-1.5 text-white"
                             />
-                            <label className="inline-flex items-center gap-1 rounded-lg border border-black/15 bg-white px-3 py-1.5 text-xs font-bold text-neutral-700 hover:bg-neutral-100 cursor-pointer">
-                              <Upload size={12} />
+                            <label className="inline-flex items-center gap-1 rounded-xl border border-white/15 bg-white/[0.06] hover:bg-white/[0.1] px-3 py-1.5 text-xs font-bold text-white cursor-pointer transition-colors">
+                              <Upload size={12} className="text-[#4385FF]" />
                               <input
                                 type="file"
                                 accept="image/*"
@@ -1302,7 +1298,7 @@ export function OurWorkManager({
                               value={block.caption || ""}
                               placeholder="Caption note"
                               onChange={(e) => updateBlockItem(bIdx, { caption: e.target.value })}
-                              className="w-full rounded-lg border border-black/10 px-3 py-1.5 bg-white"
+                              className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 py-1.5 text-white"
                             />
                           </div>
                           <div>
@@ -1311,7 +1307,7 @@ export function OurWorkManager({
                               value={block.altText || ""}
                               placeholder="Alt text"
                               onChange={(e) => updateBlockItem(bIdx, { altText: e.target.value })}
-                              className="w-full rounded-lg border border-black/10 px-3 py-1.5 bg-white"
+                              className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 py-1.5 text-white"
                             />
                           </div>
                         </div>
@@ -1324,14 +1320,14 @@ export function OurWorkManager({
                             value={block.heading}
                             placeholder="Heading"
                             onChange={(e) => updateBlockItem(bIdx, { heading: e.target.value })}
-                            className="w-full rounded-lg border border-black/10 px-3 py-1.5 font-bold bg-white"
+                            className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 py-1.5 font-display font-bold text-white"
                           />
                           <textarea
                             rows={3}
                             value={block.body}
                             placeholder="Narrative content..."
                             onChange={(e) => updateBlockItem(bIdx, { body: e.target.value })}
-                            className="w-full rounded-lg border border-black/10 px-3 py-1.5 bg-white"
+                            className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 py-1.5 text-white"
                           />
                         </div>
                       )}
@@ -1343,14 +1339,14 @@ export function OurWorkManager({
                             value={block.url}
                             placeholder="Video URL (/videos/ads/...)"
                             onChange={(e) => updateBlockItem(bIdx, { url: e.target.value })}
-                            className="w-full rounded-lg border border-black/10 px-3 py-1.5 bg-white"
+                            className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 py-1.5 text-white"
                           />
                           <input
                             type="text"
                             value={block.caption || ""}
                             placeholder="Video caption note"
                             onChange={(e) => updateBlockItem(bIdx, { caption: e.target.value })}
-                            className="w-full rounded-lg border border-black/10 px-3 py-1.5 bg-white"
+                            className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 py-1.5 text-white"
                           />
                         </div>
                       )}
@@ -1367,7 +1363,7 @@ export function OurWorkManager({
                                   imageLeft: { ...block.imageLeft, url: e.target.value },
                                 })
                               }
-                              className="w-full rounded-lg border border-black/10 px-3 py-1.5 bg-white"
+                              className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 py-1.5 text-white"
                             />
                           </div>
                           <div>
@@ -1380,7 +1376,7 @@ export function OurWorkManager({
                                   imageRight: { ...block.imageRight, url: e.target.value },
                                 })
                               }
-                              className="w-full rounded-lg border border-black/10 px-3 py-1.5 bg-white"
+                              className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 py-1.5 text-white"
                             />
                           </div>
                         </div>
@@ -1392,14 +1388,14 @@ export function OurWorkManager({
             </div>
 
             {/* Modal Footer */}
-            <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-black/10 pt-4">
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border-t border-white/[0.08] pt-4 shrink-0 bg-[#0A0B12]">
               <div className="flex items-center gap-2">
                 <Link
                   href={`/our-work/${editingProject.slug}?preview=true`}
                   target="_blank"
-                  className="inline-flex items-center gap-1.5 rounded-full border border-black/15 bg-white px-4 py-2 text-xs font-bold text-neutral-700 hover:bg-neutral-50 cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-2 text-xs font-bold text-neutral-300 hover:text-white hover:bg-white/[0.08] transition-colors"
                 >
-                  <Eye size={13} />
+                  <Eye size={13} className="text-[#4385FF]" />
                   <span>Preview Page</span>
                 </Link>
               </div>
@@ -1408,7 +1404,7 @@ export function OurWorkManager({
                 <button
                   type="button"
                   onClick={() => setEditingProject(null)}
-                  className="rounded-full px-5 py-2 text-xs font-semibold text-neutral-600 hover:text-black cursor-pointer"
+                  className="rounded-xl px-5 py-2 text-xs font-semibold text-neutral-400 hover:text-white cursor-pointer transition-colors"
                 >
                   Cancel
                 </button>
@@ -1417,7 +1413,7 @@ export function OurWorkManager({
                   type="button"
                   disabled={isSaving}
                   onClick={handleSaveProject}
-                  className="inline-flex items-center gap-2 rounded-full bg-black px-6 py-2.5 text-xs font-bold text-white hover:bg-neutral-800 transition-colors disabled:opacity-50 cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#0052FF] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#0043DB] shadow-[0_0_20px_rgba(0,82,255,0.4)] transition-all disabled:opacity-50 cursor-pointer"
                 >
                   <Save size={14} />
                   <span>{isSaving ? "Saving..." : editingProject.isPublished ? "Publish Project" : "Save as Draft"}</span>
@@ -1430,25 +1426,25 @@ export function OurWorkManager({
 
       {/* Confirmation Modal for Deleting */}
       {deleteConfirmId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
-          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl border border-black/10 text-center">
-            <AlertCircle size={36} className="mx-auto text-red-600 mb-3" />
-            <h4 className="font-display font-bold text-base text-[#09090B]">Delete this project?</h4>
-            <p className="text-xs text-[#52525B] mt-1">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+          <div className="w-full max-w-sm rounded-3xl bg-[#0A0B12] p-6 shadow-2xl border border-white/10 text-center">
+            <AlertCircle size={36} className="mx-auto text-red-400 mb-3" />
+            <h4 className="font-display font-bold text-base text-white">Delete this project?</h4>
+            <p className="text-xs text-neutral-400 mt-1">
               This will permanently remove the case study and its modular blocks from the database.
             </p>
             <div className="mt-6 flex justify-center gap-3">
               <button
                 type="button"
                 onClick={() => setDeleteConfirmId(null)}
-                className="rounded-full border border-black/15 px-4 py-2 text-xs font-semibold hover:bg-neutral-50 cursor-pointer"
+                className="rounded-xl border border-white/15 px-4 py-2 text-xs font-semibold text-neutral-300 hover:bg-white/5 cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={() => handleDelete(deleteConfirmId)}
-                className="rounded-full bg-red-600 px-5 py-2 text-xs font-bold text-white hover:bg-red-700 transition-colors cursor-pointer"
+                className="rounded-xl bg-red-600 px-5 py-2 text-xs font-bold text-white hover:bg-red-700 transition-colors cursor-pointer"
               >
                 Confirm Delete
               </button>

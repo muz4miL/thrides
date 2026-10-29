@@ -54,3 +54,4 @@
 }
 @media(prefers-reduced-motion:reduce){.page *, .page *::before,.page *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 .principles{min-width:0}
+

@@ -116,6 +116,19 @@ export async function POST(req: Request) {
         );
         return NextResponse.json({ success: true });
       }
+      case "updateSubmissionNotes": {
+        if (!ObjectId.isValid(data.id)) return NextResponse.json({ success: false, error: "Invalid ID" }, { status: 400 });
+        await collections.submissions.updateOne(
+          { _id: new ObjectId(data.id) },
+          { $set: { internalNotes: typeof data.notes === "string" ? data.notes.slice(0, 3000) : "" } },
+        );
+        return NextResponse.json({ success: true });
+      }
+      case "deleteSubmission": {
+        if (!ObjectId.isValid(data.id)) return NextResponse.json({ success: false, error: "Invalid ID" }, { status: 400 });
+        await collections.submissions.deleteOne({ _id: new ObjectId(data.id) });
+        return NextResponse.json({ success: true });
+      }
       case "updateSiteSettings": {
         const { _id, ...fields } = data;
         fields.updatedAt = new Date();
