@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight, ArrowDown, Plus, Minus, Target, BrainCircuit, MessageSquare, Users } from "lucide-react";
+import { ArrowUpRight, ArrowDown, Plus, Minus } from "lucide-react";
 import rawStyles from "./about.module.css";
 
 const styles: any = rawStyles;
@@ -14,41 +14,102 @@ type Props = {
 
 const principles = [
   {
-    title: "One plan. Every move connected.", label: "Direction", icon: Target,
+    title: "One plan. Every move connected.",
+    label: "Direction",
+    image: "/images/about/1.png",
     description: "Everything we do ties back to your business goals. No random disjointed tasks.",
-    words: ["Your goals", "Our strategy", "Every execution"]
+    words: ["Your goals", "Our strategy", "Every execution"],
   },
   {
-    title: "Insight before instinct.", label: "Intelligence", icon: BrainCircuit,
+    title: "Insight before instinct.",
+    label: "Intelligence",
+    image: "/images/about/2.png",
     description: "We research your market, competitors, and customers before we create anything, so your marketing starts with an edge.",
-    words: ["Your market", "Your audience", "Your advantage"]
+    words: ["Your market", "Your audience", "Your advantage"],
   },
   {
-    title: "Clarity at every step.", label: "Communication", icon: MessageSquare,
+    title: "Clarity at every step.",
+    label: "Communication",
+    image: "/images/about/3.png",
     description: "You’ll always know what’s working and what we’re changing, without buzzwords.",
-    words: ["What we see", "What it means", "What comes next"]
+    words: ["What we see", "What it means", "What comes next"],
   },
   {
-    title: "A partner. Not a ticket number.", label: "Partnership", icon: Users,
+    title: "A partner. Not a ticket number.",
+    label: "Partnership",
+    image: "/images/about/4.png",
     description: "A proper welcome, a clear point of contact, agreed response times, and updates without chasing.",
-    words: ["A real welcome", "A clear contact", "A shared ambition"]
+    words: ["A real welcome", "A clear contact", "A shared ambition"],
   },
 ];
 
 export default function AboutExperience({ stats, members }: Props) {
   const root = useRef<HTMLElement>(null);
+  const experienceRef = useRef<HTMLElement>(null);
   const [active, setActive] = useState<number | null>(0);
-  const selected = (principles[active ?? 0] ?? principles[0])!;
-  const Icon = selected.icon;
+  const lastActiveRef = useRef<number>(0);
+  const [isPaused, setIsPaused] = useState(false);
 
+  if (active !== null) {
+    lastActiveRef.current = active;
+  }
+  const selectedIndex = active ?? lastActiveRef.current;
+  const selected = (principles[selectedIndex] ?? principles[0])!;
+
+  // Preload all 4 sculpture images on mount
+  useEffect(() => {
+    principles.forEach((p) => {
+      const img = new Image();
+      img.src = p.image;
+    });
+  }, []);
+
+  // Pause floating motion when section is offscreen or tab is hidden
+  useEffect(() => {
+    const section = experienceRef.current;
+    if (!section) return;
+
+    let isIntersecting = true;
+    let isTabHidden = document.hidden;
+
+    const updatePaused = () => {
+      setIsPaused(!isIntersecting || isTabHidden);
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry) {
+          isIntersecting = entry.isIntersecting;
+          updatePaused();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(section);
+
+    const handleVisibility = () => {
+      isTabHidden = document.hidden;
+      updatePaused();
+    };
+
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
+  }, []);
+
+  // GSAP Entrance Animations
   useEffect(() => {
     let disposed = false;
     let cleanup: (() => void) | undefined;
-    // Load motion as enhancement; server-rendered content is always visible.
     async function initialize() {
       try {
         const [{ gsap }, { ScrollTrigger }] = await Promise.all([
-          import("gsap"), import("gsap/ScrollTrigger"),
+          import("gsap"),
+          import("gsap/ScrollTrigger"),
         ]);
         if (disposed || !root.current) return;
         gsap.registerPlugin(ScrollTrigger);
@@ -56,29 +117,45 @@ export default function AboutExperience({ stats, members }: Props) {
         mm.add("(prefers-reduced-motion: no-preference)", () => {
           const ctx = gsap.context(() => {
             gsap.from("[data-hero-copy]", {
-              y: 26, opacity: 0, duration: 0.85, stagger: 0.12,
-              ease: "power3.out", clearProps: "all",
+              y: 26,
+              opacity: 0,
+              duration: 0.85,
+              stagger: 0.12,
+              ease: "power3.out",
+              clearProps: "all",
             });
             gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((element) => {
               gsap.from(element, {
-                y: 28, opacity: 0, duration: 0.75, ease: "power3.out",
-                clearProps: "all", scrollTrigger: { trigger: element, start: "top 92%", once: true },
+                y: 28,
+                opacity: 0,
+                duration: 0.75,
+                ease: "power3.out",
+                clearProps: "all",
+                scrollTrigger: { trigger: element, start: "top 92%", once: true },
               });
             });
             if (window.matchMedia("(min-width: 900px)").matches) {
               gsap.to("[data-hero-art]", {
-                yPercent: 7, ease: "none",
+                yPercent: 7,
+                ease: "none",
                 scrollTrigger: { trigger: "[data-hero]", start: "top top", end: "bottom top", scrub: 0.7 },
               });
             }
-            gsap.fromTo("[data-manifesto]", { xPercent: 3 }, {
-              xPercent: -8, ease: "none",
-              scrollTrigger: { trigger: "[data-manifesto-wrap]", start: "top bottom", end: "bottom top", scrub: 0.8 },
-            });
+            gsap.fromTo(
+              "[data-manifesto]",
+              { xPercent: 3 },
+              {
+                xPercent: -8,
+                ease: "none",
+                scrollTrigger: { trigger: "[data-manifesto-wrap]", start: "top bottom", end: "bottom top", scrub: 0.8 },
+              }
+            );
           }, root);
           return () => ctx.revert();
         });
-        const refresh = () => { if (!disposed) ScrollTrigger.refresh(); };
+        const refresh = () => {
+          if (!disposed) ScrollTrigger.refresh();
+        };
         document.fonts.ready.then(refresh);
         const images = Array.from(root.current.querySelectorAll("img"));
         images.forEach((image) => image.addEventListener("load", refresh, { once: true }));
@@ -91,11 +168,15 @@ export default function AboutExperience({ stats, members }: Props) {
       }
     }
     void initialize();
-    return () => { disposed = true; cleanup?.(); };
+    return () => {
+      disposed = true;
+      cleanup?.();
+    };
   }, []);
 
   return (
     <main ref={root} className={styles.page}>
+      {/* ─── HERO ─── */}
       <section className={styles.hero} data-hero aria-labelledby="about-title">
         <picture className={styles.heroArt} data-hero-art>
           <source media="(max-width: 700px)" srcSet="/images/about/thrides-about-mobile.webp" />
@@ -116,12 +197,14 @@ export default function AboutExperience({ stats, members }: Props) {
         <div className={styles.heroFoot}><span>STRATEGY × CREATIVE × DIGITAL</span><a href="#our-story">SCROLL TO DISCOVER <ArrowDown size={13} /></a></div>
       </section>
 
+      {/* ─── STATS ─── */}
       <section className={styles.stats} aria-label="Thrides in numbers">
         {stats.map((stat, index) => (
           <div key={stat.label} data-reveal><span className={styles.index}>0{index + 1}</span><strong className="font-display">{stat.value}</strong><span>{stat.label}</span></div>
         ))}
       </section>
 
+      {/* ─── STORY ─── */}
       <section id="our-story" className={styles.story}>
         <div data-reveal><p className={styles.eyebrow}>01 / OUR STORY</p><h2 className="font-display">Everywhere.<br /><em className="font-serif">With intention.</em></h2><span className={styles.blueLine} /></div>
         <div className={styles.storyCopy} data-reveal>
@@ -132,32 +215,122 @@ export default function AboutExperience({ stats, members }: Props) {
         </div>
       </section>
 
+      {/* ─── MANIFESTO ─── */}
       <div className={styles.manifesto} data-manifesto-wrap aria-label="Every move, on purpose">
         <p data-manifesto aria-hidden="true">EVERY MOVE. <em className="font-serif">On purpose.</em> EVERY MOVE.</p>
       </div>
 
-      <section className={styles.experience}>
-        <div className={styles.sectionHead} data-reveal><div><p className={styles.eyebrow}>02 / THE EXPERIENCE</p><h2 className="font-display">Good work starts with<br /><em className="font-serif">a better partnership.</em></h2></div><p>Clear thinking. Connected execution.<br />People you can actually talk to.</p></div>
+      {/* ─── THE EXPERIENCE / THE THRIDES APPROACH ─── */}
+      <section ref={experienceRef} className={styles.experience}>
+        <div className={styles.sectionHead} data-reveal>
+          <div>
+            <p className={styles.eyebrow}>02 / THE EXPERIENCE</p>
+            <h2 className="font-display">
+              Good work starts with<br /><em className="font-serif">a better partnership.</em>
+            </h2>
+          </div>
+          <p>Clear thinking. Connected execution.<br />People you can actually talk to.</p>
+        </div>
+
         <div className={styles.experienceGrid}>
+          {/* Accordion Principles */}
           <div className={styles.principles}>
             {principles.map((item, index) => {
               const open = active === index;
-              return <article key={item.label} className={styles.principle} data-open={open} data-reveal>
-                <h3><button type="button" id={"principle-button-" + index} aria-expanded={open} aria-controls={"principle-panel-" + index} onClick={() => setActive(open ? null : index)}>
-                  <span className={styles.index}>0{index + 1}</span><span>{item.title}</span>{open ? <Minus size={18} /> : <Plus size={18} />}
-                </button></h3>
-                <div id={"principle-panel-" + index} role="region" aria-labelledby={"principle-button-" + index} hidden={!open} className={styles.principleBody}><p>{item.description}</p></div>
-              </article>;
+              return (
+                <article key={item.label} className={styles.principle} data-open={open} data-reveal>
+                  <h3>
+                    <button
+                      type="button"
+                      id={"principle-button-" + index}
+                      aria-expanded={open}
+                      aria-controls={"principle-panel-" + index}
+                      onClick={() => setActive(open ? null : index)}
+                    >
+                      <span className={styles.index}>0{index + 1}</span>
+                      <span>{item.title}</span>
+                      {open ? <Minus size={18} /> : <Plus size={18} />}
+                    </button>
+                  </h3>
+                  <div
+                    id={"principle-panel-" + index}
+                    role="region"
+                    aria-labelledby={"principle-button-" + index}
+                    hidden={!open}
+                    className={styles.principleBody}
+                  >
+                    <p className={styles.principleDescription}>{item.description}</p>
+
+                    {/* Mobile Visual: Displayed directly beneath open description on narrow viewports */}
+                    {open && (
+                      <div className={styles.mobileVisualWrap}>
+                        <div className={styles.mobileStage}>
+                          <div key={item.image} className={styles.transitionWrapper}>
+                            <div className={`${styles.floatWrapper} ${isPaused ? styles.paused : ""}`}>
+                              <img
+                                src={item.image}
+                                alt=""
+                                width={240}
+                                height={240}
+                                className={styles.sculptureImg}
+                                loading="eager"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className={styles.visualCopy}>
+                          <span className={styles.categoryBadge}>{item.label}</span>
+                          <p className={`font-serif ${styles.captionText}`}>{item.words[2]}</p>
+                          <div className={styles.chipsRow}>
+                            {item.words.map((word) => (
+                              <span key={word} className={styles.chip}>{word}</span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </article>
+              );
             })}
           </div>
+
+          {/* Desktop Preview Panel: Dedicated Sculpture Stage */}
           <div className={styles.strategyVisual} aria-hidden="true">
             <span className={styles.visualLabel}>THE THRIDES APPROACH</span>
-            <div className={styles.orbit}><div className={styles.orbitInner} /><div className={styles.core}><Icon size={42} strokeWidth={1.2} /></div><span className={styles.orbitDot} /></div>
-            <div key={selected.label} className={styles.visualCopy}><span>{selected.label}</span><p className="font-serif">{selected.words[2]}</p><div>{selected.words.map((word) => <span key={word}>{word}</span>)}</div></div>
+
+            <div className={styles.stage}>
+              {/* Separate wrapper for crossfade / enter transition */}
+              <div key={selected.image} className={styles.transitionWrapper}>
+                {/* Separate wrapper for continuous gentle floating motion */}
+                <div className={`${styles.floatWrapper} ${isPaused ? styles.paused : ""}`}>
+                  <img
+                    src={selected.image}
+                    alt=""
+                    width={300}
+                    height={300}
+                    className={styles.sculptureImg}
+                    loading="eager"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div key={selected.label} className={styles.visualCopy}>
+              <span className={styles.categoryBadge}>{selected.label}</span>
+              <p className={`font-serif ${styles.captionText}`}>{selected.words[2]}</p>
+              <div className={styles.chipsRow}>
+                {selected.words.map((word) => (
+                  <span key={word} className={styles.chip}>{word}</span>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
+      {/* ─── TEAM ─── */}
       <section className={styles.team}>
         <div className={styles.sectionHead} data-reveal><div><p className={styles.eyebrow}>03 / OUR PEOPLE</p><h2 className="font-display">Real people.<br /><em className="font-serif">Shared ambition.</em></h2></div><p>Senior strategists directing every plan<br />with dedicated execution.</p></div>
         <div className={styles.teamGrid}>
@@ -170,8 +343,10 @@ export default function AboutExperience({ stats, members }: Props) {
         </div>
       </section>
 
+      {/* ─── OUR STANDARD ─── */}
       <section className={styles.standard} data-reveal><p className={styles.eyebrow}>OUR STANDARD</p><blockquote className="font-display">Attention should never<br />be accidental.<br /><em className="font-serif">Let’s make yours on purpose.</em></blockquote><p>Every website, post, campaign, and email we produce is backed by research and built to deliver measurable commercial clarity.</p></section>
 
+      {/* ─── CTA ─── */}
       <section className={styles.cta} data-reveal>
         <div><p className={styles.eyebrow}>YOUR NEXT CHAPTER</p><h2 className="font-display">Let’s make<br /><em className="font-serif">your mark.</em></h2></div>
         <div><p>Book a free 30-minute strategy call. We’ll review your current marketing and show you where the biggest opportunities are.</p><Link href="/contact" className={styles.primary}>Book a free strategy call <ArrowUpRight size={20} /></Link><span className={styles.ctaNote}>A conversation. A clearer direction.</span></div>

@@ -596,28 +596,44 @@ export const teamMembers: TeamMember[] = [
 
 export const faqs = [
   {
-    q: "Do I have to choose a package now?",
-    a: "No. The free call is for exactly that. We’ll review your business and recommend the right starting point based on where you are today.",
+    q: "What type of brands do you work best with?",
+    a: "We work best with ambitious founders and established businesses who want a unified strategic partner across branding, high-converting web architecture, and organic/paid campaigns—eliminating fragmented freelancers.",
   },
   {
-    q: "Can I start small and grow?",
-    a: "Yes. Most clients start with Kickstart or Accelerate and move up as results come in.",
+    q: "What does having a dedicated partner mean?",
+    a: "It means no junior account managers passing notes. Senior strategists personally architect your roadmap, manage delivery milestones, and attend your reviews with agreed SLA commitments.",
   },
   {
-    q: "What if my needs don’t fit a package?",
-    a: "That’s what Authority is for. We build it completely custom around your business, your market, and your competitors.",
+    q: "Do I have to choose a package right now?",
+    a: "No. The discovery call is for exactly that. We review your current presence, market opportunity, and unit economics to recommend the right starting stage.",
+  },
+  {
+    q: "Can I start small and expand as results compound?",
+    a: "Yes. Most clients start with a targeted Kickstart sprint or Accelerate tier, scaling their engagement as qualified inbound opportunities and revenue grow.",
+  },
+  {
+    q: "What if my requirements don’t fit a fixed package?",
+    a: "That is what the Authority engagement is engineered for. We build a fully bespoke scope around your business objectives, custom integrations, and market competitors.",
+  },
+  {
+    q: "What if we already have an internal marketing team?",
+    a: "We frequently co-pilot with internal marketing leads and founders—handling specialized design, technical SEO, and web engineering while your team stays focused on daily operations.",
   },
   {
     q: "Do you guarantee rankings or follower counts?",
-    a: "No. Rankings and reach depend on algorithms and competition, and anyone promising them is guessing. We guarantee what we control: delivery dates, deliverables, revisions, and a plan review if results fall behind.",
+    a: "No, algorithms fluctuate and anyone promising instant rankings is guessing. What we guarantee in writing is what we control: strict delivery dates, unlimited revisions until sign-off, and proactive plan reviews.",
   },
   {
-    q: "What do I get on the free call?",
-    a: "A review of your current marketing and clear, actionable recommendations, whether or not you hire us.",
+    q: "What exactly happens on the free strategy call?",
+    a: "A practical 30-minute review of your digital presence with actionable takeaways and architectural recommendations, whether you decide to work with us or not.",
   },
   {
-    q: "How soon will you reply?",
-    a: "Within 24 hours.",
+    q: "How does onboarding work once we begin?",
+    a: "Within 24 hours of confirmation, you receive a kickoff schedule, dedicated communication channels, and milestone commitments in writing so production begins immediately.",
+  },
+  {
+    q: "How soon do we hear back after submitting an enquiry?",
+    a: "Our strategy team reviews incoming submissions and responds within 24 hours (or same-day during standard business hours).",
   },
 ];
 
