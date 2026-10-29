@@ -6,6 +6,7 @@ import { Footer } from "@/components/site/Footer";
 import { ArrowUpRight, Sparkles } from "lucide-react";
 import { caseStudies, serviceCategoryLabels, type ServiceCategory } from "@/content/site";
 import Link from "next/link";
+import { CtaBanner } from "@/components/site/CtaBanner";
 
 export function OurWorkContent() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
@@ -170,23 +171,17 @@ export function OurWorkContent() {
               </div>
             )}
 
-            {/* Bottom Call to Action */}
-            <div className="mt-20 rounded-[32px] bg-[#09090B] p-8 sm:p-12 text-white text-center">
-              <h3 className="font-display text-2xl sm:text-3xl font-bold">
-                Want to see what we can build for your business?
-              </h3>
-              <p className="mt-3 text-neutral-300 max-w-xl mx-auto text-sm sm:text-base">
-                Book a free 30-minute strategy call. We’ll review your market and recommend clear priorities.
-              </p>
-              <div className="mt-6">
-                <Link
-                  href="/contact"
-                  className="inline-flex h-[52px] items-center justify-center gap-2 rounded-full bg-white px-8 text-sm font-bold text-[#09090B] transition-transform hover:bg-neutral-200"
-                >
-                  <span>Request a Free Strategy Call</span>
-                  <ArrowUpRight size={16} className="stroke-[2.5]" />
-                </Link>
-              </div>
+            {/* Bottom Call to Action - Premium Image Banner */}
+            <div className="mt-20 lg:mt-28">
+              <CtaBanner
+                eyebrow="YOUR NEXT CHAPTER"
+                headingPrefix="Your brand."
+                accentText="Our next masterpiece."
+                buttonText="Start a conversation ↗"
+                buttonHref="/contact"
+                imageSrc="/images/cta/work-banner.png"
+                mobileObjectPosition="85% center"
+              />
             </div>
           </div>
         </section>

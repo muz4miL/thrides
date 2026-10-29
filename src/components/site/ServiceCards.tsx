@@ -189,7 +189,11 @@ export function ServiceCards() {
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUpOrLeave}
           onMouseLeave={handleMouseUpOrLeave}
-          className="flex snap-x snap-mandatory gap-4 sm:gap-6 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pl-5 pr-8 sm:pl-[6vw] sm:pr-[10vw] cursor-grab active:cursor-grabbing pb-3"
+          className="no-scrollbar flex snap-x snap-mandatory gap-4 sm:gap-6 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pl-5 pr-8 sm:pl-[6vw] sm:pr-[10vw] cursor-grab active:cursor-grabbing pb-3"
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}
         >
           {serviceItems.map((item) => (
             <a

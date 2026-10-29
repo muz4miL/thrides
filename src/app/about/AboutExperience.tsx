@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, ArrowDown, Plus, Minus } from "lucide-react";
+import { CtaBanner } from "@/components/site/CtaBanner";
 import rawStyles from "./about.module.css";
 
 const styles: any = rawStyles;
@@ -347,9 +348,16 @@ export default function AboutExperience({ stats, members }: Props) {
       <section className={styles.standard} data-reveal><p className={styles.eyebrow}>OUR STANDARD</p><blockquote className="font-display">Attention should never<br />be accidental.<br /><em className="font-serif">Let’s make yours on purpose.</em></blockquote><p>Every website, post, campaign, and email we produce is backed by research and built to deliver measurable commercial clarity.</p></section>
 
       {/* ─── CTA ─── */}
-      <section className={styles.cta} data-reveal>
-        <div><p className={styles.eyebrow}>YOUR NEXT CHAPTER</p><h2 className="font-display">Let’s make<br /><em className="font-serif">your mark.</em></h2></div>
-        <div><p>Book a free 30-minute strategy call. We’ll review your current marketing and show you where the biggest opportunities are.</p><Link href="/contact" className={styles.primary}>Book a free strategy call <ArrowUpRight size={20} /></Link><span className={styles.ctaNote}>A conversation. A clearer direction.</span></div>
+      <section className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-8 py-16 sm:py-24">
+        <CtaBanner
+          eyebrow="LET’S BUILD SOMETHING MEANINGFUL"
+          headingPrefix="Good people."
+          accentText="Extraordinary possibilities."
+          buttonText="Meet your creative partner ↗"
+          buttonHref="/contact"
+          imageSrc="/images/cta/about-banner.png"
+          mobileObjectPosition="75% center"
+        />
       </section>
     </main>
   );

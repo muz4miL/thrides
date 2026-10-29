@@ -31,7 +31,7 @@ export function WorkGallery({
       <div
         role="group"
         aria-label="Filter work"
-        className="mx-auto mt-10 flex max-w-full gap-1.5 overflow-x-auto rounded-full border border-border bg-surface p-1.5 [scrollbar-width:none] md:w-fit"
+        className="no-scrollbar mx-auto mt-10 flex max-w-full gap-1.5 overflow-x-auto rounded-full border border-border bg-surface p-1.5 [scrollbar-width:none] md:w-fit"
       >
         {filters.map((f) => (
           <button

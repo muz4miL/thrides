@@ -6,6 +6,8 @@ import { Footer } from "@/components/site/Footer";
 import { HeroButton } from "@/components/site/HeroButton";
 import { WhoItsFor } from "@/components/site/WhoItsFor";
 import ReadyToScale from "@/components/ReadyToScale";
+import { OnboardingSection } from "@/components/services/onboarding/OnboardingSection";
+import { HowItWorksSection } from "@/components/services/how-it-works/HowItWorksSection";
 import {
   ArrowUpRight,
   Check,
@@ -115,7 +117,7 @@ export function ServicesContent() {
                 className={`mt-4 sm:mt-5 select-none font-display text-[clamp(40px,5.8vw,86px)] font-extrabold tracking-[-0.04em] text-[#F4F4F5] leading-[0.96] transition-all duration-700 ease-out ${heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
               >
                 <span className="block">Start where you are.</span>
-                <span className="block font-serif font-normal italic tracking-[-0.025em] text-[#4385FF] mt-0.5">
+                <span className="block font-serif font-normal italic tracking-[-0.025em] text-[#c3d4ff] mt-0.5">
                   Grow from there.
                 </span>
               </h1>
@@ -191,102 +193,11 @@ export function ServicesContent() {
           </div>
         </WhoItsFor>
 
-        {/* 3. HOW IT WORKS */}
-        <section
-          ref={processReveal.ref as React.RefObject<HTMLElement>}
-          className="py-24 md:py-32 bg-[#060608] border-t border-b border-white/[0.05]"
-        >
-          <div className="mx-auto max-w-[1240px] px-4 sm:px-6 md:px-8">
-            <div className={`transition-all duration-700 ${processReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-14">
-                <div>
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-[#0052FF]">Simple Process</span>
-                  <h2 className="mt-3 font-display text-[clamp(28px,3.5vw,46px)] font-extrabold tracking-[-0.04em] text-white leading-tight">
-                    How It Works
-                  </h2>
-                </div>
-                <p className="text-[14px] text-neutral-400 max-w-xs leading-relaxed sm:text-right">
-                  Three steps from your first conversation to results in progress.
-                </p>
-              </div>
+        {/* 3. HOW IT WORKS (PREMIUM ANIMATED JOURNEY) */}
+        <HowItWorksSection />
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-0 md:divide-x divide-white/[0.06]">
-                {[
-                  { step: "01", title: "Free strategy call", desc: "30 minutes. We review your current marketing, positioning, and goals. No obligation." },
-                  { step: "02", title: "Your plan", desc: "We recommend the package and priorities that will make the biggest difference for your business." },
-                  { step: "03", title: "We build", desc: "You get a clear timeline, delivery dates, and a structured kickoff. Then we get to work." },
-                ].map((item, i) => (
-                  <div
-                    key={item.step}
-                    style={{ transitionDelay: `${i * 100 + 80}ms` }}
-                    className={`px-0 md:px-10 first:pl-0 last:pr-0 py-6 md:py-0 border-b md:border-b-0 border-white/[0.06] last:border-0 transition-all duration-700 ${processReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
-                  >
-                    <span className="font-display text-[72px] font-black text-white/[0.045] leading-none select-none block">
-                      {item.step}
-                    </span>
-                    <div className="mt-2 flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#0052FF]" />
-                      <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-[#0052FF]">Step {item.step}</span>
-                    </div>
-                    <h3 className="mt-3 font-display text-[21px] font-extrabold text-white tracking-[-0.02em]">{item.title}</h3>
-                    <p className="mt-2 text-[14px] leading-relaxed text-neutral-400">{item.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div aria-hidden="true" className="my-20 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
-            {/* Client Onboarding */}
-            <div className={`transition-all duration-700 delay-100 ${processReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
-                <div>
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-[#0052FF]">Client Onboarding</span>
-                  <h2 className="mt-3 font-display text-[clamp(26px,3vw,40px)] font-extrabold tracking-[-0.04em] text-white leading-tight">
-                    A smooth start, because the first two weeks set the tone
-                  </h2>
-                  <p className="mt-4 text-[14px] sm:text-[15px] leading-relaxed text-neutral-400">
-                    No guesswork, no communication black holes. We establish structured check-ins, rapid feedback loops, and clear delivery roadmaps from day one.
-                  </p>
-
-                  <div className="mt-8 space-y-4">
-                    {whatItsLikeToWork.map((item, i) => (
-                      <div key={i} className="flex items-start gap-3">
-                        <div className="mt-0.5 h-5 w-5 flex items-center justify-center rounded-full bg-[#0052FF]/12 border border-[#0052FF]/30 shrink-0">
-                          <Check size={11} className="text-[#0052FF]" />
-                        </div>
-                        <div>
-                          <p className="font-display font-bold text-[14px] text-white leading-snug">{item.title}</p>
-                          <p className="text-[13px] text-neutral-400 mt-0.5 leading-relaxed">{item.desc}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-[#0052FF] block">
-                    What happens when you join
-                  </span>
-                  {whatHappensWhenYouJoin.map((w, i) => (
-                    <div
-                      key={i}
-                      className="rounded-2xl border border-white/[0.07] bg-[#0A0A0E] p-6 hover:border-white/15 transition-all"
-                    >
-                      <div className="flex items-center gap-3 mb-2">
-                        <span className="font-mono text-xs font-bold text-[#0052FF] bg-[#0052FF]/10 px-2.5 py-1 rounded-md">
-                          0{i + 1}
-                        </span>
-                        <h3 className="font-display font-bold text-white text-[16px]">{w.title}</h3>
-                      </div>
-                      <p className="text-[13.5px] leading-relaxed text-neutral-400">{w.desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* 3.5 CLIENT ONBOARDING (LUXURY TIMELINE) */}
+        <OnboardingSection />
 
         {/* 4. ALL SIX SERVICES IN DETAIL */}
         <section

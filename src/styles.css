@@ -96,10 +96,12 @@
    GLOBAL CUSTOM LUXURY SCROLLBAR (DESKTOP & MOBILE)
    ======================================================== */
 
-/* Standard CSS for Firefox & standards-compliant browsers */
-* {
+/* Standard CSS for Firefox & standards-compliant browsers - #c3d4ff light blue by default without hover */
+html,
+body,
+:root {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  scrollbar-color: #c3d4ff transparent;
 }
 
 /* WebKit & Chromium-based browsers (Chrome, Edge, Safari, Brave, Android Webview) */
@@ -112,23 +114,25 @@
   background: transparent;
 }
 
+/* Right-most site scrollbar thumb in #c3d4ff without hover */
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.18);
+  background: #c3d4ff;
   border-radius: 9999px;
   border: 1.5px solid transparent;
   background-clip: padding-box;
+  box-shadow: 0 0 10px rgba(195, 212, 255, 0.4);
   transition: background-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #0052FF;
+  background: #c3d4ff;
   border: 1.5px solid transparent;
   background-clip: padding-box;
-  box-shadow: 0 0 12px rgba(0, 82, 255, 0.6);
+  box-shadow: 0 0 16px rgba(195, 212, 255, 0.8);
 }
 
 ::-webkit-scrollbar-thumb:active {
-  background: #0043DB;
+  background: #a9c1ff;
 }
 
 /* Kill all default browser arrows / buttons completely */
@@ -142,11 +146,13 @@
   background: transparent;
 }
 
-/* Mobile & Touch refinement: ultra-subtle, sleek 4px scrollbar */
+/* Mobile & Touch refinement: ultra-subtle, sleek 4px scrollbar in #c3d4ff */
 @media (max-width: 768px) {
-  * {
+  html,
+  body,
+  :root {
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+    scrollbar-color: #c3d4ff transparent;
   }
 
   ::-webkit-scrollbar {
@@ -155,14 +161,37 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.22);
+    background: #c3d4ff;
     border-radius: 9999px;
     border: none;
+    box-shadow: 0 0 6px rgba(195, 212, 255, 0.4);
   }
 
   ::-webkit-scrollbar-thumb:active {
-    background: #0052FF;
+    background: #a9c1ff;
   }
+}
+
+/* ========================================================
+   COMPLETE ELIMINATION OF SCROLLBARS ON OUR SERVICES
+   ======================================================== */
+.no-scrollbar,
+.no-scrollbar *,
+#services .overflow-x-auto,
+#services [ref="trackRef"] {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+.no-scrollbar::-webkit-scrollbar,
+.no-scrollbar *::-webkit-scrollbar,
+#services .overflow-x-auto::-webkit-scrollbar,
+#services [ref="trackRef"]::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+  -webkit-appearance: none !important;
 }
 
 @layer base {
@@ -579,7 +608,8 @@
 }
 
 .showcase-track {
-  animation: showcase-left 28s linear infinite;
+  animation: showcase-left 14s linear infinite;
+  contain: layout paint;
   will-change: transform;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
@@ -587,7 +617,7 @@
 }
 @media (min-width: 768px) {
   .showcase-track {
-    animation-duration: 38s;
+    animation-duration: 19s;
   }
 }
 

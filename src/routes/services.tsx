@@ -243,7 +243,7 @@ function ServicesPage() {
                 className={`mt-4 sm:mt-5 select-none font-display text-[clamp(40px,5.8vw,86px)] font-extrabold tracking-[-0.04em] text-[#F4F4F5] leading-[0.96] transition-all duration-700 ease-out ${heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
               >
                 <span className="block">Start where you are.</span>
-                <span className="block font-serif font-normal italic tracking-[-0.025em] text-[#4385FF] mt-0.5">
+                <span className="block font-serif font-normal italic tracking-[-0.025em] text-[#c3d4ff] mt-0.5">
                   Grow from there.
                 </span>
               </h1>

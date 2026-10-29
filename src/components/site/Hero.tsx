@@ -6,12 +6,12 @@ export function Hero() {
     <section
       id="top"
       aria-label="Hero overview"
-      className="relative mx-auto w-full overflow-hidden rounded-[36px] sm:rounded-[44px] md:rounded-[52px] bg-[#000000] border border-white/[0.08] min-h-[560px] lg:h-[calc(100vh-140px)] lg:min-h-[580px] lg:max-h-[720px] shadow-2xl"
+      className="relative mx-auto w-full overflow-hidden rounded-[36px] sm:rounded-[44px] md:rounded-[52px] bg-[#000000] border border-white/[0.08] min-h-[560px] lg:h-[calc(100vh-140px)] lg:min-h-[580px] lg:max-h-[720px] shadow-2xl flex flex-col"
     >
       {/* ========================================================
           DESKTOP LAYOUT (>= 1024px / lg) - CLEAN MINIMAL BLUE
          ======================================================== */}
-      <div className="hidden lg:grid lg:grid-cols-[48fr_52fr] h-full">
+      <div className="hidden lg:grid lg:grid-cols-[48fr_52fr] h-full flex-1 w-full">
         {/* Left: Text, CTA & Partner Logos */}
         <div className="rise-in z-10 flex flex-col justify-center px-10 py-10 lg:px-14 xl:px-16 h-full">
           {/* Headline: We / Deliver / Growth */}
@@ -57,84 +57,86 @@ export function Hero() {
       {/* ========================================================
           MOBILE & TABLET LAYOUT (< 1024px)
          ======================================================== */}
-      <div className="flex lg:hidden flex-col items-center justify-center text-center px-4 py-8 sm:py-10 w-full h-full select-none">
-        {/* Top Centered Headline */}
-        <h1 className="select-none flex flex-col items-center">
-          <span className="block font-display text-[44px] sm:text-[54px] font-extrabold leading-[0.88] tracking-[-0.055em] text-[#D5D5D5]">
-            We
-          </span>
-          <span className="block font-serif font-normal italic tracking-[-0.035em] text-[1.08em] leading-[0.88] text-[#D5D5D5] -my-1">
-            Deliver
-          </span>
-          <span className="block font-display text-[44px] sm:text-[54px] font-extrabold leading-[0.88] tracking-[-0.055em] text-[#D5D5D5]">
-            Growth.
-          </span>
-        </h1>
+      <div className="flex lg:hidden flex-col items-center justify-center text-center px-4 py-8 sm:py-10 w-full flex-1 min-h-[560px] select-none">
+        <div className="my-auto flex flex-col items-center justify-center w-full">
+          {/* Top Centered Headline */}
+          <h1 className="select-none flex flex-col items-center">
+            <span className="block font-display text-[44px] sm:text-[54px] font-extrabold leading-[0.88] tracking-[-0.055em] text-[#D5D5D5]">
+              We
+            </span>
+            <span className="block font-serif font-normal italic tracking-[-0.035em] text-[1.08em] leading-[0.88] text-[#D5D5D5] -my-1">
+              Deliver
+            </span>
+            <span className="block font-display text-[44px] sm:text-[54px] font-extrabold leading-[0.88] tracking-[-0.055em] text-[#D5D5D5]">
+              Growth.
+            </span>
+          </h1>
 
-        {/* Center: Glowing Brand Squircle with Real Marquee Logos Gliding Horizontally */}
-        <div className="relative my-7 sm:my-8 flex items-center justify-center w-full max-w-[420px] overflow-hidden">
-          {/* Intense ambient blue glow blur */}
-          <div className="pointer-events-none absolute z-10 h-36 w-36 rounded-full bg-[#0052FF]/30 blur-3xl" />
+          {/* Center: Glowing Brand Squircle with Real Marquee Logos Gliding Horizontally */}
+          <div className="relative my-7 sm:my-8 flex items-center justify-center w-full max-w-[420px] overflow-hidden">
+            {/* Intense ambient blue glow blur */}
+            <div className="pointer-events-none absolute z-10 h-36 w-36 rounded-full bg-[#0052FF]/30 blur-3xl" />
 
-          {/* Real Marquee Logos flowing behind the central badge */}
-          <div className="absolute inset-x-0 z-0 flex items-center overflow-hidden [mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)]">
-            <div
-              className="flex shrink-0 items-center gap-8 py-2 will-change-transform"
-              style={{
-                animation: "marquee-scroll 24s linear infinite",
-              }}
-            >
-              <img
-                src="/Line1-Logos-V2-scaled.png"
-                alt=""
-                className="h-[26px] w-auto max-w-none opacity-45 shrink-0"
-              />
-              <img
-                src="/Line2-Logos-v3-scaled.png"
-                alt=""
-                className="h-[24px] w-auto max-w-none opacity-45 shrink-0"
-              />
-              <img
-                src="/Line1-Logos-V2-scaled.png"
-                alt=""
-                className="h-[26px] w-auto max-w-none opacity-45 shrink-0"
-              />
-              <img
-                src="/Line2-Logos-v3-scaled.png"
-                alt=""
-                className="h-[24px] w-auto max-w-none opacity-45 shrink-0"
-              />
+            {/* Real Marquee Logos flowing behind the central badge */}
+            <div className="absolute inset-x-0 z-0 flex items-center overflow-hidden [mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)]">
+              <div
+                className="flex shrink-0 items-center gap-8 py-2 will-change-transform"
+                style={{
+                  animation: "marquee-scroll 24s linear infinite",
+                }}
+              >
+                <img
+                  src="/Line1-Logos-V2-scaled.png"
+                  alt=""
+                  className="h-[26px] w-auto max-w-none opacity-45 shrink-0"
+                />
+                <img
+                  src="/Line2-Logos-v3-scaled.png"
+                  alt=""
+                  className="h-[24px] w-auto max-w-none opacity-45 shrink-0"
+                />
+                <img
+                  src="/Line1-Logos-V2-scaled.png"
+                  alt=""
+                  className="h-[26px] w-auto max-w-none opacity-45 shrink-0"
+                />
+                <img
+                  src="/Line2-Logos-v3-scaled.png"
+                  alt=""
+                  className="h-[24px] w-auto max-w-none opacity-45 shrink-0"
+                />
+              </div>
+            </div>
+
+            {/* Central Glowing Brand Squircle in Thrides Blue */}
+            <div className="relative z-20 flex shrink-0 items-center justify-center py-2">
+              <div className="absolute -inset-1.5 rounded-[28px] bg-[#0052FF] opacity-80 blur-md" />
+              <div className="relative grid h-[92px] w-[92px] place-items-center rounded-[26px] bg-[#0052FF] shadow-[0_0_40px_rgba(0,82,255,0.6)]">
+                <span className="font-display text-[54px] font-black leading-none text-white select-none pl-0.5">
+                  t.
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Central Glowing Brand Squircle in Thrides Blue */}
-          <div className="relative z-20 flex shrink-0 items-center justify-center py-2">
-            <div className="absolute -inset-1.5 rounded-[28px] bg-[#0052FF] opacity-80 blur-md" />
-            <div className="relative grid h-[92px] w-[92px] place-items-center rounded-[26px] bg-[#0052FF] shadow-[0_0_40px_rgba(0,82,255,0.6)]">
-              <span className="font-display text-[54px] font-black leading-none text-white select-none pl-0.5">
-                t.
-              </span>
-            </div>
+          {/* Pill CTA Button with Glowing Outer Border */}
+          <div className="w-full flex justify-center">
+            <HeroButton
+              href="/contact"
+              leftText="Book a"
+              rightText="Growth Audit"
+              ariaLabel="Book a Growth Audit"
+            />
           </div>
-        </div>
 
-        {/* Pill CTA Button with Glowing Outer Border */}
-        <div className="w-full flex justify-center">
-          <HeroButton
-            href="/contact"
-            leftText="Book a"
-            rightText="Growth Audit"
-            ariaLabel="Book a Growth Audit"
-          />
-        </div>
-
-        {/* Partner Logos Strip Centered Below Button */}
-        <div className="mt-5 flex items-center justify-center">
-          <img
-            src="/PartnerLogos.png"
-            alt="Meta, Google, Shopify Plus, Klaviyo Partners"
-            className="h-[28px] sm:h-[32px] w-auto max-w-[270px] sm:max-w-[300px] object-contain opacity-85"
-          />
+          {/* Partner Logos Strip Centered Below Button */}
+          <div className="mt-5 flex items-center justify-center">
+            <img
+              src="/PartnerLogos.png"
+              alt="Meta, Google, Shopify Plus, Klaviyo Partners"
+              className="h-[28px] sm:h-[32px] w-auto max-w-[270px] sm:max-w-[300px] object-contain opacity-85"
+            />
+          </div>
         </div>
       </div>
     </section>

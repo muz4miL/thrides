@@ -17,20 +17,55 @@ import { SectionBadge } from "./SectionBadge";
 
 export type TabKey = "ads" | "emails" | "landing" | "ugc";
 
-export const ADS_VIDEOS = [
-  "/videos/ads/13014537_2160_3840_24fps.mp4",
-  "/videos/ads/17084724_1080_1920_29fps.mp4",
-  "/videos/ads/5561960-uhd_2160_3840_25fps.mp4",
-  "/videos/ads/6664406-uhd_2160_3744_30fps.mp4",
-  "/videos/ads/7616839-hd_1080_1920_24fps.mp4",
+export interface VideoMediaItem {
+  video: string;
+  poster: string;
+}
+
+export const ADS_VIDEOS: VideoMediaItem[] = [
+  {
+    video: "/videos/ads/optimized/13014537_2160_3840_24fps.mp4",
+    poster: "/videos/ads/optimized/13014537_2160_3840_24fps.webp",
+  },
+  {
+    video: "/videos/ads/optimized/17084724_1080_1920_29fps.mp4",
+    poster: "/videos/ads/optimized/17084724_1080_1920_29fps.webp",
+  },
+  {
+    video: "/videos/ads/optimized/5561960-uhd_2160_3840_25fps.mp4",
+    poster: "/videos/ads/optimized/5561960-uhd_2160_3840_25fps.webp",
+  },
+  {
+    video: "/videos/ads/optimized/6664406-uhd_2160_3744_30fps.mp4",
+    poster: "/videos/ads/optimized/6664406-uhd_2160_3744_30fps.webp",
+  },
+  {
+    video: "/videos/ads/optimized/7616839-hd_1080_1920_24fps.mp4",
+    poster: "/videos/ads/optimized/7616839-hd_1080_1920_24fps.webp",
+  },
 ];
 
-export const UGC_VIDEOS = [
-  "/videos/ads/17084724_1080_1920_29fps.mp4",
-  "/videos/ads/7616839-hd_1080_1920_24fps.mp4",
-  "/videos/ads/13014537_2160_3840_24fps.mp4",
-  "/videos/ads/6664406-uhd_2160_3744_30fps.mp4",
-  "/videos/ads/5561960-uhd_2160_3840_25fps.mp4",
+export const UGC_VIDEOS: VideoMediaItem[] = [
+  {
+    video: "/videos/ads/optimized/17084724_1080_1920_29fps.mp4",
+    poster: "/videos/ads/optimized/17084724_1080_1920_29fps.webp",
+  },
+  {
+    video: "/videos/ads/optimized/7616839-hd_1080_1920_24fps.mp4",
+    poster: "/videos/ads/optimized/7616839-hd_1080_1920_24fps.webp",
+  },
+  {
+    video: "/videos/ads/optimized/13014537_2160_3840_24fps.mp4",
+    poster: "/videos/ads/optimized/13014537_2160_3840_24fps.webp",
+  },
+  {
+    video: "/videos/ads/optimized/6664406-uhd_2160_3744_30fps.mp4",
+    poster: "/videos/ads/optimized/6664406-uhd_2160_3744_30fps.webp",
+  },
+  {
+    video: "/videos/ads/optimized/5561960-uhd_2160_3840_25fps.mp4",
+    poster: "/videos/ads/optimized/5561960-uhd_2160_3840_25fps.webp",
+  },
 ];
 
 interface EmailCardData {
@@ -203,13 +238,13 @@ const LANDING_DATA: LandingCardData[] = [
    PHONE CARD MOCKUP (Used for Ads Creative & UGC)
 ------------------------------------------------------------- */
 interface PhoneCardProps {
-  videoSrc: string;
+  item: VideoMediaItem;
   index: number;
   isDuplicate?: boolean;
   isSectionNear: boolean;
 }
 
-function PhoneCard({ videoSrc, index, isDuplicate, isSectionNear }: PhoneCardProps) {
+function PhoneCard({ item, index, isDuplicate, isSectionNear }: PhoneCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -220,7 +255,10 @@ function PhoneCard({ videoSrc, index, isDuplicate, isSectionNear }: PhoneCardPro
       const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (!prefersReduced) {
         video.muted = true;
-        video.play().catch(() => {});
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {});
+        }
       }
     } else {
       video.pause();
@@ -230,43 +268,45 @@ function PhoneCard({ videoSrc, index, isDuplicate, isSectionNear }: PhoneCardPro
   const handleLoadedMetadata = () => {
     const video = videoRef.current;
     if (video && video.duration) {
-      video.currentTime = (index * 2.3 + (isDuplicate ? 1.5 : 0)) % video.duration;
+      video.currentTime = (index * 1.8 + (isDuplicate ? 1.1 : 0)) % video.duration;
     }
   };
 
   return (
-    <div className="relative h-[330px] w-[172px] shrink-0 select-none sm:h-[390px] sm:w-[204px] md:h-[450px] md:w-[234px] lg:h-[470px] lg:w-[244px]">
+    <div className="relative h-[260px] w-[136px] shrink-0 select-none sm:h-[310px] sm:w-[162px] md:h-[350px] md:w-[182px] lg:h-[370px] lg:w-[192px] transform-gpu">
       {/* Left side volume buttons */}
-      <div className="absolute -left-[3px] top-[75px] h-[22px] w-[3px] rounded-l-sm bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] sm:top-[90px] sm:h-[26px] md:top-[105px] md:h-[30px]" />
-      <div className="absolute -left-[3px] top-[103px] h-[22px] w-[3px] rounded-l-sm bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] sm:top-[122px] sm:h-[26px] md:top-[142px] md:h-[30px]" />
+      <div className="absolute -left-[2.5px] top-[60px] h-[18px] w-[2.5px] rounded-l-sm bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] sm:top-[72px] sm:h-[22px] md:top-[82px] md:h-[24px]" />
+      <div className="absolute -left-[2.5px] top-[82px] h-[18px] w-[2.5px] rounded-l-sm bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] sm:top-[98px] sm:h-[22px] md:top-[112px] md:h-[24px]" />
 
       {/* Right side power button */}
-      <div className="absolute -right-[3px] top-[82px] h-[34px] w-[3px] rounded-r-sm bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] sm:top-[98px] sm:h-[40px] md:top-[114px] md:h-[46px]" />
+      <div className="absolute -right-[2.5px] top-[65px] h-[28px] w-[2.5px] rounded-r-sm bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] sm:top-[78px] sm:h-[34px] md:top-[90px] md:h-[38px]" />
 
       {/* Phone outer frame: titanium silver border */}
-      <div className="relative h-full w-full rounded-[30px] bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] p-[2px] shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_24px_60px_rgba(0,0,0,0.65)] sm:rounded-[36px] md:rounded-[42px]">
+      <div className="relative h-full w-full rounded-[24px] bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] p-[2px] shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_20px_50px_rgba(0,0,0,0.65)] sm:rounded-[28px] md:rounded-[32px]">
         {/* Thin black bezel padding */}
-        <div className="relative h-full w-full rounded-[28px] bg-[#0c0c0e] p-[4px] sm:rounded-[34px] sm:p-[5px] md:rounded-[40px] md:p-[6px]">
+        <div className="relative h-full w-full rounded-[22px] bg-[#0c0c0e] p-[3px] sm:rounded-[26px] sm:p-[4px] md:rounded-[30px] md:p-[4.5px]">
           {/* Inner screen radius with overflow hidden */}
-          <div className="relative h-full w-full overflow-hidden rounded-[25px] bg-[#121214] sm:rounded-[30px] md:rounded-[35px]">
+          <div className="relative h-full w-full overflow-hidden rounded-[19px] bg-[#121214] sm:rounded-[22px] md:rounded-[26px]">
             {/* Dynamic island */}
-            <div className="pointer-events-none absolute top-[6px] left-1/2 z-20 flex h-[15px] w-[60px] -translate-x-1/2 items-center justify-end rounded-full bg-black pr-1 sm:top-[7px] sm:h-[18px] sm:w-[72px] sm:pr-1.5 md:top-[9px] md:h-[20px] md:w-[80px] md:pr-2">
-              <div className="h-[5px] w-[5px] rounded-full bg-[#0d1b2a] shadow-[inset_0_0_2px_#415a77] ring-1 ring-[#1b263b]/70 md:h-[6px] md:w-[6px]" />
+            <div className="pointer-events-none absolute top-[5px] left-1/2 z-20 flex h-[12px] w-[46px] -translate-x-1/2 items-center justify-end rounded-full bg-black pr-1 sm:h-[14px] sm:w-[54px] sm:pr-1 md:top-[6px] md:h-[16px] md:w-[62px] md:pr-1.5">
+              <div className="h-[3.5px] w-[3.5px] rounded-full bg-[#0d1b2a] shadow-[inset_0_0_2px_#415a77] ring-1 ring-[#1b263b]/70 md:h-[4.5px] md:w-[4.5px]" />
             </div>
 
-            {/* Video element */}
+            {/* Video element with instant poster & faststart */}
             <video
               ref={videoRef}
-              src={`${videoSrc}#t=0.1`}
+              src={item.video}
+              poster={item.poster}
               muted
               loop
               playsInline
-              preload={isSectionNear ? "metadata" : "none"}
+              autoPlay
+              preload="auto"
               disablePictureInPicture
               controls={false}
               draggable={false}
               onLoadedMetadata={handleLoadedMetadata}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover transform-gpu"
             />
           </div>
         </div>
@@ -503,11 +543,11 @@ export function OurWorkSection() {
           {activeTab === "ads" && (
             <>
               {/* Set 1 */}
-              <div className="flex shrink-0 items-center gap-6 sm:gap-8 lg:gap-10 pr-6 sm:pr-8 lg:pr-10">
-                {ADS_VIDEOS.map((src, idx) => (
+              <div className="flex shrink-0 items-center gap-4 sm:gap-6 lg:gap-7 pr-4 sm:pr-6 lg:pr-7">
+                {ADS_VIDEOS.map((item, idx) => (
                   <PhoneCard
                     key={`ads-1-${idx}`}
-                    videoSrc={src}
+                    item={item}
                     index={idx}
                     isSectionNear={isSectionNear}
                   />
@@ -515,13 +555,13 @@ export function OurWorkSection() {
               </div>
               {/* Set 2 (Duplicate for infinite seamless loop) */}
               <div
-                className="flex shrink-0 items-center gap-6 sm:gap-8 lg:gap-10 pr-6 sm:pr-8 lg:pr-10"
+                className="flex shrink-0 items-center gap-4 sm:gap-6 lg:gap-7 pr-4 sm:pr-6 lg:pr-7"
                 aria-hidden="true"
               >
-                {ADS_VIDEOS.map((src, idx) => (
+                {ADS_VIDEOS.map((item, idx) => (
                   <PhoneCard
                     key={`ads-2-${idx}`}
-                    videoSrc={src}
+                    item={item}
                     index={idx}
                     isDuplicate
                     isSectionNear={isSectionNear}
@@ -577,11 +617,11 @@ export function OurWorkSection() {
           {activeTab === "ugc" && (
             <>
               {/* Set 1 */}
-              <div className="flex shrink-0 items-center gap-6 sm:gap-8 lg:gap-10 pr-6 sm:pr-8 lg:pr-10">
-                {UGC_VIDEOS.map((src, idx) => (
+              <div className="flex shrink-0 items-center gap-4 sm:gap-6 lg:gap-7 pr-4 sm:pr-6 lg:pr-7">
+                {UGC_VIDEOS.map((item, idx) => (
                   <PhoneCard
                     key={`ugc-1-${idx}`}
-                    videoSrc={src}
+                    item={item}
                     index={idx}
                     isSectionNear={isSectionNear}
                   />
@@ -589,13 +629,13 @@ export function OurWorkSection() {
               </div>
               {/* Set 2 (Duplicate for infinite seamless loop) */}
               <div
-                className="flex shrink-0 items-center gap-6 sm:gap-8 lg:gap-10 pr-6 sm:pr-8 lg:pr-10"
+                className="flex shrink-0 items-center gap-4 sm:gap-6 lg:gap-7 pr-4 sm:pr-6 lg:pr-7"
                 aria-hidden="true"
               >
-                {UGC_VIDEOS.map((src, idx) => (
+                {UGC_VIDEOS.map((item, idx) => (
                   <PhoneCard
                     key={`ugc-2-${idx}`}
-                    videoSrc={src}
+                    item={item}
                     index={idx}
                     isDuplicate
                     isSectionNear={isSectionNear}

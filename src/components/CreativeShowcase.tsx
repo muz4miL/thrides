@@ -5,13 +5,33 @@ import { ArrowUpRight } from "lucide-react";
 
 export type TabKey = "ads" | "emails" | "landing" | "ugc";
 
-export const SHOWCASE_DATA: Record<TabKey, string[]> = {
+export interface ShowcaseMediaItem {
+  video: string;
+  poster: string;
+}
+
+export const SHOWCASE_DATA: Record<TabKey, ShowcaseMediaItem[]> = {
   ads: [
-    "/videos/ads/13014537_2160_3840_24fps.mp4",
-    "/videos/ads/17084724_1080_1920_29fps.mp4",
-    "/videos/ads/5561960-uhd_2160_3840_25fps.mp4",
-    "/videos/ads/6664406-uhd_2160_3744_30fps.mp4",
-    "/videos/ads/7616839-hd_1080_1920_24fps.mp4",
+    {
+      video: "/videos/ads/optimized/13014537_2160_3840_24fps.mp4",
+      poster: "/videos/ads/optimized/13014537_2160_3840_24fps.webp",
+    },
+    {
+      video: "/videos/ads/optimized/17084724_1080_1920_29fps.mp4",
+      poster: "/videos/ads/optimized/17084724_1080_1920_29fps.webp",
+    },
+    {
+      video: "/videos/ads/optimized/5561960-uhd_2160_3840_25fps.mp4",
+      poster: "/videos/ads/optimized/5561960-uhd_2160_3840_25fps.webp",
+    },
+    {
+      video: "/videos/ads/optimized/6664406-uhd_2160_3744_30fps.mp4",
+      poster: "/videos/ads/optimized/6664406-uhd_2160_3744_30fps.webp",
+    },
+    {
+      video: "/videos/ads/optimized/7616839-hd_1080_1920_24fps.mp4",
+      poster: "/videos/ads/optimized/7616839-hd_1080_1920_24fps.webp",
+    },
   ],
   emails: [],
   landing: [],
@@ -19,13 +39,13 @@ export const SHOWCASE_DATA: Record<TabKey, string[]> = {
 };
 
 interface PhoneCardProps {
-  videoSrc: string;
+  item: ShowcaseMediaItem;
   index: number;
   isDuplicate?: boolean;
   isSectionNear: boolean;
 }
 
-function PhoneCard({ videoSrc, index, isDuplicate, isSectionNear }: PhoneCardProps) {
+function PhoneCard({ item, index, isDuplicate, isSectionNear }: PhoneCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -36,7 +56,10 @@ function PhoneCard({ videoSrc, index, isDuplicate, isSectionNear }: PhoneCardPro
       const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (!prefersReduced) {
         video.muted = true;
-        video.play().catch(() => {});
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {});
+        }
       }
     } else {
       video.pause();
@@ -46,44 +69,46 @@ function PhoneCard({ videoSrc, index, isDuplicate, isSectionNear }: PhoneCardPro
   const handleLoadedMetadata = () => {
     const video = videoRef.current;
     if (video && video.duration) {
-      video.currentTime = (index * 2.1 + (isDuplicate ? 1.4 : 0)) % video.duration;
+      video.currentTime = (index * 1.8 + (isDuplicate ? 1.1 : 0)) % video.duration;
     }
   };
 
   return (
-    <div className="relative h-[407px] w-[210px] shrink-0 select-none sm:h-[504px] sm:w-[260px] md:h-[600px] md:w-[310px]">
+    <div className="relative h-[302px] w-[155px] shrink-0 select-none sm:h-[380px] sm:w-[195px] md:h-[440px] md:w-[225px] transform-gpu">
       {/* Left side volume buttons */}
-      <div className="absolute -left-[3px] top-[100px] h-[28px] w-[3px] rounded-l-sm bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] sm:top-[115px] sm:h-[32px] md:top-[130px] md:h-[38px]" />
-      <div className="absolute -left-[3px] top-[136px] h-[28px] w-[3px] rounded-l-sm bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] sm:top-[156px] sm:h-[32px] md:top-[178px] md:h-[38px]" />
+      <div className="absolute -left-[2.5px] top-[75px] h-[20px] w-[2.5px] rounded-l-sm bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] sm:top-[90px] sm:h-[24px] md:top-[102px] md:h-[28px]" />
+      <div className="absolute -left-[2.5px] top-[102px] h-[20px] w-[2.5px] rounded-l-sm bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] sm:top-[122px] sm:h-[24px] md:top-[138px] md:h-[28px]" />
 
       {/* Right side power button */}
-      <div className="absolute -right-[3px] top-[108px] h-[44px] w-[3px] rounded-r-sm bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] sm:top-[125px] sm:h-[50px] md:top-[144px] md:h-[58px]" />
+      <div className="absolute -right-[2.5px] top-[80px] h-[32px] w-[2.5px] rounded-r-sm bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] sm:top-[96px] sm:h-[38px] md:top-[112px] md:h-[44px]" />
 
       {/* Phone outer frame: 2px silver gradient border */}
-      <div className="relative h-full w-full rounded-[38px] bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] p-[2px] shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_30px_80px_rgba(0,0,0,0.6)] sm:rounded-[45px] md:rounded-[52px]">
+      <div className="relative h-full w-full rounded-[28px] bg-gradient-to-b from-[#e8e8ea] via-[#c8c8d0] to-[#8a8a90] p-[2px] shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_20px_50px_rgba(0,0,0,0.65)] sm:rounded-[34px] md:rounded-[40px]">
         {/* Thin black bezel padding */}
-        <div className="relative h-full w-full rounded-[36px] bg-[#0c0c0e] p-[5px] sm:rounded-[43px] sm:p-[6px] md:rounded-[50px] md:p-[7px]">
+        <div className="relative h-full w-full rounded-[26px] bg-[#0c0c0e] p-[3.5px] sm:rounded-[32px] sm:p-[4.5px] md:rounded-[38px] md:p-[5.5px]">
           {/* Inner screen radius with overflow hidden */}
-          <div className="relative h-full w-full overflow-hidden rounded-[31px] bg-[#121214] sm:rounded-[37px] md:rounded-[43px]">
+          <div className="relative h-full w-full overflow-hidden rounded-[22px] bg-[#121214] sm:rounded-[27px] md:rounded-[32px]">
             {/* Dynamic island */}
-            <div className="pointer-events-none absolute top-[7px] left-1/2 z-20 flex h-[18px] w-[70px] -translate-x-1/2 items-center justify-end rounded-full bg-black pr-1.5 sm:top-[9px] sm:h-[22px] sm:w-[85px] sm:pr-2 md:top-[11px] md:h-[26px] md:w-[98px] md:pr-2.5">
+            <div className="pointer-events-none absolute top-[6px] left-1/2 z-20 flex h-[14px] w-[54px] -translate-x-1/2 items-center justify-end rounded-full bg-black pr-1.5 sm:top-[7px] sm:h-[16px] sm:w-[64px] sm:pr-2 md:top-[8px] md:h-[18px] md:w-[74px] md:pr-2">
               {/* Camera lens dot */}
-              <div className="h-[6px] w-[6px] rounded-full bg-[#0d1b2a] shadow-[inset_0_0_2px_#415a77] ring-1 ring-[#1b263b]/70 md:h-[8px] md:w-[8px]" />
+              <div className="h-[4.5px] w-[4.5px] rounded-full bg-[#0d1b2a] shadow-[inset_0_0_2px_#415a77] ring-1 ring-[#1b263b]/70 md:h-[5.5px] md:w-[5.5px]" />
             </div>
 
-            {/* Video element */}
+            {/* Video element with instant poster & faststart */}
             <video
               ref={videoRef}
-              src={`${videoSrc}#t=0.1`}
+              src={item.video}
+              poster={item.poster}
               muted
               loop
               playsInline
-              preload={isSectionNear ? "metadata" : "none"}
+              autoPlay
+              preload="auto"
               disablePictureInPicture
               controls={false}
               draggable={false}
               onLoadedMetadata={handleLoadedMetadata}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover transform-gpu"
             />
           </div>
         </div>
@@ -127,22 +152,22 @@ export default function CreativeShowcase() {
       ref={sectionRef}
       id="creative"
       aria-label="Our work"
-      className="relative w-full overflow-x-hidden bg-[#000000] pt-16 pb-16 md:pt-24 md:pb-20 select-none"
+      className="relative w-full overflow-x-hidden bg-[#000000] pt-14 pb-14 md:pt-20 md:pb-18 select-none"
     >
       <div className="mx-auto flex max-w-[1440px] flex-col items-center px-4 text-center">
         {/* Pill badge at top */}
-        <div className="inline-flex h-10 items-center justify-center rounded-full border border-white/[0.08] bg-gradient-to-b from-[#1a1a1a] to-[#050505] px-6 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.2)] md:h-[54px] md:w-[336px] md:px-0">
+        <div className="inline-flex h-9 items-center justify-center rounded-full border border-white/[0.08] bg-gradient-to-b from-[#1a1a1a] to-[#050505] px-5 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.2)] md:h-[48px] md:w-[310px] md:px-0">
           <span className="font-sans text-[10px] font-semibold uppercase tracking-[0.2em] text-white/90 md:text-[11px]">
             OUR WORK
           </span>
         </div>
 
         {/* Heading */}
-        <h2 className="mt-12 flex flex-col items-center text-center md:mt-16">
-          <span className="font-display text-[clamp(44px,7vw,96px)] font-bold tracking-[-0.04em] text-[#d4d4d4] leading-[0.95]">
+        <h2 className="mt-10 flex flex-col items-center text-center md:mt-14">
+          <span className="font-display text-[clamp(40px,6.5vw,88px)] font-bold tracking-[-0.04em] text-[#d4d4d4] leading-[0.95]">
             Creative that
           </span>
-          <span className="font-serif text-[clamp(48px,7.5vw,104px)] font-normal italic tracking-[-0.03em] text-[#e5e5e5] leading-[0.95]">
+          <span className="font-serif text-[clamp(44px,7vw,96px)] font-normal italic tracking-[-0.03em] text-[#e5e5e5] leading-[0.95]">
             Converts
           </span>
         </h2>
@@ -151,7 +176,7 @@ export default function CreativeShowcase() {
         <div
           role="tablist"
           aria-label="Creative categories"
-          className="mt-10 inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-[#0b0b0d] p-1.5 md:mt-12 md:gap-2 md:p-2"
+          className="mt-8 inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-[#0b0b0d] p-1.5 md:mt-10 md:gap-2 md:p-2"
         >
           {TABS.map((tab) => {
             const isAds = tab.id === "ads";
@@ -177,7 +202,7 @@ export default function CreativeShowcase() {
                     if (!isAds) setTooltipTab(tab.id);
                   }}
                   onMouseLeave={() => setTooltipTab(null)}
-                  className={`relative rounded-full px-5 py-2 text-[14px] md:px-7 md:py-2.5 md:text-[15px] transition-colors ${
+                  className={`relative rounded-full px-4 py-1.5 text-[13.5px] md:px-6 md:py-2 md:text-[14.5px] transition-colors ${
                     isActive
                       ? "bg-[#d4d4d4] font-semibold text-[#111111]"
                       : "cursor-not-allowed bg-[#050505] font-medium text-white/90 hover:text-white"
@@ -202,15 +227,15 @@ export default function CreativeShowcase() {
         </div>
       </div>
 
-      {/* Moving row of phone mockups */}
-      <div className="showcase-row relative mt-12 w-full overflow-hidden md:mt-14">
+      {/* Moving row of phone mockups - 2x faster, smaller, instant loading */}
+      <div className="showcase-row relative mt-10 w-full overflow-hidden md:mt-12">
         <div className="showcase-track flex w-max will-change-transform">
           {/* Set 1: primary accessible phones */}
-          <div className="flex shrink-0 items-center gap-8 pr-8 md:gap-12 md:pr-12">
-            {activeVideos.map((videoSrc, idx) => (
+          <div className="flex shrink-0 items-center gap-5 pr-5 sm:gap-7 sm:pr-7 md:gap-8 md:pr-8">
+            {activeVideos.map((item, idx) => (
               <PhoneCard
                 key={`s1-${idx}`}
-                videoSrc={videoSrc}
+                item={item}
                 index={idx}
                 isSectionNear={isSectionNear}
               />
@@ -219,13 +244,13 @@ export default function CreativeShowcase() {
 
           {/* Set 2: identical duplicate set for 100% seamless infinite loop */}
           <div
-            className="flex shrink-0 items-center gap-8 pr-8 md:gap-12 md:pr-12"
+            className="flex shrink-0 items-center gap-5 pr-5 sm:gap-7 sm:pr-7 md:gap-8 md:pr-8"
             aria-hidden="true"
           >
-            {activeVideos.map((videoSrc, idx) => (
+            {activeVideos.map((item, idx) => (
               <PhoneCard
                 key={`s2-${idx}`}
-                videoSrc={videoSrc}
+                item={item}
                 index={idx}
                 isDuplicate
                 isSectionNear={isSectionNear}
@@ -236,10 +261,10 @@ export default function CreativeShowcase() {
       </div>
 
       {/* Bottom CTA Bar */}
-      <div className="mx-auto mt-14 flex w-full max-w-[1100px] flex-col items-center justify-between gap-8 px-4 md:mt-20 md:flex-row md:gap-6">
+      <div className="mx-auto mt-12 flex w-full max-w-[1100px] flex-col items-center justify-between gap-8 px-4 md:mt-16 md:flex-row md:gap-6">
         {/* Left: "Want more inspiration?" */}
         <div className="text-center md:text-right">
-          <p className="font-serif text-[28px] not-italic leading-[1.05] tracking-tight text-[#e5e5e5] md:text-[34px]">
+          <p className="font-serif text-[26px] not-italic leading-[1.05] tracking-tight text-[#e5e5e5] md:text-[32px]">
             Want more
             <br />
             inspiration?
@@ -248,12 +273,12 @@ export default function CreativeShowcase() {
 
         {/* Center: "Go to Creative Library" pill button */}
         <a
-          href="#"
-          className="group inline-flex h-[56px] items-center justify-center gap-3 rounded-full bg-white px-8 font-sans text-[18px] font-semibold text-black shadow-[0_10px_30px_rgba(255,255,255,0.12)] transition-transform duration-250 hover:scale-[1.03] md:h-[64px] md:px-12 md:text-[22px]"
+          href="/our-work"
+          className="group inline-flex h-[52px] items-center justify-center gap-3 rounded-full bg-white px-8 font-sans text-[17px] font-semibold text-black shadow-[0_10px_30px_rgba(255,255,255,0.12)] transition-transform duration-250 hover:scale-[1.03] md:h-[60px] md:px-11 md:text-[20px]"
         >
           <span>Go to Creative Library</span>
           <ArrowUpRight
-            className="h-6 w-6 transition-transform duration-250 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 md:h-7 md:w-7"
+            className="h-5 w-5 transition-transform duration-250 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 md:h-6 md:w-6"
             strokeWidth={2.5}
           />
         </a>
@@ -286,7 +311,7 @@ export default function CreativeShowcase() {
             </span>
           </div>
           <p className="mt-1.5 text-[13px] text-white/85 md:text-[14px]">
-            Discover why 300+ Brands Choose Brand It.
+            Discover why 300+ Brands Choose Thrides.
           </p>
         </div>
       </div>
