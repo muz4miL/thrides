@@ -32,9 +32,9 @@ export const serviceCategoryLabels: Record<ServiceCategory, string> = {
 
 export const nav = [
   { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
   { label: "Services & Packages", href: "/services" },
   { label: "Our Work", href: "/our-work" },
-  { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];
 

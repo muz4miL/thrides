@@ -141,16 +141,16 @@ export default function AboutExperience({ stats, members }: Props) {
                 ease: "none",
                 scrollTrigger: { trigger: "[data-hero]", start: "top top", end: "bottom top", scrub: 0.7 },
               });
+              gsap.fromTo(
+                "[data-manifesto]",
+                { xPercent: 3 },
+                {
+                  xPercent: -8,
+                  ease: "none",
+                  scrollTrigger: { trigger: "[data-manifesto-wrap]", start: "top bottom", end: "bottom top", scrub: 0.8 },
+                }
+              );
             }
-            gsap.fromTo(
-              "[data-manifesto]",
-              { xPercent: 3 },
-              {
-                xPercent: -8,
-                ease: "none",
-                scrollTrigger: { trigger: "[data-manifesto-wrap]", start: "top bottom", end: "bottom top", scrub: 0.8 },
-              }
-            );
           }, root);
           return () => ctx.revert();
         });
@@ -200,9 +200,23 @@ export default function AboutExperience({ stats, members }: Props) {
 
       {/* ─── STATS ─── */}
       <section className={styles.stats} aria-label="Thrides in numbers">
-        {stats.map((stat, index) => (
-          <div key={stat.label} data-reveal><span className={styles.index}>0{index + 1}</span><strong className="font-display">{stat.value}</strong><span>{stat.label}</span></div>
-        ))}
+        {stats.map((stat, index) => {
+          const valStr = String(stat.value);
+          const match = valStr.match(/^([0-9+]+)\s*(.*)$/);
+          const num = match ? match[1] : valStr;
+          const unit = match ? match[2] : "";
+
+          return (
+            <div key={stat.label} className={styles.statCol} data-reveal>
+              <span className={styles.index}>0{index + 1}</span>
+              <div className={styles.statContent}>
+                <strong className={`font-display ${styles.statNumber}`}>{num}</strong>
+                {unit && <span className={styles.statUnit}>{unit}</span>}
+              </div>
+              <span className={styles.statLabel}>{stat.label}</span>
+            </div>
+          );
+        })}
       </section>
 
       {/* ─── STORY ─── */}
@@ -216,9 +230,32 @@ export default function AboutExperience({ stats, members }: Props) {
         </div>
       </section>
 
-      {/* ─── MANIFESTO ─── */}
+      {/* ─── MANIFESTO / STRAP TEXT ─── */}
       <div className={styles.manifesto} data-manifesto-wrap aria-label="Every move, on purpose">
-        <p data-manifesto aria-hidden="true">EVERY MOVE. <em className="font-serif">On purpose.</em> EVERY MOVE.</p>
+        {/* Desktop version: preserved exact layout and parallax */}
+        <div className={styles.manifestoDesktop}>
+          <p data-manifesto aria-hidden="true">
+            EVERY MOVE. <em className="font-serif">On purpose.</em> EVERY MOVE.
+          </p>
+        </div>
+
+        {/* Mobile version: smooth, unclipped infinite marquee ticker */}
+        <div className={styles.manifestoMobile} aria-hidden="true">
+          <div className={styles.marqueeTrack}>
+            <span className={styles.marqueeItem}>
+              EVERY MOVE. <em className="font-serif">On purpose.</em> EVERY MOVE. <span className={styles.marqueeSep}>·</span>
+            </span>
+            <span className={styles.marqueeItem}>
+              EVERY MOVE. <em className="font-serif">On purpose.</em> EVERY MOVE. <span className={styles.marqueeSep}>·</span>
+            </span>
+            <span className={styles.marqueeItem}>
+              EVERY MOVE. <em className="font-serif">On purpose.</em> EVERY MOVE. <span className={styles.marqueeSep}>·</span>
+            </span>
+            <span className={styles.marqueeItem}>
+              EVERY MOVE. <em className="font-serif">On purpose.</em> EVERY MOVE. <span className={styles.marqueeSep}>·</span>
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* ─── THE EXPERIENCE / THE THRIDES APPROACH ─── */}
@@ -353,7 +390,8 @@ export default function AboutExperience({ stats, members }: Props) {
           eyebrow="LET’S BUILD SOMETHING MEANINGFUL"
           headingPrefix="Good people."
           accentText="Extraordinary possibilities."
-          buttonText="Meet your creative partner ↗"
+          buttonLeftText="Ready?"
+          buttonRightText="Start Now"
           buttonHref="/contact"
           imageSrc="/images/cta/about-banner.png"
           mobileObjectPosition="75% center"

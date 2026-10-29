@@ -3,8 +3,7 @@
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { WorkHero } from "@/components/work/WorkHero";
-import { WorkFeaturedPinned } from "@/components/work/WorkFeaturedPinned";
-import { WorkProjectIndex } from "@/components/work/WorkProjectIndex";
+import { OurWorkGallery } from "@/components/work/OurWorkGallery";
 import { WorkClosingCta } from "@/components/work/WorkClosingCta";
 import type { WorkProjectDoc, WorkPageSettingsDoc } from "@/server/types";
 
@@ -30,15 +29,8 @@ export function OurWorkPageClient({ settings, projects }: OurWorkPageClientProps
           featuredMediaType={featured?.mediaType}
         />
 
-        {/* B. Featured Signature Sequence (GSAP ScrollTrigger Pinned on Desktop) */}
-        <WorkFeaturedPinned projects={projects} />
-
-        {/* C. Project Index (12-column alternating 7/5 rhythm & URL filter sync) */}
-        <WorkProjectIndex
-          projects={projects}
-          categoryOrder={settings.categoryOrder}
-          intro={settings.galleryIntro}
-        />
+        {/* B. Curated Exhibition Gallery (Featured Exhibit, 12-Col Gallery Grid & Archive Index) */}
+        <OurWorkGallery />
 
         {/* D. Editorial Closing Invitation */}
         <WorkClosingCta settings={settings} />

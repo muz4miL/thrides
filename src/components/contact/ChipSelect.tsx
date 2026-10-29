@@ -155,26 +155,57 @@ export function ChipSelect({ selected, onChange }: ChipSelectProps) {
             </button>
           );
         })}
-      </fieldset>
-
-      {/* "Not sure yet" chip */}
-      <div className="flex justify-end">
+        {/* 7th Option: Full-width "Not sure yet" option spanning all columns */}
         <button
           type="button"
           role="checkbox"
           aria-checked={isNotSureSelected}
           onClick={() => toggleService(NOT_SURE_OPTION.id)}
-          className={`inline-flex items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-mono transition-all cursor-pointer ${
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              toggleService(NOT_SURE_OPTION.id);
+            }
+          }}
+          className={`col-span-1 sm:col-span-2 md:col-span-3 group relative flex items-center justify-between gap-3 rounded-2xl px-4 py-3 sm:py-3.5 text-left border transition-all duration-200 cursor-pointer select-none ${
             isNotSureSelected
-              ? "border border-[#0A5CFF] bg-[#0A5CFF]/15 text-white shadow-[0_0_12px_rgba(10,92,255,0.2)]"
-              : "border border-white/[0.07] bg-white/[0.015] text-neutral-400 hover:text-white hover:border-white/20"
-          } active:scale-[0.98] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#0A5CFF]`}
+              ? "border-[#0A5CFF] bg-[#0A5CFF]/[0.12] shadow-[0_0_18px_rgba(10,92,255,0.22)] ring-1 ring-[#0A5CFF]/40 -translate-y-[1px]"
+              : "border-dashed border-white/10 bg-white/[0.015] hover:border-white/25 hover:bg-white/[0.03] hover:-translate-y-[1px]"
+          } active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A5CFF]`}
         >
-          <HelpCircle size={12} className={isNotSureSelected ? "text-[#0A5CFF]" : "text-neutral-500"} />
-          <span>Not sure yet</span>
-          {isNotSureSelected && <Check size={11} className="text-[#0A5CFF]" />}
+          <div className="flex items-center gap-3">
+            <div
+              className={`flex h-8 w-8 items-center justify-center rounded-xl transition-colors shrink-0 ${
+                isNotSureSelected
+                  ? "bg-[#0A5CFF] text-white"
+                  : "bg-white/[0.04] text-neutral-400 group-hover:text-white"
+              }`}
+            >
+              <HelpCircle size={16} />
+            </div>
+
+            <div>
+              <span
+                className={`font-display text-[13px] sm:text-[13.5px] font-medium leading-snug ${
+                  isNotSureSelected ? "text-white" : "text-neutral-300 group-hover:text-white"
+                }`}
+              >
+                Not sure yet
+              </span>
+              <span className="hidden sm:inline text-neutral-400 text-xs ml-2 font-normal">
+                — we&apos;ll help you choose the right path on our call
+              </span>
+            </div>
+          </div>
+
+          {/* Checkmark badge when selected */}
+          {isNotSureSelected && (
+            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#0A5CFF] text-white shrink-0 animate-in zoom-in-75 duration-150">
+              <Check size={10} strokeWidth={3} />
+            </span>
+          )}
         </button>
-      </div>
+      </fieldset>
 
       {/* Live feedback text fading in below chips */}
       <div aria-live="polite" className="min-h-[28px] pt-1">

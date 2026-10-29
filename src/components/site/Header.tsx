@@ -175,7 +175,21 @@ export function Header() {
               Home
             </a>
 
-            {/* 2. Services & Packages with dropdown */}
+            {/* 2. About */}
+            <a
+              href="/about"
+              className={cn(
+                "flex h-[44px] items-center justify-center rounded-full px-4 text-[15px] transition-colors duration-150",
+                "focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2",
+                activePath.startsWith("/about")
+                  ? "bg-[#0052FF] font-bold text-white shadow-md shadow-blue-950/40"
+                  : "bg-transparent font-medium text-[#E4E4E7] hover:bg-white/10 hover:text-white",
+              )}
+            >
+              About
+            </a>
+
+            {/* 3. Services & Packages with dropdown */}
             <div className="relative">
               <div className="flex items-center">
                 <a
@@ -217,7 +231,7 @@ export function Header() {
               </div>
             </div>
 
-            {/* 3. Our Work */}
+            {/* 4. Our Work */}
             <a
               href="/our-work"
               className={cn(
@@ -229,20 +243,6 @@ export function Header() {
               )}
             >
               Our Work
-            </a>
-
-            {/* 4. About */}
-            <a
-              href="/about"
-              className={cn(
-                "flex h-[44px] items-center justify-center rounded-full px-4 text-[15px] transition-colors duration-150",
-                "focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2",
-                activePath.startsWith("/about")
-                  ? "bg-[#0052FF] font-bold text-white shadow-md shadow-blue-950/40"
-                  : "bg-transparent font-medium text-[#E4E4E7] hover:bg-white/10 hover:text-white",
-              )}
-            >
-              About
             </a>
 
             {/* 5. Contact */}
@@ -375,6 +375,15 @@ export function Header() {
             Home
           </a>
 
+          {/* About */}
+          <a
+            href="/about"
+            onClick={() => setIsMobileOpen(false)}
+            className="flex min-h-[46px] items-center rounded-2xl bg-[#17171E] px-4 text-[15px] font-medium text-white transition-colors hover:bg-[#0052FF] hover:font-bold hover:text-white"
+          >
+            About
+          </a>
+
           {/* Services & Packages Accordion */}
           <div className="flex flex-col rounded-2xl bg-[#17171E] overflow-hidden">
             <div className="flex items-center justify-between pr-2">
@@ -429,15 +438,6 @@ export function Header() {
             className="flex min-h-[46px] items-center rounded-2xl bg-[#17171E] px-4 text-[15px] font-medium text-white transition-colors hover:bg-[#0052FF] hover:font-bold hover:text-white"
           >
             Our Work
-          </a>
-
-          {/* About */}
-          <a
-            href="/about"
-            onClick={() => setIsMobileOpen(false)}
-            className="flex min-h-[46px] items-center rounded-2xl bg-[#17171E] px-4 text-[15px] font-medium text-white transition-colors hover:bg-[#0052FF] hover:font-bold hover:text-white"
-          >
-            About
           </a>
 
           {/* Contact */}

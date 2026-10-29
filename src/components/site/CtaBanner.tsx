@@ -3,7 +3,6 @@
 import React from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
 import { Instrument_Serif } from "next/font/google";
 
 const instrumentSerif = Instrument_Serif({
@@ -17,7 +16,9 @@ export interface CtaBannerProps {
   eyebrow: string;
   headingPrefix: string;
   accentText: string;
-  buttonText: string;
+  buttonText?: string;
+  buttonLeftText?: string;
+  buttonRightText?: string;
   buttonHref?: string;
   imageSrc: string;
   mobileObjectPosition?: string; // e.g. "85% center" or "75% center"
@@ -29,15 +30,14 @@ export function CtaBanner({
   headingPrefix,
   accentText,
   buttonText,
+  buttonLeftText = "Ready?",
+  buttonRightText = "Start Now",
   buttonHref = "/contact",
   imageSrc,
   mobileObjectPosition = "80% center",
   className = "",
 }: CtaBannerProps) {
   const shouldReduceMotion = useReducedMotion();
-
-  // Strip trailing arrow character if user provides it, so we can use standard Lucide icon
-  const cleanButtonLabel = buttonText.replace(/[↗→]/g, "").trim();
 
   return (
     <div className={`relative w-full ${className}`}>
@@ -110,16 +110,41 @@ export function CtaBanner({
               </h2>
             </div>
 
+            {/* Signature Thrides Dual-Sided Capsule CTA Button (identical to 3rd component on home page) */}
             <div className="pt-6">
               <Link
                 href={buttonHref}
-                className="inline-flex h-[52px] xl:h-[56px] items-center justify-center gap-2.5 rounded-full bg-[#0A5CFF] px-8 xl:px-9 text-[14.5px] xl:text-[15.5px] font-semibold text-white shadow-[0_0_24px_rgba(10,92,255,0.4)] hover:bg-[#004ADE] hover:shadow-[0_0_32px_rgba(10,92,255,0.6)] hover:-translate-y-0.5 active:scale-[0.98] transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                aria-label="Start a project with Thrides"
+                className="group/btn relative inline-flex h-[68px] sm:h-[74px] w-full max-w-[320px] items-center justify-between rounded-full bg-[#000000] p-[5px] transition-all duration-300 hover:bg-[#0052FF] hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-4 select-none shadow-[0_0_28px_rgba(0,82,255,0.22)] cursor-pointer"
               >
-                <span>{cleanButtonLabel}</span>
-                <ArrowUpRight
-                  size={17}
-                  className="transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                {/* Animated outer glowing breathing border */}
+                <span
+                  className="pointer-events-none absolute -inset-[2px] rounded-full border-2 border-[#0052FF] animate-hero-border-pulse"
+                  aria-hidden="true"
                 />
+
+                {/* Inner charcoal outline inset */}
+                <div className="relative z-10 flex h-full w-full items-center justify-between rounded-full border border-white/20 px-6 transition-colors duration-300 group-hover/btn:border-white/50">
+                  {/* Left Text: Ready? */}
+                  <span className="text-[16px] sm:text-[17px] font-bold text-white transition-colors duration-300">
+                    {buttonLeftText}
+                  </span>
+
+                  {/* Central Blue Icon Tile with t. */}
+                  <div className="relative flex items-center justify-center">
+                    <div className="absolute inset-0 rounded-[12px] bg-[#0052FF] blur-[8px] opacity-60 transition-opacity duration-300 group-hover/btn:opacity-90" />
+                    <div className="relative grid h-[42px] w-[42px] sm:h-[44px] sm:w-[44px] place-items-center rounded-[12px] bg-[#0052FF] shadow-[0_0_14px_rgba(0,82,255,0.55)]">
+                      <span className="font-display text-[20px] sm:text-[22px] font-black text-white leading-none pl-0.5">
+                        t.
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Right Text: Start Now */}
+                  <span className="text-[16px] sm:text-[17px] font-bold text-white transition-colors duration-300">
+                    {buttonRightText}
+                  </span>
+                </div>
               </Link>
             </div>
           </div>
@@ -146,13 +171,41 @@ export function CtaBanner({
               </h2>
             </div>
 
+            {/* Signature Thrides Dual-Sided Capsule CTA Button for Mobile */}
             <div>
               <Link
                 href={buttonHref}
-                className="w-full inline-flex h-[50px] items-center justify-center gap-2 rounded-full bg-[#0A5CFF] px-6 text-[14px] font-semibold text-white shadow-[0_0_20px_rgba(10,92,255,0.35)] active:scale-[0.98] transition-all cursor-pointer"
+                aria-label="Start a project with Thrides"
+                className="group/btn relative inline-flex h-[66px] sm:h-[72px] w-full max-w-[320px] items-center justify-between rounded-full bg-[#000000] p-[5px] transition-all duration-300 hover:bg-[#0052FF] hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-4 select-none shadow-[0_0_28px_rgba(0,82,255,0.22)] cursor-pointer"
               >
-                <span>{cleanButtonLabel}</span>
-                <ArrowUpRight size={16} />
+                {/* Animated outer glowing breathing border */}
+                <span
+                  className="pointer-events-none absolute -inset-[2px] rounded-full border-2 border-[#0052FF] animate-hero-border-pulse"
+                  aria-hidden="true"
+                />
+
+                {/* Inner charcoal outline inset */}
+                <div className="relative z-10 flex h-full w-full items-center justify-between rounded-full border border-white/20 px-5 sm:px-6 transition-colors duration-300 group-hover/btn:border-white/50">
+                  {/* Left Text: Ready? */}
+                  <span className="text-[15px] sm:text-[17px] font-bold text-white transition-colors duration-300">
+                    {buttonLeftText}
+                  </span>
+
+                  {/* Central Blue Icon Tile with t. */}
+                  <div className="relative flex items-center justify-center">
+                    <div className="absolute inset-0 rounded-[12px] bg-[#0052FF] blur-[8px] opacity-60 transition-opacity duration-300 group-hover/btn:opacity-90" />
+                    <div className="relative grid h-[40px] w-[40px] sm:h-[44px] sm:w-[44px] place-items-center rounded-[12px] bg-[#0052FF] shadow-[0_0_14px_rgba(0,82,255,0.55)]">
+                      <span className="font-display text-[19px] sm:text-[22px] font-black text-white leading-none pl-0.5">
+                        t.
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Right Text: Start Now */}
+                  <span className="text-[15px] sm:text-[17px] font-bold text-white transition-colors duration-300">
+                    {buttonRightText}
+                  </span>
+                </div>
               </Link>
             </div>
           </div>
