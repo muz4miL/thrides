@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { HeroButton } from "@/components/site/HeroButton";
@@ -17,12 +18,28 @@ import {
   Minus,
 } from "lucide-react";
 import {
-  packageComparisonRows,
-  services,
-  whatHappensWhenYouJoin,
-  whatItsLikeToWork,
-  faqs,
+  packageComparisonRows as defaultComparisonRows,
+  services as defaultServices,
+  faqs as defaultFaqs,
 } from "@/content/site";
+import type { ServicesPageContent } from "@/server/types";
+
+import serviceIdentity from "@/assets/service-identity.jpg";
+import serviceSocial from "@/assets/service-social.jpg";
+import serviceAds from "@/assets/service-ads.jpg";
+import servicePackages from "@/assets/service-packages.jpg";
+import rise from "@/assets/work-package-rise.jpg";
+import zest from "@/assets/work-social-juice.jpg";
+
+const serviceImageMap: Record<string, any> = {
+  "marketing-consultancy": serviceIdentity,
+  "website-design-dev": rise,
+  "website-design-development": rise,
+  "content-creation": serviceSocial,
+  "social-media-marketing": zest,
+  "seo": serviceAds,
+  "email-marketing": servicePackages,
+};
 
 // tiny scroll-reveal hook
 function useReveal(threshold = 0.12) {
@@ -46,17 +63,98 @@ function useReveal(threshold = 0.12) {
   return { ref, visible };
 }
 
-export function ServicesContent() {
+interface ServicesContentProps {
+  data?: ServicesPageContent;
+}
+
+export function ServicesContent({ data }: ServicesContentProps) {
   const [showComparison, setShowComparison] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  const hero = data?.hero || {
+    eyebrow: "SERVICES & PACKAGES",
+    headingLine1: "Start where you are.",
+    headingLineItalic: "Grow from there.",
+    subCopy: "Strategy, websites, and content — packaged around your stage of growth.",
+    ctaLeftText: "Book a",
+    ctaRightText: "Free Strategy Call",
+    ctaHref: "/contact",
+    exploreLabel: "Explore packages",
+    heroImageUrl: "/servicehero.png",
+  };
+
+  const packages = data?.packages && data.packages.length > 0 ? data.packages : undefined;
+
+  const comparisonRows =
+    data?.comparisonRows && data.comparisonRows.length > 0
+      ? data.comparisonRows
+      : defaultComparisonRows;
+
+  const processSteps =
+    data?.processSteps && data.processSteps.length > 0
+      ? data.processSteps.map((ps) => ({
+          stepNumber: ps.stepNumber,
+          timeLabel: ps.timeLabel,
+          title: ps.title,
+          desc: ps.desc,
+        }))
+      : undefined;
+
+  const checklistItems =
+    data?.checklistItems && data.checklistItems.length > 0
+      ? data.checklistItems.map((ci) => ({
+          title: ci.title,
+          desc: ci.desc,
+        }))
+      : undefined;
+
+  const timelineSteps =
+    data?.timelineSteps && data.timelineSteps.length > 0
+      ? data.timelineSteps.map((ts) => ({
+          dayLabel: ts.dayLabel,
+          title: ts.title,
+          desc: ts.desc,
+        }))
+      : undefined;
+
+  const coreServices =
+    data?.coreServices && data.coreServices.length > 0
+      ? data.coreServices.map((cs) => ({
+          id: cs.slug,
+          slug: cs.slug,
+          title: cs.title,
+          includedIn: cs.includedIn,
+          summary: cs.summary,
+          bullets: cs.bullets,
+          imageUrl: cs.imageUrl,
+          imageAlt: cs.imageAlt || cs.title,
+        }))
+      : defaultServices.map((ds) => ({
+          id: ds.id,
+          slug: ds.slug,
+          title: ds.title,
+          includedIn: ds.includedIn,
+          summary: ds.summary,
+          bullets: ds.bullets,
+          imageUrl: "",
+          imageAlt: ds.title,
+        }));
+
+  const faqs =
+    data?.faqs && data.faqs.length > 0
+      ? data.faqs.map((f) => ({
+          q: f.question,
+          a: f.answer,
+        }))
+      : defaultFaqs;
+
   const [mobileExpandedService, setMobileExpandedService] = useState<string | null>(
-    services[0]?.id || "",
+    coreServices[0]?.id || "",
   );
 
   const [heroEntered, setHeroEntered] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
 
-  const processReveal = useReveal();
   const servicesReveal = useReveal();
   const faqReveal = useReveal();
 
@@ -90,13 +188,16 @@ export function ServicesContent() {
             className="relative mx-auto w-full overflow-hidden rounded-[36px] sm:rounded-[44px] md:rounded-[52px] bg-[#000000] border border-white/[0.08] min-h-[520px] lg:h-[calc(100vh-180px)] lg:min-h-[580px] lg:max-h-[640px] shadow-2xl flex flex-col justify-center items-center text-center px-4 sm:px-6 md:px-8 py-14 sm:py-16 select-none"
           >
             <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-              <img
-                src="/servicehero.png"
-                alt=""
-                aria-hidden="true"
-                className={`h-full w-full object-cover object-bottom transition-transform duration-1000 ease-out will-change-transform motion-reduce:transform-none ${heroEntered ? "scale-100" : "scale-105"}`}
-                loading="eager"
-              />
+              <picture>
+                <source media="(max-width: 768px)" srcSet="/servicehero-mobile.png" />
+                <img
+                  src={hero.heroImageUrl || "/servicehero.png"}
+                  alt=""
+                  aria-hidden="true"
+                  className={`h-full w-full object-cover object-bottom transition-transform duration-1000 ease-out will-change-transform motion-reduce:transform-none ${heroEntered ? "scale-100" : "scale-105"}`}
+                  loading="eager"
+                />
+              </picture>
               <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-b from-[#000000]/75 via-[#000000]/30 to-[#000000]/85" />
               <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,#000000_90%)] opacity-70" />
             </div>
@@ -108,7 +209,7 @@ export function ServicesContent() {
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-[#0052FF] animate-pulse" />
                 <span className="font-mono text-[11px] sm:text-[12px] font-semibold tracking-[0.16em] uppercase text-neutral-300">
-                  SERVICES &amp; PACKAGES
+                  {hero.eyebrow}
                 </span>
               </div>
 
@@ -116,9 +217,9 @@ export function ServicesContent() {
                 style={{ transitionDelay: heroEntered ? "80ms" : "0ms" }}
                 className={`mt-4 sm:mt-5 select-none font-display text-[clamp(40px,5.8vw,86px)] font-extrabold tracking-[-0.04em] text-[#F4F4F5] leading-[0.96] transition-all duration-700 ease-out ${heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
               >
-                <span className="block">Start where you are.</span>
+                <span className="block">{hero.headingLine1}</span>
                 <span className="block font-serif font-normal italic tracking-[-0.025em] text-[#c3d4ff] mt-0.5">
-                  Grow from there.
+                  {hero.headingLineItalic}
                 </span>
               </h1>
 
@@ -126,19 +227,24 @@ export function ServicesContent() {
                 style={{ transitionDelay: heroEntered ? "160ms" : "0ms" }}
                 className={`mt-3 sm:mt-4 max-w-[600px] font-sans text-[15px] sm:text-[17px] text-[#C9C9D0] leading-relaxed transition-all duration-700 ease-out ${heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
               >
-                Strategy, websites, and content — packaged around your stage of growth.
+                {hero.subCopy}
               </p>
 
               <div
                 style={{ transitionDelay: heroEntered ? "240ms" : "0ms" }}
                 className={`mt-7 sm:mt-8 flex flex-col items-center gap-5 w-full transition-all duration-700 ease-out ${heroEntered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
               >
-                <HeroButton href="/contact" leftText="Book a" rightText="Free Strategy Call" ariaLabel="Book a Free Strategy Call" />
+                <HeroButton
+                  href={hero.ctaHref || "/contact"}
+                  leftText={hero.ctaLeftText || "Book a"}
+                  rightText={hero.ctaRightText || "Free Strategy Call"}
+                  ariaLabel={`${hero.ctaLeftText} ${hero.ctaRightText}`}
+                />
                 <a
                   href="#packages"
                   className="group inline-flex items-center gap-1.5 text-[13px] font-medium text-neutral-500 hover:text-neutral-200 transition-colors duration-200 cursor-pointer focus-visible:outline-none focus-visible:text-white"
                 >
-                  <span>Explore packages</span>
+                  <span>{hero.exploreLabel || "Explore packages"}</span>
                   <ChevronDown size={13} className="transition-transform duration-200 group-hover:translate-y-0.5" />
                 </a>
               </div>
@@ -146,9 +252,10 @@ export function ServicesContent() {
           </section>
         </div>
 
-        {/* 2. THE THREE PACKAGES (Identical to Home Screen WhoItsFor Component) */}
+        {/* 2. THE THREE PACKAGES */}
         <WhoItsFor
           id="packages"
+          packagesData={packages as any}
           onCompareClick={() => setShowComparison((s) => !s)}
         >
           {/* Collapsible comparison matrix inside packages section */}
@@ -178,7 +285,7 @@ export function ServicesContent() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/[0.05]">
-                    {packageComparisonRows.map((row, idx) => (
+                    {comparisonRows.map((row, idx) => (
                       <tr key={idx} className={idx % 2 === 0 ? "bg-transparent" : "bg-white/[0.015]"}>
                         <td className="py-3.5 px-5 font-semibold text-[12px] text-neutral-300">{row.feature}</td>
                         <td className="py-3.5 px-5 text-[12px] text-neutral-400">{row.kickstart}</td>
@@ -193,11 +300,11 @@ export function ServicesContent() {
           </div>
         </WhoItsFor>
 
-        {/* 3. HOW IT WORKS (PREMIUM ANIMATED JOURNEY) */}
-        <HowItWorksSection />
+        {/* 3. HOW IT WORKS */}
+        <HowItWorksSection steps={processSteps} />
 
-        {/* 3.5 CLIENT ONBOARDING (LUXURY TIMELINE) */}
-        <OnboardingSection />
+        {/* 3.5 CLIENT ONBOARDING */}
+        <OnboardingSection checklistItems={checklistItems} timelineSteps={timelineSteps} />
 
         {/* 4. ALL SIX SERVICES IN DETAIL */}
         <section
@@ -221,67 +328,85 @@ export function ServicesContent() {
 
             {/* Desktop */}
             <div className="hidden lg:block divide-y divide-white/[0.07]">
-              {services.map((svc, sIdx) => (
-                <div
-                  key={svc.id}
-                  style={{ transitionDelay: `${sIdx * 60}ms` }}
-                  className={`py-12 grid grid-cols-12 gap-8 items-center group transition-all duration-700 ${servicesReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
-                >
-                  <div className="col-span-1">
-                    <span className="font-mono text-xs font-bold text-[#0052FF]">
-                      {String(sIdx + 1).padStart(2, "0")}
-                    </span>
-                  </div>
+              {coreServices.map((svc, sIdx) => {
+                const fallbackImg = serviceImageMap[svc.slug] || serviceImageMap[svc.id] || serviceIdentity;
+                const imgSrc = svc.imageUrl && svc.imageUrl.trim() !== "" ? svc.imageUrl : fallbackImg;
 
-                  <div className="col-span-4">
-                    <div className="inline-flex items-center rounded-full bg-[#0052FF]/10 border border-[#0052FF]/25 px-3 py-0.5 text-[10px] font-mono font-bold text-[#0052FF] uppercase tracking-wider mb-2.5">
-                      {svc.includedIn}
+                return (
+                  <div
+                    key={svc.id || svc.slug}
+                    style={{ transitionDelay: `${sIdx * 60}ms` }}
+                    className={`py-12 grid grid-cols-12 gap-8 items-center group transition-all duration-700 ${servicesReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
+                  >
+                    <div className="col-span-1">
+                      <span className="font-mono text-xs font-bold text-[#0052FF]">
+                        {String(sIdx + 1).padStart(2, "0")}
+                      </span>
                     </div>
-                    <h3 className="font-display text-[24px] font-extrabold text-white tracking-[-0.03em] group-hover:text-[#0052FF] transition-colors">
-                      {svc.title}
-                    </h3>
-                    <p className="mt-2.5 text-[13.5px] leading-relaxed text-neutral-400">
-                      {svc.summary}
-                    </p>
-                  </div>
 
-                  <div className="col-span-4">
-                    <ul className="space-y-2">
-                      {svc.bullets.map((bullet, bIdx) => (
-                        <li key={bIdx} className="flex items-start gap-2.5 text-[13px] text-neutral-300">
-                          <Check size={13} className="text-[#0052FF] shrink-0 mt-0.5" />
-                          <span className="leading-snug">{bullet}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="col-span-3">
-                    <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/[0.07] bg-[#07070A]">
-                      <img
-                        src={typeof svc.image === "string" ? svc.image : svc.image?.src || ""}
-                        alt={svc.title}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
+                    <div className="col-span-4">
+                      <div className="inline-flex items-center rounded-full bg-[#0052FF]/10 border border-[#0052FF]/25 px-3 py-0.5 text-[10px] font-mono font-bold text-[#0052FF] uppercase tracking-wider mb-2.5">
+                        {svc.includedIn}
+                      </div>
+                      <h3 className="font-display text-[24px] font-extrabold text-white tracking-[-0.03em] group-hover:text-[#0052FF] transition-colors">
+                        {svc.title}
+                      </h3>
+                      <p className="mt-2.5 text-[13.5px] leading-relaxed text-neutral-400">
+                        {svc.summary}
+                      </p>
                     </div>
-                    <a
-                      href={`/contact?service=${svc.slug}`}
-                      className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold text-[#0052FF] hover:text-blue-300 transition-colors cursor-pointer"
-                    >
-                      Enquire about this service
-                      <ArrowUpRight size={12} />
-                    </a>
+
+                    <div className="col-span-4">
+                      <ul className="space-y-2">
+                        {svc.bullets.map((bullet, bIdx) => (
+                          <li key={bIdx} className="flex items-start gap-2.5 text-[13px] text-neutral-300">
+                            <Check size={13} className="text-[#0052FF] shrink-0 mt-0.5" />
+                            <span className="leading-snug">{bullet}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="col-span-3">
+                      <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/[0.07] bg-[#07070A] relative">
+                        {typeof imgSrc === "string" ? (
+                          <img
+                            src={imgSrc}
+                            alt={svc.imageAlt || svc.title}
+                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        ) : (
+                          <Image
+                            src={imgSrc}
+                            alt={svc.imageAlt || svc.title}
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 300px"
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        )}
+                      </div>
+                      <a
+                        href={`/contact?service=${svc.slug}`}
+                        className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold text-[#0052FF] hover:text-blue-300 transition-colors cursor-pointer"
+                      >
+                        Enquire about this service
+                        <ArrowUpRight size={12} />
+                      </a>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Mobile */}
             <div className="block lg:hidden space-y-3">
-              {services.map((svc, sIdx) => {
+              {coreServices.map((svc, sIdx) => {
                 const isOpen = mobileExpandedService === svc.id;
+                const fallbackImg = serviceImageMap[svc.slug] || serviceImageMap[svc.id] || serviceIdentity;
+                const imgSrc = svc.imageUrl && svc.imageUrl.trim() !== "" ? svc.imageUrl : fallbackImg;
+
                 return (
-                  <div key={svc.id} className="rounded-2xl border border-white/[0.08] bg-[#0C0C10] overflow-hidden">
+                  <div key={svc.id || svc.slug} className="rounded-2xl border border-white/[0.08] bg-[#0C0C10] overflow-hidden">
                     <button
                       type="button"
                       onClick={() => setMobileExpandedService(isOpen ? null : svc.id)}
@@ -303,8 +428,22 @@ export function ServicesContent() {
                         <div className="inline-flex items-center rounded-full bg-[#0052FF]/10 border border-[#0052FF]/25 px-3 py-0.5 text-[10px] font-mono font-bold text-[#0052FF] uppercase tracking-wider">
                           {svc.includedIn}
                         </div>
-                        <div className="aspect-[16/9] w-full overflow-hidden rounded-xl border border-white/[0.07]">
-                          <img src={typeof svc.image === "string" ? svc.image : svc.image?.src || ""} alt={svc.title} className="h-full w-full object-cover" />
+                        <div className="aspect-[16/9] w-full overflow-hidden rounded-xl border border-white/[0.07] relative">
+                          {typeof imgSrc === "string" ? (
+                            <img
+                              src={imgSrc}
+                              alt={svc.imageAlt || svc.title}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <Image
+                              src={imgSrc}
+                              alt={svc.imageAlt || svc.title}
+                              fill
+                              sizes="100vw"
+                              className="object-cover"
+                            />
+                          )}
                         </div>
                         <p className="text-[13.5px] text-neutral-300 leading-relaxed">{svc.summary}</p>
                         <ul className="space-y-1.5">
@@ -391,7 +530,7 @@ export function ServicesContent() {
           </div>
         </section>
 
-        {/* 6. FINAL CTA: Ready to Scale (Identical to Home Screen) */}
+        {/* 6. FINAL CTA: Ready to Scale */}
         <ReadyToScale />
 
       </main>

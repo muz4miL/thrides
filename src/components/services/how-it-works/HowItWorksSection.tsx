@@ -6,7 +6,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Instrument_Serif } from "next/font/google";
 import { ArrowUpRight } from "lucide-react";
 import { JourneyStep } from "./JourneyStep";
-import { HOW_IT_WORKS_STEPS } from "./types";
+import { HOW_IT_WORKS_STEPS, HowItWorksStep } from "./types";
 
 const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
@@ -15,8 +15,9 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
-export function HowItWorksSection() {
+export function HowItWorksSection({ steps }: { steps?: HowItWorksStep[] | undefined } = {}) {
   const shouldReduceMotion = useReducedMotion();
+  const displaySteps = steps && steps.length > 0 ? steps : HOW_IT_WORKS_STEPS;
 
   return (
     <section
@@ -51,9 +52,6 @@ export function HowItWorksSection() {
       </svg>
 
       <div className="relative z-10 mx-auto max-w-[1240px] px-4 sm:px-6 md:px-8">
-        {/* ========================================================= */}
-        {/* HEADER: Left-aligned, no far-right paragraph              */}
-        {/* ========================================================= */}
         <div className="max-w-2xl mb-14 sm:mb-18">
           <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-[#0A5CFF] block">
             SIMPLE PROCESS
@@ -73,19 +71,13 @@ export function HowItWorksSection() {
           </p>
         </div>
 
-        {/* ========================================================= */}
-        {/* JOURNEY: Desktop horizontal track / Mobile vertical stack */}
-        {/* ========================================================= */}
         <div className="relative">
-          {/* Desktop Horizontal Line connecting the 3 nodes */}
           <div
             aria-hidden="true"
             className="hidden lg:block absolute top-[52px] left-[18px] right-[18px] h-[2px] pointer-events-none z-0"
           >
-            {/* Background 1px track */}
             <div className="absolute inset-0 bg-white/[0.08] shadow-[0_0_8px_rgba(10,92,255,0.15)]" />
 
-            {/* Blue fill line drawing left to right */}
             <motion.div
               initial={
                 shouldReduceMotion
@@ -102,17 +94,13 @@ export function HowItWorksSection() {
             />
           </div>
 
-          {/* Steps Ordered List */}
           <ol className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-8 relative z-10 m-0 p-0">
-            {HOW_IT_WORKS_STEPS.map((step, idx) => (
+            {displaySteps.map((step, idx) => (
               <JourneyStep key={step.stepNumber} step={step} index={idx} />
             ))}
           </ol>
         </div>
 
-        {/* ========================================================= */}
-        {/* DESTINATION: Final Glowing Node + Primary CTA Button      */}
-        {/* ========================================================= */}
         <motion.div
           initial={
             shouldReduceMotion
@@ -148,4 +136,3 @@ export function HowItWorksSection() {
     </section>
   );
 }
-

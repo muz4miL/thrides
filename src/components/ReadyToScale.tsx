@@ -36,23 +36,29 @@ export default function ReadyToScale() {
           />
 
           {/* Banner Graphic Layer */}
-          <div className="relative w-full overflow-hidden min-h-[300px] sm:min-h-[380px] lg:min-h-[460px] flex items-center justify-between">
-            <img
-              src="/readytoScale.png"
-              alt="Ready to scale? Make your next move with Thrides"
-              className="absolute inset-0 h-full w-full object-cover object-left md:object-center select-none"
-              loading="lazy"
-            />
+          <div className="relative w-full overflow-hidden min-h-[270px] sm:min-h-[340px] lg:min-h-[440px] flex items-center justify-between">
+            <picture className="absolute inset-0 h-full w-full pointer-events-none select-none">
+              <source media="(max-width: 768px)" srcSet="/readytoScale-mobile.png" />
+              <img
+                src="/readytoScale.png"
+                alt="Ready to scale? Make your next move with Thrides"
+                className="h-full w-full object-cover object-center select-none"
+                loading="lazy"
+              />
+            </picture>
 
-            {/* Subtle Gradient Overlay for Contrast */}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/70 sm:to-black/50" />
+            {/* Contrast and glow overlays */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/40 md:bg-gradient-to-r md:from-black/40 md:via-transparent md:to-black/50" />
 
-            {/* Floating Hero Bouncy Pulsing Button on the Right */}
-            <div className="relative z-20 w-full flex justify-center md:justify-end px-6 sm:px-10 lg:px-16 py-12 md:py-0">
+            {/* Ambient blue glow behind button */}
+            <div className="pointer-events-none absolute right-4 md:right-16 top-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-[#0052FF]/25 blur-[90px]" />
+
+            {/* Floating Hero Bouncy Pulsing Button on the Right (Centered on mobile) */}
+            <div className="relative z-20 w-full flex justify-center md:justify-end px-4 sm:px-10 lg:px-16 py-8 md:py-0">
               <a
                 href="/contact"
                 aria-label="Book a Growth Audit"
-                className="group relative inline-flex h-[72px] sm:h-[78px] w-full max-w-[340px] sm:max-w-[360px] items-center justify-between rounded-full bg-[#000000] p-[5px] transition-all duration-300 hover:bg-[#0052FF] hover:scale-[1.03] active:scale-[0.98] select-none shadow-[0_0_35px_rgba(0,82,255,0.35)]"
+                className="group relative inline-flex h-[68px] sm:h-[78px] w-full max-w-[320px] sm:max-w-[360px] items-center justify-between rounded-full bg-[#000000] p-[5px] transition-all duration-300 hover:bg-[#0052FF] hover:scale-[1.03] active:scale-[0.98] select-none shadow-[0_0_35px_rgba(0,82,255,0.35)]"
               >
                 {/* Animated Outer Blue Pulse */}
                 <span

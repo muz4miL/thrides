@@ -25,16 +25,26 @@ export interface WhoItsForProps {
   id?: string;
   onCompareClick?: () => void;
   children?: React.ReactNode;
+  packagesData?: PackageData[] | undefined;
 }
 
 export function WhoItsFor({
   id = "packages-overview",
   onCompareClick,
   children,
+  packagesData,
 }: WhoItsForProps = {}) {
   const [activeDetailId, setActiveDetailId] = useState<string | null>(null);
   const [hasEntered, setHasEntered] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+
+  const displayPackages =
+    packagesData && packagesData.length > 0
+      ? packagesData.map((p) => ({
+          ...p,
+          id: p.id || (p as any).slug,
+        }))
+      : packages;
 
   // Entrance observer triggered when 20% of section enters viewport
   useEffect(() => {
@@ -80,7 +90,7 @@ export function WhoItsFor({
     });
   };
 
-  const activePackage = packages.find((p) => p.id === activeDetailId);
+  const activePackage = displayPackages.find((p) => p.id === activeDetailId);
 
   return (
     <section
@@ -114,11 +124,11 @@ export function WhoItsFor({
 
         {/* 2. Three Balanced Cards Grid */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-stretch">
-          {packages.map((pkg, idx) => {
-            const isAccelerate = pkg.id === "accelerate";
+          {displayPackages.map((pkg, idx) => {
+            const isAccelerate = pkg.id === "accelerate" || pkg.isPopular;
             const isSelected = activeDetailId === pkg.id;
-            const number = indexMap[pkg.id] || "01";
-            const ribbonImg = ribbonMap[pkg.id];
+            const number = indexMap[pkg.id] || String(idx + 1).padStart(2, "0");
+            const ribbonImg = ribbonMap[pkg.id] || ribbon1;
             const remainingCount = Math.max(0, pkg.deliverables.length - 3);
 
             // Stagger animation timing: 0ms, 90ms, 180ms

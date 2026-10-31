@@ -322,6 +322,143 @@ export interface WorkProjectDoc {
   publishedAt?: Date;
 }
 
+// ── SERVICES PAGE CONTENT ─────────────────────────────────────────────────
+
+export interface SpSettingsDoc {
+  _id?: ObjectId | string;
+  seoTitle: string;
+  seoDescription: string;
+  ogImage?: string;
+  updatedAt: Date;
+}
+
+export interface SpHeroDoc {
+  _id?: ObjectId | string;
+  eyebrow: string;
+  headingLine1: string;
+  headingLineItalic: string;
+  subCopy: string;
+  ctaLeftText: string;
+  ctaRightText: string;
+  ctaHref: string;
+  exploreLabel: string;
+  heroImageUrl: string;
+  updatedAt: Date;
+}
+
+export interface SpPackageDoc {
+  _id?: ObjectId | string;
+  slug: string;
+  name: string;
+  tagline: string;
+  heading: string;
+  theProblem: string;
+  deliverables: string[];
+  timeline: string;
+  payment: string;
+  promise: string;
+  investment: string;
+  ctaText: string;
+  badge?: string;
+  isPopular?: boolean;
+  sortOrder: number;
+  visible: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface SpComparisonRowDoc {
+  _id?: ObjectId | string;
+  feature: string;
+  kickstart: string;
+  accelerate: string;
+  authority: string;
+  sortOrder: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface SpProcessStepDoc {
+  _id?: ObjectId | string;
+  stepNumber: string;
+  timeLabel: string;
+  title: string;
+  desc: string;
+  sortOrder: number;
+  visible: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface SpChecklistItemDoc {
+  _id?: ObjectId | string;
+  title: string;
+  desc: string;
+  sortOrder: number;
+  visible: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface SpTimelineStepDoc {
+  _id?: ObjectId | string;
+  dayLabel: string;
+  title: string;
+  desc: string;
+  sortOrder: number;
+  visible: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface SpCoreServiceDoc {
+  _id?: ObjectId | string;
+  slug: string;
+  title: string;
+  includedIn: string;
+  summary: string;
+  bullets: string[];
+  imageUrl: string;
+  imageAlt: string;
+  sortOrder: number;
+  visible: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface SpFaqDoc {
+  _id?: ObjectId | string;
+  question: string;
+  answer: string;
+  sortOrder: number;
+  visible: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Serialised (plain objects) versions for client consumption
+export type SpSettingsSer = Omit<SpSettingsDoc, "_id"> & { _id: string };
+export type SpHeroSer = Omit<SpHeroDoc, "_id"> & { _id: string };
+export type SpPackageSer = Omit<SpPackageDoc, "_id" | "createdAt" | "updatedAt"> & { _id: string; createdAt: string; updatedAt: string };
+export type SpComparisonRowSer = Omit<SpComparisonRowDoc, "_id" | "createdAt" | "updatedAt"> & { _id: string; createdAt: string; updatedAt: string };
+export type SpProcessStepSer = Omit<SpProcessStepDoc, "_id" | "createdAt" | "updatedAt"> & { _id: string; createdAt: string; updatedAt: string };
+export type SpChecklistItemSer = Omit<SpChecklistItemDoc, "_id" | "createdAt" | "updatedAt"> & { _id: string; createdAt: string; updatedAt: string };
+export type SpTimelineStepSer = Omit<SpTimelineStepDoc, "_id" | "createdAt" | "updatedAt"> & { _id: string; createdAt: string; updatedAt: string };
+export type SpCoreServiceSer = Omit<SpCoreServiceDoc, "_id" | "createdAt" | "updatedAt"> & { _id: string; createdAt: string; updatedAt: string };
+export type SpFaqSer = Omit<SpFaqDoc, "_id" | "createdAt" | "updatedAt"> & { _id: string; createdAt: string; updatedAt: string };
+
+export interface ServicesPageContent {
+  settings: SpSettingsSer | null;
+  hero: SpHeroSer | null;
+  packages: SpPackageSer[];
+  comparisonRows: SpComparisonRowSer[];
+  processSteps: SpProcessStepSer[];
+  checklistItems: SpChecklistItemSer[];
+  timelineSteps: SpTimelineStepSer[];
+  coreServices: SpCoreServiceSer[];
+  faqs: SpFaqSer[];
+}
+
 export interface WorkPageSettingsDoc {
   _id?: ObjectId | string;
   heroEyebrow: string;

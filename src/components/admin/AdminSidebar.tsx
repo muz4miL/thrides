@@ -19,6 +19,7 @@ import {
 export type AdminTab =
   | "inbox"
   | "our-work"
+  | "services-page"
   | "services"
   | "portfolio"
   | "case-studies"
@@ -90,8 +91,13 @@ export function AdminSidebar({
           count: counts.ourWork,
         },
         {
+          id: "services-page" as AdminTab,
+          label: "Services Page CMS",
+          icon: Layers,
+        },
+        {
           id: "services" as AdminTab,
-          label: "Agency Services",
+          label: "Agency Pillars",
           icon: Layers,
           count: counts.services,
         },

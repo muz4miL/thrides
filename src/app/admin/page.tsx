@@ -72,7 +72,11 @@ export default async function AdminPage() {
     ]);
 
     const { getAdminWorkData } = await import("@/server/work-service");
-    const workData = await getAdminWorkData();
+    const { getAdminServicesPageContent } = await import("@/server/services-page-service");
+    const [workData, spContent] = await Promise.all([
+      getAdminWorkData(),
+      getAdminServicesPageContent(),
+    ]);
 
     initialData = {
       services: allServices.map((s) => ({ ...s, _id: s._id.toString() })),
@@ -85,14 +89,20 @@ export default async function AdminPage() {
       testimonials: allTestimonials.map((t) => ({ ...t, _id: t._id.toString() })),
       workProjects: workData.projects,
       workPageSettings: workData.settings,
+      servicesPageContent: spContent,
     };
   } catch (err) {
     console.error("Admin dashboard data fetch error:", err);
     try {
       const { getAdminWorkData } = await import("@/server/work-service");
-      const workData = await getAdminWorkData();
+      const { getAdminServicesPageContent } = await import("@/server/services-page-service");
+      const [workData, spContent] = await Promise.all([
+        getAdminWorkData(),
+        getAdminServicesPageContent(),
+      ]);
       initialData.workProjects = workData.projects;
       initialData.workPageSettings = workData.settings;
+      initialData.servicesPageContent = spContent;
     } catch (fallbackErr) {
       console.warn("Could not load fallback admin work data:", fallbackErr);
     }

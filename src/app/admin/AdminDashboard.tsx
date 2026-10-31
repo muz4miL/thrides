@@ -6,6 +6,7 @@ import { Check, AlertCircle, Menu } from "lucide-react";
 import { AdminSidebar, AdminTab } from "@/components/admin/AdminSidebar";
 import { SubmissionsTab } from "@/components/admin/tabs/SubmissionsTab";
 import { OurWorkManager } from "@/components/admin/OurWorkManager";
+import { ServicesPageTab } from "@/components/admin/tabs/ServicesPageTab";
 import { ServicesTab } from "@/components/admin/tabs/ServicesTab";
 import { PortfolioTab } from "@/components/admin/tabs/PortfolioTab";
 import { CaseStudiesTab } from "@/components/admin/tabs/CaseStudiesTab";
@@ -161,6 +162,15 @@ export function AdminDashboard({
               <OurWorkManager
                 initialProjects={workProjects}
                 initialSettings={workPageSettings}
+                onNotice={showNotice}
+              />
+            </div>
+          )}
+
+          {activeTab === "services-page" && (
+            <div className="rounded-2xl border border-white/[0.08] bg-[#0E0F18]/90 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
+              <ServicesPageTab
+                initialContent={initialData.servicesPageContent}
                 onNotice={showNotice}
               />
             </div>

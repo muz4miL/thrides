@@ -1,4 +1,4 @@
-import { MongoClient, Db, Collection } from "mongodb";
+import { MongoClient, Db } from "mongodb";
 import dns from "dns";
 import type {
   SiteSettingsDoc,
@@ -14,6 +14,15 @@ import type {
   AdminUserDoc,
   WorkProjectDoc,
   WorkPageSettingsDoc,
+  SpSettingsDoc,
+  SpHeroDoc,
+  SpPackageDoc,
+  SpComparisonRowDoc,
+  SpProcessStepDoc,
+  SpChecklistItemDoc,
+  SpTimelineStepDoc,
+  SpCoreServiceDoc,
+  SpFaqDoc,
 } from "./types";
 
 // Ensure DNS resolution succeeds across Windows Node SRV lookups
@@ -75,6 +84,16 @@ export async function getCollections() {
     adminUsers: db.collection<AdminUserDoc>("admin_users"),
     workProjects: db.collection<WorkProjectDoc>("work_projects"),
     workPageSettings: db.collection<WorkPageSettingsDoc>("work_page_settings"),
+    // Services Page CMS
+    spSettings: db.collection<SpSettingsDoc>("sp_settings"),
+    spHero: db.collection<SpHeroDoc>("sp_hero"),
+    spPackages: db.collection<SpPackageDoc>("sp_packages"),
+    spComparisonRows: db.collection<SpComparisonRowDoc>("sp_comparison_rows"),
+    spProcessSteps: db.collection<SpProcessStepDoc>("sp_process_steps"),
+    spChecklistItems: db.collection<SpChecklistItemDoc>("sp_checklist_items"),
+    spTimelineSteps: db.collection<SpTimelineStepDoc>("sp_timeline_steps"),
+    spCoreServices: db.collection<SpCoreServiceDoc>("sp_core_services"),
+    spFaqs: db.collection<SpFaqDoc>("sp_faqs"),
   };
 }
 
@@ -96,6 +115,16 @@ async function createIndexes(db: Db) {
       db.collection("vacancies").createIndex({ isOpen: 1, isArchived: 1 }),
       db.collection("submissions").createIndex({ submittedAt: -1, type: 1 }),
       db.collection("admin_users").createIndex({ email: 1 }, { unique: true }),
+      // Services Page indexes
+      db.collection("sp_packages").createIndex({ slug: 1 }, { unique: true }),
+      db.collection("sp_packages").createIndex({ sortOrder: 1, visible: 1 }),
+      db.collection("sp_core_services").createIndex({ slug: 1 }, { unique: true }),
+      db.collection("sp_core_services").createIndex({ sortOrder: 1, visible: 1 }),
+      db.collection("sp_faqs").createIndex({ sortOrder: 1, visible: 1 }),
+      db.collection("sp_process_steps").createIndex({ sortOrder: 1 }),
+      db.collection("sp_checklist_items").createIndex({ sortOrder: 1 }),
+      db.collection("sp_timeline_steps").createIndex({ sortOrder: 1 }),
+      db.collection("sp_comparison_rows").createIndex({ sortOrder: 1 }),
     ]);
   } catch (err) {
     console.warn("Index creation notice:", err);
