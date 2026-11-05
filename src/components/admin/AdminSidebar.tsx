@@ -95,24 +95,6 @@ export function AdminSidebar({
           label: "Services Page CMS",
           icon: Layers,
         },
-        {
-          id: "services" as AdminTab,
-          label: "Agency Pillars",
-          icon: Layers,
-          count: counts.services,
-        },
-        {
-          id: "portfolio" as AdminTab,
-          label: "Legacy Portfolio",
-          icon: Briefcase,
-          count: counts.portfolio,
-        },
-        {
-          id: "case-studies" as AdminTab,
-          label: "Case Studies",
-          icon: FileText,
-          count: counts.caseStudies,
-        },
       ],
     },
     {

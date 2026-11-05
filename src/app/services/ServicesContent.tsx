@@ -70,6 +70,7 @@ interface ServicesContentProps {
 export function ServicesContent({ data }: ServicesContentProps) {
   const [showComparison, setShowComparison] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [showAllFaqs, setShowAllFaqs] = useState(false);
 
   const hero = data?.hero || {
     eyebrow: "SERVICES & PACKAGES",
@@ -498,33 +499,58 @@ export function ServicesContent({ data }: ServicesContentProps) {
               </div>
 
               <div className="lg:col-span-8">
-                <div className="divide-y divide-white/[0.07]">
-                  {faqs.map((item, i) => {
-                    const isOpen = openFaq === i;
-                    return (
-                      <div key={i}>
-                        <button
-                          type="button"
-                          onClick={() => setOpenFaq(isOpen ? null : i)}
-                          aria-expanded={isOpen}
-                          className="w-full flex items-start justify-between py-5 text-left gap-4 cursor-pointer group"
-                        >
-                          <span className="font-display font-bold text-[15px] sm:text-[16px] text-white group-hover:text-[#0052FF] transition-colors leading-snug">
-                            {item.q}
-                          </span>
-                          <span className="shrink-0 mt-0.5 text-neutral-500 group-hover:text-[#0052FF] transition-colors">
-                            {isOpen ? <Minus size={16} /> : <Plus size={16} />}
-                          </span>
-                        </button>
-                        {isOpen && (
-                          <div className="pb-5 text-[14px] leading-relaxed text-neutral-300 animate-in fade-in duration-200">
-                            {item.a}
-                          </div>
-                        )}
+                {(() => {
+                  const visibleFaqs = showAllFaqs ? faqs : faqs.slice(0, 5);
+                  return (
+                    <>
+                      <div className="divide-y divide-white/[0.07]">
+                        {visibleFaqs.map((item, i) => {
+                          const isOpen = openFaq === i;
+                          return (
+                            <div key={i}>
+                              <button
+                                type="button"
+                                onClick={() => setOpenFaq(isOpen ? null : i)}
+                                aria-expanded={isOpen}
+                                className="w-full flex items-start justify-between py-5 text-left gap-4 cursor-pointer group"
+                              >
+                                <span className="font-display font-bold text-[15px] sm:text-[16px] text-white group-hover:text-[#0052FF] transition-colors leading-snug">
+                                  {item.q}
+                                </span>
+                                <span className="shrink-0 mt-0.5 text-neutral-500 group-hover:text-[#0052FF] transition-colors">
+                                  {isOpen ? <Minus size={16} /> : <Plus size={16} />}
+                                </span>
+                              </button>
+                              {isOpen && (
+                                <div className="pb-5 text-[14px] leading-relaxed text-neutral-300 animate-in fade-in duration-200">
+                                  {item.a}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
-                    );
-                  })}
-                </div>
+
+                      {faqs.length > 5 && (
+                        <div className="pt-6">
+                          <button
+                            type="button"
+                            onClick={() => setShowAllFaqs((prev) => !prev)}
+                            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-xs font-semibold text-neutral-300 hover:border-white/20 hover:bg-white/[0.08] hover:text-white transition-all cursor-pointer"
+                          >
+                            <span>
+                              {showAllFaqs ? "Show fewer questions" : `View all ${faqs.length} questions`}
+                            </span>
+                            <ChevronDown
+                              size={14}
+                              className={`transition-transform duration-200 ${showAllFaqs ? "rotate-180 text-[#0052FF]" : "text-neutral-400"}`}
+                            />
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
             </div>
           </div>
