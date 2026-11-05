@@ -28,7 +28,7 @@ export const getSiteContentFn = createServerFn({ method: "GET" }).handler(async 
       vacancyDocs,
       caseStudyDocs,
     ] = await Promise.all([
-      siteSettings.findOne({ agencyName: "brandit." }),
+      siteSettings.findOne({ agencyName: { $in: ["Thrides", "brandit."] } }),
       services
         .find({ isPublished: true }, { projection: { _id: 0 } })
         .sort({ order: 1 })

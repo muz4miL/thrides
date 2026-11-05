@@ -66,7 +66,7 @@ export default async function AdminPage() {
       caseStudies.find({}).sort({ updatedAt: -1 }).toArray(),
       vacancies.find({}).sort({ createdAt: -1 }).toArray(),
       submissions.find({}).sort({ submittedAt: -1 }).limit(100).toArray(),
-      siteSettings.findOne({ agencyName: "brandit." }),
+      siteSettings.findOne({ agencyName: { $in: ["Thrides", "brandit."] } }),
       faqs.find({}).sort({ order: 1 }).toArray(),
       testimonials.find({}).sort({ order: 1 }).toArray(),
     ]);

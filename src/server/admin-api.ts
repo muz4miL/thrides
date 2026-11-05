@@ -97,7 +97,7 @@ export const adminGetDashboardDataFn = createServerFn({ method: "GET" }).handler
     studioEquipment.find({}).sort({ order: 1 }).toArray(),
     vacancies.find({}).sort({ createdAt: -1 }).toArray(),
     submissions.find({}).sort({ submittedAt: -1 }).limit(100).toArray(),
-    siteSettings.findOne({ agencyName: "brandit." }),
+    siteSettings.findOne({ agencyName: { $in: ["Thrides", "brandit."] } }),
     faqs.find({}).sort({ order: 1 }).toArray(),
     testimonials.find({}).sort({ order: 1 }).toArray(),
   ]);
@@ -284,7 +284,7 @@ export const adminUpdateSiteSettingsFn = createServerFn({ method: "POST" })
     fields.updatedAt = new Date();
 
     await siteSettings.updateOne(
-      { agencyName: "brandit." },
+      { agencyName: { $in: ["Thrides", "brandit."] } },
       { $set: fields },
       { upsert: true },
     );

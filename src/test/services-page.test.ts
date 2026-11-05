@@ -109,9 +109,9 @@ describe("Fallback Content Integrity", () => {
     expect(content.hero?.headingLineItalic).toBe("Grow from there.");
 
     expect(content.packages.length).toBe(3);
-    expect(content.packages[0].name).toBe("Kickstart");
-    expect(content.packages[1].name).toBe("Accelerate");
-    expect(content.packages[2].name).toBe("Authority");
+    expect(content.packages[0]?.name).toBe("Kickstart");
+    expect(content.packages[1]?.name).toBe("Accelerate");
+    expect(content.packages[2]?.name).toBe("Authority");
 
     expect(content.comparisonRows.length).toBeGreaterThan(0);
     expect(content.processSteps.length).toBe(3);

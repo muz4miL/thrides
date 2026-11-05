@@ -15,7 +15,7 @@ export async function POST(req: Request) {
 
     const normalizedEmail = rawIdentifier.trim().includes("@")
       ? rawIdentifier.trim()
-      : `${rawIdentifier.trim()}@brandit.agency`;
+      : `${rawIdentifier.trim()}@thrides.com`;
 
     const authResult = await authenticateCredentials(normalizedEmail, data.password);
     if (!authResult.success || !authResult.token) {

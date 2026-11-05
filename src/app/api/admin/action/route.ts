@@ -132,7 +132,7 @@ export async function POST(req: Request) {
       case "updateSiteSettings": {
         const { _id, ...fields } = data;
         fields.updatedAt = new Date();
-        await collections.siteSettings.updateOne({ agencyName: "brandit." }, { $set: fields }, { upsert: true });
+        await collections.siteSettings.updateOne({ agencyName: { $in: ["Thrides", "brandit."] } }, { $set: fields }, { upsert: true });
         return NextResponse.json({ success: true });
       }
       case "downloadCv": {

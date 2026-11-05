@@ -250,7 +250,7 @@ export function AdminSidebar({
               </div>
               <div className="overflow-hidden">
                 <div className="text-xs font-semibold text-white truncate">
-                  {user?.email || "admin@brandit.agency"}
+                  {user?.email || "admin@thrides.com"}
                 </div>
                 <div className="flex items-center gap-1.5 text-[10px] font-mono text-neutral-400">
                   <Shield size={10} className="text-emerald-400" />

@@ -21,7 +21,7 @@ export default function AdminLoginPage() {
 
     const resolvedEmail = email.trim().includes("@")
       ? email.trim()
-      : `${email.trim()}@brandit.agency`;
+      : `${email.trim()}@thrides.com`;
 
     try {
       const res = await adminLoginFn({
@@ -43,8 +43,8 @@ export default function AdminLoginPage() {
   };
 
   const handleAutofill = () => {
-    setEmail("admin@brandit.agency");
-    setPassword("BrandIt2026AdminSecure!");
+    setEmail("admin@thrides.com");
+    setPassword("Thrides2026AdminSecure!");
     setErrorMessage(null);
   };
 
@@ -114,7 +114,7 @@ export default function AdminLoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@brandit.agency"
+                  placeholder="admin@thrides.com"
                   className="w-full rounded-2xl border border-white/10 bg-white/[0.03] py-3.5 pl-10 pr-4 text-sm text-white placeholder-neutral-500 focus:border-[#0052FF] focus:bg-white/[0.05] focus:outline-none focus:ring-1 focus:ring-[#0052FF] transition-all"
                 />
               </div>
@@ -153,7 +153,7 @@ export default function AdminLoginPage() {
           <div className="mt-6 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4 text-center">
             <p className="text-[11px] text-neutral-400">
               Default Credentials:{" "}
-              <code className="font-mono text-neutral-200">admin@brandit.agency</code>
+              <code className="font-mono text-neutral-200">admin@thrides.com</code>
             </p>
             <button
               type="button"
