@@ -95,14 +95,14 @@ export function OnboardingSection({
 
   return (
     <section className="relative py-24 sm:py-32 overflow-hidden bg-[#060608] border-t border-b border-white/[0.05] select-none">
-      {/* 1. Subtle, slow ambient radial glows */}
+      {/* 1. Subtle, slow ambient luxury gold radial glows */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-40 right-1/4 h-[550px] w-[550px] rounded-full bg-[#0A5CFF]/[0.06] blur-[160px]"
+        className="pointer-events-none absolute -top-40 right-1/4 h-[550px] w-[550px] rounded-full bg-[#D4AF37]/[0.035] blur-[160px]"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-40 left-10 h-[500px] w-[500px] rounded-full bg-[#0A5CFF]/[0.05] blur-[150px]"
+        className="pointer-events-none absolute -bottom-40 left-10 h-[500px] w-[500px] rounded-full bg-[#B8860B]/[0.03] blur-[150px]"
       />
 
       {/* 2. 3% Film Grain SVG Noise Filter */}
@@ -126,7 +126,7 @@ export function OnboardingSection({
           {/* LEFT COLUMN */}
           <div className="lg:col-span-5 lg:sticky lg:top-[120px] self-start space-y-6">
             <div>
-              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-[#0A5CFF] block">
+              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-[#E6B93C] block">
                 CLIENT ONBOARDING
               </span>
 
@@ -151,10 +151,10 @@ export function OnboardingSection({
             <div className="pt-2 space-y-4">
               {displayChecklist.map((item, i) => (
                 <div
-                  key={item.title}
+                  key={`${item.title}-${i}`}
                   className="flex items-start gap-3.5 group"
                 >
-                  <div className="mt-0.5 h-6 w-6 flex items-center justify-center rounded-full bg-[#0A5CFF]/10 border border-[#0A5CFF]/30 shrink-0 shadow-[0_0_12px_rgba(10,92,255,0.18)] transition-colors duration-200 group-hover:border-[#0A5CFF]/60 group-hover:bg-[#0A5CFF]/20">
+                  <div className="mt-0.5 h-6 w-6 flex items-center justify-center rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 shrink-0 shadow-[0_0_12px_rgba(212,175,55,0.22)] transition-colors duration-200 group-hover:border-[#D4AF37]/60 group-hover:bg-[#D4AF37]/20">
                     <svg
                       width="13"
                       height="13"
@@ -164,7 +164,7 @@ export function OnboardingSection({
                     >
                       <motion.path
                         d="M4 12.5L9.5 18L20 6.5"
-                        stroke="#0A5CFF"
+                        stroke="#D4AF37"
                         strokeWidth="2.75"
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -199,33 +199,49 @@ export function OnboardingSection({
 
           {/* RIGHT COLUMN */}
           <div className="lg:col-span-7 space-y-4">
-            <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-[#0A5CFF] block mb-6">
+            <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-[#E6B93C] block mb-6">
               WHAT HAPPENS WHEN YOU JOIN
             </span>
 
             <div ref={timelineRef} className="relative space-y-8 sm:space-y-10">
+              {/* Faint 6px blur glow duplicate underneath */}
               <div
                 aria-hidden="true"
-                className="absolute left-0 top-6 bottom-6 w-[1px] bg-white/[0.08] shadow-[0_0_8px_rgba(10,92,255,0.15)] pointer-events-none"
+                className="absolute left-0 top-6 bottom-6 w-[2px] -translate-x-1/2 blur-[6px] opacity-60 pointer-events-none"
+                style={{
+                  background:
+                    "linear-gradient(180deg, transparent 0%, #B8860B 25%, #F7E08A 50%, #B8860B 75%, transparent 100%)",
+                }}
+              />
+              {/* Base vertical track line */}
+              <div
+                aria-hidden="true"
+                className="absolute left-0 top-6 bottom-6 w-[1px] -translate-x-1/2 opacity-35 pointer-events-none"
+                style={{
+                  background:
+                    "linear-gradient(180deg, transparent 0%, #B8860B 20%, #F7E08A 50%, #B8860B 80%, transparent 100%)",
+                }}
               />
 
+              {/* Progress/filled portion using --gold-metal */}
               <motion.div
                 aria-hidden="true"
-                style={{ height: fillHeight }}
-                className="absolute left-0 top-6 w-[1.5px] bg-gradient-to-b from-[#0A5CFF] via-[#0A5CFF] to-[#60A5FA] shadow-[0_0_12px_#0A5CFF,0_0_20px_#0A5CFF] pointer-events-none z-10 origin-top"
+                style={{ height: fillHeight, background: "var(--gold-metal)" }}
+                className="absolute left-0 top-6 w-[2px] -translate-x-1/2 shadow-[0_0_14px_rgba(212,175,55,0.6),0_0_22px_rgba(212,175,55,0.35)] pointer-events-none z-10 origin-top"
               />
 
+              {/* Active moving tracer node */}
               <motion.div
                 aria-hidden="true"
                 style={{ top: fillHeight }}
-                className="absolute left-0 top-6 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white border-2 border-[#0A5CFF] shadow-[0_0_14px_#0A5CFF,0_0_24px_#0A5CFF] pointer-events-none z-20 transition-transform duration-150"
+                className="absolute left-0 top-6 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-[#FFF1B8] border-2 border-[#D4AF37] shadow-[0_0_16px_rgba(212,175,55,0.9),0_0_24px_rgba(212,175,55,0.5)] pointer-events-none z-20 transition-transform duration-150"
               >
-                <span className="animate-ping absolute inset-0 rounded-full bg-[#0A5CFF] opacity-60" />
+                <span className="animate-ping absolute inset-0 rounded-full bg-[#E6B93C] opacity-75" />
               </motion.div>
 
               {displayTimeline.map((step, index) => (
                 <div
-                  key={step.title}
+                  key={`${step.title}-${index}`}
                   onMouseEnter={() => setHoveredStep(index)}
                   onMouseLeave={() => setHoveredStep(null)}
                 >

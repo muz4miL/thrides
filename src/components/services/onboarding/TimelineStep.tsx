@@ -56,28 +56,37 @@ export function TimelineStep({
         <div
           className={`h-6 w-6 rounded-full flex items-center justify-center transition-all duration-500 ${
             isActive
-              ? "bg-[#0A5CFF]/20 border border-[#0A5CFF] shadow-[0_0_16px_#0A5CFF]"
-              : "bg-neutral-900 border border-white/20"
+              ? "bg-[#D4AF37]/15 border-[1.5px] border-[#D4AF37] shadow-[0_0_16px_rgba(212,175,55,0.5)]"
+              : "bg-neutral-950 border border-white/20"
           }`}
         >
           {/* Inner Core */}
           <div
             className={`h-2.5 w-2.5 rounded-full transition-all duration-500 ${
               isActive
-                ? "bg-white shadow-[0_0_8px_#0A5CFF]"
+                ? "bg-[#FFF1B8] shadow-[0_0_8px_rgba(212,175,55,0.9)]"
                 : "bg-neutral-500"
             }`}
           />
         </div>
       </div>
 
-      {/* Day label badge in mono text beside/above the card */}
-      <div className="flex items-center gap-2.5 mb-2.5">
-        <span className="font-mono text-[11px] font-bold tracking-wider text-[#C9A96A] bg-[#C9A96A]/10 border border-[#C9A96A]/25 px-2.5 py-0.5 rounded-md">
-          {dayLabel}
-        </span>
-        <span className="font-mono text-[11px] text-neutral-400">
-          Phase {numeral}
+      {/* Day label badge: Day 1 · Phase 01 */}
+      <div className="flex items-center gap-2 mb-2.5">
+        <span
+          className={`font-mono text-[11px] font-semibold tracking-wider px-2.5 py-0.5 rounded-md gold-pill-badge gold-shine ${
+            index === 0
+              ? "gold-shine-d1"
+              : index === 1
+                ? "gold-shine-d2"
+                : index === 2
+                  ? "gold-shine-d3"
+                  : "gold-shine-d4"
+          }`}
+        >
+          <span className="gold-text-gradient">
+            {dayLabel} · Phase {numeral}
+          </span>
         </span>
       </div>
 
@@ -86,7 +95,11 @@ export function TimelineStep({
         numeral={numeral}
         isActive={isActive}
         isHero={isHero}
-        className={isHero ? "ring-1 ring-[#0A5CFF]/30" : ""}
+        className={
+          isHero
+            ? "ring-1 ring-[rgba(212,175,55,0.35)] shadow-[0_0_30px_rgba(212,175,55,0.06)]"
+            : ""
+        }
       >
         <div className="flex items-start justify-between gap-4">
           <div>

@@ -45,12 +45,12 @@ export function SpotlightCard({
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`group relative rounded-[24px] border transition-all duration-500 ease-out ${
+      className={`group relative rounded-[24px] border transition-all duration-500 ease-out gold-card-hover ${
         isActive
-          ? "border-white/[0.09] shadow-[0_20px_50px_rgba(0,0,0,0.65)] hover:border-white/25 hover:-translate-y-1 hover:shadow-[0_28px_60px_rgba(10,92,255,0.12)]"
+          ? "border-white/[0.09] shadow-[0_20px_50px_rgba(0,0,0,0.65)] hover:-translate-y-1"
           : "border-white/[0.04] shadow-[0_12px_30px_rgba(0,0,0,0.4)]"
       } bg-[#0A0A0F]/85 backdrop-blur-xl overflow-hidden ${
-        isHero ? "p-7 sm:p-9 ring-1 ring-[#0A5CFF]/20" : "p-6 sm:p-7"
+        isHero ? "p-7 sm:p-9" : "p-6 sm:p-7"
       } ${className}`}
       style={
         {
@@ -66,14 +66,14 @@ export function SpotlightCard({
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
       />
 
-      {/* Top-left hairline electric-blue accent */}
+      {/* Top-left hairline metallic gold accent */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute top-0 left-0 w-32 h-px bg-gradient-to-r from-[#0A5CFF] to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+        className="pointer-events-none absolute top-0 left-0 w-32 h-px bg-gradient-to-r from-[rgba(212,175,55,0.8)] via-[rgba(247,224,138,0.5)] to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-300"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute top-0 left-0 w-px h-28 bg-gradient-to-b from-[#0A5CFF] to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-300"
+        className="pointer-events-none absolute top-0 left-0 w-px h-28 bg-gradient-to-b from-[rgba(212,175,55,0.7)] to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-300"
       />
 
       {/* Mouse Cursor Spotlight Glow */}
@@ -84,7 +84,7 @@ export function SpotlightCard({
         }`}
         style={{
           background: coords
-            ? `radial-gradient(320px circle at ${coords.x}px ${coords.y}px, rgba(10, 92, 255, 0.14), transparent 80%), radial-gradient(180px circle at ${coords.x}px ${coords.y}px, rgba(255, 255, 255, 0.06), transparent 70%)`
+            ? `radial-gradient(320px circle at ${coords.x}px ${coords.y}px, rgba(212, 175, 55, 0.08), transparent 80%), radial-gradient(180px circle at ${coords.x}px ${coords.y}px, rgba(255, 241, 184, 0.04), transparent 70%)`
             : "none",
         }}
       />
@@ -93,19 +93,23 @@ export function SpotlightCard({
       {isHero && (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-20 -top-20 w-72 h-72 rounded-full bg-[#0A5CFF]/[0.07] blur-3xl"
+          className="pointer-events-none absolute -right-20 -top-20 w-72 h-72 rounded-full bg-[#D4AF37]/[0.035] blur-3xl"
         />
       )}
 
-      {/* Large Ghost Numeral (01, 02, 03, 04) with Champagne-Gold Touch */}
+      {/* Large Ghost Numeral (01, 02, 03, 04) - Stroke only in rgba(212,175,55,0.18), brightening on hover */}
       {numeral && (
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute right-6 top-4 select-none font-mono text-5xl sm:text-6xl font-black tracking-tighter"
+          className="pointer-events-none absolute right-6 top-4 select-none font-mono text-5xl sm:text-6xl font-black tracking-tighter transition-all duration-300"
           style={{
-            WebkitTextStroke: "1px rgba(201, 169, 106, 0.16)",
+            WebkitTextStroke: isHovered
+              ? "1px rgba(212, 175, 55, 0.42)"
+              : "1px rgba(212, 175, 55, 0.18)",
             color: "transparent",
-            textShadow: "0 0 24px rgba(201, 169, 106, 0.08)",
+            textShadow: isHovered
+              ? "0 0 28px rgba(212, 175, 55, 0.22)"
+              : "0 0 20px rgba(212, 175, 55, 0.08)",
           }}
         >
           {numeral}

@@ -25,14 +25,14 @@ export function HowItWorksSection({ steps }: { steps?: HowItWorksStep[] | undefi
       aria-label="How it works process"
       className="relative py-24 sm:py-32 overflow-hidden bg-[#060608] border-t border-b border-white/[0.05] select-none"
     >
-      {/* 1. Ambient slow-drifting blue radial glow */}
+      {/* 1. Ambient luxury warm gold radial glow */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-40 left-1/4 h-[550px] w-[550px] rounded-full bg-[#0A5CFF]/[0.07] blur-[150px]"
+        className="pointer-events-none absolute -top-40 left-1/4 h-[550px] w-[550px] rounded-full bg-[#D4AF37]/[0.035] blur-[160px]"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-40 right-1/4 h-[550px] w-[550px] rounded-full bg-[#0A5CFF]/[0.05] blur-[150px]"
+        className="pointer-events-none absolute -bottom-40 right-1/4 h-[550px] w-[550px] rounded-full bg-[#B8860B]/[0.03] blur-[160px]"
       />
 
       {/* 2. 3% Film Grain SVG Noise Filter */}
@@ -53,7 +53,7 @@ export function HowItWorksSection({ steps }: { steps?: HowItWorksStep[] | undefi
 
       <div className="relative z-10 mx-auto max-w-[1240px] px-4 sm:px-6 md:px-8">
         <div className="max-w-2xl mb-14 sm:mb-18">
-          <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-[#0A5CFF] block">
+          <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-[#E6B93C] block">
             SIMPLE PROCESS
           </span>
 
@@ -76,8 +76,24 @@ export function HowItWorksSection({ steps }: { steps?: HowItWorksStep[] | undefi
             aria-hidden="true"
             className="hidden lg:block absolute top-[52px] left-[18px] right-[18px] h-[2px] pointer-events-none z-0"
           >
-            <div className="absolute inset-0 bg-white/[0.08] shadow-[0_0_8px_rgba(10,92,255,0.15)]" />
+            {/* Faint 6px blur glow duplicate underneath */}
+            <div
+              className="absolute inset-0 blur-[6px] opacity-60"
+              style={{
+                background:
+                  "linear-gradient(90deg, transparent 0%, #B8860B 25%, #F7E08A 50%, #B8860B 75%, transparent 100%)",
+              }}
+            />
+            {/* Background track that fades gold */}
+            <div
+              className="absolute inset-0 opacity-30"
+              style={{
+                background:
+                  "linear-gradient(90deg, transparent 0%, #B8860B 20%, #F7E08A 50%, #B8860B 80%, transparent 100%)",
+              }}
+            />
 
+            {/* Filled / progress portion using --gold-metal */}
             <motion.div
               initial={
                 shouldReduceMotion
@@ -90,13 +106,16 @@ export function HowItWorksSection({ steps }: { steps?: HowItWorksStep[] | undefi
                 duration: 1.2,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              className="absolute inset-0 origin-left bg-gradient-to-r from-[#0A5CFF] via-[#0A5CFF] to-[#60A5FA] shadow-[0_0_14px_#0A5CFF,0_0_22px_#0A5CFF]"
+              style={{
+                background: "var(--gold-metal)",
+              }}
+              className="absolute inset-0 origin-left shadow-[0_0_14px_rgba(212,175,55,0.45),0_0_22px_rgba(212,175,55,0.25)]"
             />
           </div>
 
           <ol className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-8 relative z-10 m-0 p-0">
             {displaySteps.map((step, idx) => (
-              <JourneyStep key={step.stepNumber} step={step} index={idx} />
+              <JourneyStep key={`${step.title}-${idx}`} step={step} index={idx} />
             ))}
           </ol>
         </div>

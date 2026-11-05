@@ -28,6 +28,19 @@ function formatDoc<T extends { _id?: ObjectId | string; createdAt?: Date; update
   };
 }
 
+function dedupeDocs<T>(docs: T[], keyFn: (doc: T) => string): T[] {
+  const seen = new Set<string>();
+  const res: T[] = [];
+  for (const doc of docs) {
+    const k = keyFn(doc).toLowerCase().trim();
+    if (!seen.has(k)) {
+      seen.add(k);
+      res.push(doc);
+    }
+  }
+  return res;
+}
+
 export function getFallbackServicesPageContent(): ServicesPageContent {
   return {
     settings: {
@@ -216,19 +229,22 @@ export async function getServicesPageContent(): Promise<ServicesPageContent> {
         ? comparisonRowsDocs.map((c, idx) => formatDoc(c, `comp-${idx}`))
         : fallback.comparisonRows,
       processSteps: processStepsDocs.length
-        ? processStepsDocs.map((ps, idx) => formatDoc(ps, `ps-${idx}`))
+        ? dedupeDocs(processStepsDocs, (ps) => ps.title || ps.stepNumber).map((ps, idx) => ({
+            ...formatDoc(ps, `ps-${idx}`),
+            stepNumber: String(idx + 1).padStart(2, "0"),
+          }))
         : fallback.processSteps,
       checklistItems: checklistItemsDocs.length
-        ? checklistItemsDocs.map((ci, idx) => formatDoc(ci, `ci-${idx}`))
+        ? dedupeDocs(checklistItemsDocs, (ci) => ci.title).map((ci, idx) => formatDoc(ci, `ci-${idx}`))
         : fallback.checklistItems,
       timelineSteps: timelineStepsDocs.length
-        ? timelineStepsDocs.map((ts, idx) => formatDoc(ts, `ts-${idx}`))
+        ? dedupeDocs(timelineStepsDocs, (ts) => `${ts.dayLabel}-${ts.title}`).map((ts, idx) => formatDoc(ts, `ts-${idx}`))
         : fallback.timelineSteps,
       coreServices: coreServicesDocs.length
         ? coreServicesDocs.map((cs, idx) => formatDoc(cs, `cs-${idx}`))
         : fallback.coreServices,
       faqs: faqsDocs.length
-        ? faqsDocs.map((f, idx) => formatDoc(f, `faq-${idx}`))
+        ? dedupeDocs(faqsDocs, (f) => f.question).map((f, idx) => formatDoc(f, `faq-${idx}`))
         : fallback.faqs,
     };
   } catch (err) {
@@ -281,19 +297,22 @@ export async function getAdminServicesPageContent(): Promise<ServicesPageContent
         ? comparisonRowsDocs.map((c, idx) => formatDoc(c, `comp-${idx}`))
         : fallback.comparisonRows,
       processSteps: processStepsDocs.length
-        ? processStepsDocs.map((ps, idx) => formatDoc(ps, `ps-${idx}`))
+        ? dedupeDocs(processStepsDocs, (ps) => ps.title || ps.stepNumber).map((ps, idx) => ({
+            ...formatDoc(ps, `ps-${idx}`),
+            stepNumber: String(idx + 1).padStart(2, "0"),
+          }))
         : fallback.processSteps,
       checklistItems: checklistItemsDocs.length
-        ? checklistItemsDocs.map((ci, idx) => formatDoc(ci, `ci-${idx}`))
+        ? dedupeDocs(checklistItemsDocs, (ci) => ci.title).map((ci, idx) => formatDoc(ci, `ci-${idx}`))
         : fallback.checklistItems,
       timelineSteps: timelineStepsDocs.length
-        ? timelineStepsDocs.map((ts, idx) => formatDoc(ts, `ts-${idx}`))
+        ? dedupeDocs(timelineStepsDocs, (ts) => `${ts.dayLabel}-${ts.title}`).map((ts, idx) => formatDoc(ts, `ts-${idx}`))
         : fallback.timelineSteps,
       coreServices: coreServicesDocs.length
         ? coreServicesDocs.map((cs, idx) => formatDoc(cs, `cs-${idx}`))
         : fallback.coreServices,
       faqs: faqsDocs.length
-        ? faqsDocs.map((f, idx) => formatDoc(f, `faq-${idx}`))
+        ? dedupeDocs(faqsDocs, (f) => f.question).map((f, idx) => formatDoc(f, `faq-${idx}`))
         : fallback.faqs,
     };
   } catch (err) {

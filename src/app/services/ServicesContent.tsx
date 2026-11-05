@@ -91,32 +91,33 @@ export function ServicesContent({ data }: ServicesContentProps) {
       ? data.comparisonRows
       : defaultComparisonRows;
 
-  const processSteps =
-    data?.processSteps && data.processSteps.length > 0
-      ? data.processSteps.map((ps) => ({
-          stepNumber: ps.stepNumber,
-          timeLabel: ps.timeLabel,
-          title: ps.title,
-          desc: ps.desc,
-        }))
-      : undefined;
+  const rawProcessSteps = data?.processSteps && data.processSteps.length > 0 ? data.processSteps : undefined;
+  const uniqueProcessSteps = rawProcessSteps
+    ? Array.from(new Map(rawProcessSteps.map((s) => [s.title.toLowerCase().trim(), s])).values())
+    : undefined;
+  const processSteps = uniqueProcessSteps?.map((ps, idx) => ({
+    stepNumber: String(idx + 1).padStart(2, "0"),
+    timeLabel: ps.timeLabel,
+    title: ps.title,
+    desc: ps.desc,
+  }));
 
-  const checklistItems =
-    data?.checklistItems && data.checklistItems.length > 0
-      ? data.checklistItems.map((ci) => ({
-          title: ci.title,
-          desc: ci.desc,
-        }))
-      : undefined;
+  const rawChecklist = data?.checklistItems && data.checklistItems.length > 0 ? data.checklistItems : undefined;
+  const checklistItems = rawChecklist
+    ? Array.from(new Map(rawChecklist.map((c) => [c.title.toLowerCase().trim(), c])).values()).map((ci) => ({
+        title: ci.title,
+        desc: ci.desc,
+      }))
+    : undefined;
 
-  const timelineSteps =
-    data?.timelineSteps && data.timelineSteps.length > 0
-      ? data.timelineSteps.map((ts) => ({
-          dayLabel: ts.dayLabel,
-          title: ts.title,
-          desc: ts.desc,
-        }))
-      : undefined;
+  const rawTimeline = data?.timelineSteps && data.timelineSteps.length > 0 ? data.timelineSteps : undefined;
+  const timelineSteps = rawTimeline
+    ? Array.from(new Map(rawTimeline.map((t) => [`${t.title.toLowerCase().trim()}-${t.dayLabel.toLowerCase().trim()}`, t])).values()).map((ts) => ({
+        dayLabel: ts.dayLabel,
+        title: ts.title,
+        desc: ts.desc,
+      }))
+    : undefined;
 
   const coreServices =
     data?.coreServices && data.coreServices.length > 0

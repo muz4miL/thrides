@@ -50,8 +50,16 @@ export function JourneyStep({ step, index }: JourneyStepProps) {
     >
       {/* Time Label Above Node */}
       <div className="mb-2.5 flex items-center justify-between">
-        <span className="font-mono text-[11px] font-bold tracking-[0.18em] text-[#C9A96A] bg-[#C9A96A]/10 border border-[#C9A96A]/25 px-2.5 py-0.5 rounded-md">
-          {step.timeLabel}
+        <span
+          className={`font-mono text-[11px] font-semibold tracking-[0.18em] px-2.5 py-0.5 rounded-md gold-pill-badge gold-shine ${
+            index === 0
+              ? "gold-shine-d1"
+              : index === 1
+                ? "gold-shine-d2"
+                : "gold-shine-d3"
+          }`}
+        >
+          <span className="gold-text-gradient">{step.timeLabel}</span>
         </span>
       </div>
 
@@ -66,12 +74,20 @@ export function JourneyStep({ step, index }: JourneyStepProps) {
           whileInView={{ scale: 1, opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: nodeDelay, ease: "easeOut" }}
-          className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full bg-[#0A0A0F] border border-[#0A5CFF] shadow-[0_0_16px_rgba(10,92,255,0.4)]"
+          className={`relative z-10 flex h-9 w-9 items-center justify-center rounded-full bg-[#0A0A0F] gold-circle-node gold-shine ${
+            index === 0
+              ? "gold-shine-d1"
+              : index === 1
+                ? "gold-shine-d2"
+                : "gold-shine-d3"
+          }`}
         >
-          <span className="font-mono text-xs font-bold text-[#F5F2EC]">
+          <span className="font-mono text-xs font-bold gold-text-gradient">
             {step.stepNumber}
           </span>
-          <span className="absolute inset-0 rounded-full border border-white/20 animate-pulse pointer-events-none" />
+          {index === 0 && (
+            <span className="absolute inset-0 rounded-full border border-[#D4AF37] gold-pulse-ring pointer-events-none" />
+          )}
         </motion.div>
       </div>
 
@@ -84,7 +100,7 @@ export function JourneyStep({ step, index }: JourneyStepProps) {
           setIsHovered(false);
           setCoords(null);
         }}
-        className="group relative flex-1 rounded-[24px] border border-white/[0.08] bg-[#0A0A0F]/85 backdrop-blur-xl p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden transition-all duration-300 hover:border-white/20 hover:-translate-y-1 hover:shadow-[0_24px_55px_rgba(10,92,255,0.1)] flex flex-col justify-between"
+        className="group relative flex-1 rounded-[24px] border border-white/[0.08] bg-[#0A0A0F]/85 backdrop-blur-xl p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden gold-card-hover hover:-translate-y-1 flex flex-col justify-between"
       >
         {/* Hairline top gradient highlight */}
         <div
@@ -93,7 +109,7 @@ export function JourneyStep({ step, index }: JourneyStepProps) {
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute top-0 left-0 w-28 h-px bg-gradient-to-r from-[#0A5CFF] to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+          className="pointer-events-none absolute top-0 left-0 w-28 h-px bg-gradient-to-r from-[rgba(212,175,55,0.8)] via-[rgba(247,224,138,0.5)] to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-300"
         />
 
         {/* Soft Cursor Spotlight Glow */}
@@ -104,7 +120,7 @@ export function JourneyStep({ step, index }: JourneyStepProps) {
           }`}
           style={{
             background: coords
-              ? `radial-gradient(280px circle at ${coords.x}px ${coords.y}px, rgba(10, 92, 255, 0.12), transparent 80%), radial-gradient(140px circle at ${coords.x}px ${coords.y}px, rgba(255, 255, 255, 0.05), transparent 70%)`
+              ? `radial-gradient(280px circle at ${coords.x}px ${coords.y}px, rgba(212, 175, 55, 0.08), transparent 80%), radial-gradient(140px circle at ${coords.x}px ${coords.y}px, rgba(255, 241, 184, 0.04), transparent 70%)`
               : "none",
           }}
         />
