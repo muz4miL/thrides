@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Plus, Edit2, Trash2, Eye, X, Check } from "lucide-react";
 import { adminSaveCaseStudyFn, adminDeleteCaseStudyFn } from "@/api/admin";
+import { ConfirmModal } from "@/components/admin/ConfirmModal";
 
 interface CaseStudiesTabProps {
   caseStudies: any[];
@@ -13,6 +14,7 @@ interface CaseStudiesTabProps {
 export function CaseStudiesTab({ caseStudies, setCaseStudies, onNotice }: CaseStudiesTabProps) {
   const [editingCaseStudy, setEditingCaseStudy] = useState<any | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
 
   const handleSave = async () => {
     if (!editingCaseStudy) return;
@@ -35,8 +37,10 @@ export function CaseStudiesTab({ caseStudies, setCaseStudies, onNotice }: CaseSt
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this case study?")) return;
+  const confirmDelete = async () => {
+    if (!deleteTargetId) return;
+    const id = deleteTargetId;
+    setDeleteTargetId(null);
     try {
       await adminDeleteCaseStudyFn({ data: { id } });
       setCaseStudies((prev) => prev.filter((c) => c._id !== id));
@@ -48,6 +52,16 @@ export function CaseStudiesTab({ caseStudies, setCaseStudies, onNotice }: CaseSt
 
   return (
     <div className="space-y-6">
+      <ConfirmModal
+        open={!!deleteTargetId}
+        title="Delete Case Study?"
+        description="Are you sure you want to delete this case study? This action cannot be undone."
+        confirmLabel="Yes, delete"
+        cancelLabel="Cancel"
+        danger
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTargetId(null)}
+      />
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h2 className="font-display text-2xl font-bold tracking-tight text-white">
@@ -134,7 +148,7 @@ export function CaseStudiesTab({ caseStudies, setCaseStudies, onNotice }: CaseSt
               </button>
               <button
                 type="button"
-                onClick={() => handleDelete(cs._id)}
+                onClick={() => setDeleteTargetId(cs._id)}
                 className="rounded-xl border border-red-500/20 bg-red-500/10 p-2.5 text-red-400 hover:bg-red-500/20 transition-colors cursor-pointer"
                 title="Delete Case Study"
               >

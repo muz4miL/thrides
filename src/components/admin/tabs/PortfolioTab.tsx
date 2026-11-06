@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Plus, Edit2, Trash2, X, Check, Image as ImageIcon } from "lucide-react";
 import { adminSavePortfolioFn, adminDeletePortfolioFn } from "@/api/admin";
+import { ConfirmModal } from "@/components/admin/ConfirmModal";
 
 interface PortfolioTabProps {
   portfolio: any[];
@@ -13,6 +14,7 @@ interface PortfolioTabProps {
 export function PortfolioTab({ portfolio, setPortfolio, onNotice }: PortfolioTabProps) {
   const [editingPortfolio, setEditingPortfolio] = useState<any | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
 
   const handleSave = async () => {
     if (!editingPortfolio) return;
@@ -35,8 +37,10 @@ export function PortfolioTab({ portfolio, setPortfolio, onNotice }: PortfolioTab
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this portfolio project?")) return;
+  const confirmDelete = async () => {
+    if (!deleteTargetId) return;
+    const id = deleteTargetId;
+    setDeleteTargetId(null);
     try {
       await adminDeletePortfolioFn({ data: { id } });
       setPortfolio((prev) => prev.filter((p) => p._id !== id));
@@ -48,6 +52,16 @@ export function PortfolioTab({ portfolio, setPortfolio, onNotice }: PortfolioTab
 
   return (
     <div className="space-y-6">
+      <ConfirmModal
+        open={!!deleteTargetId}
+        title="Delete Portfolio Project?"
+        description="Are you sure you want to delete this portfolio project? This action cannot be undone."
+        confirmLabel="Yes, delete"
+        cancelLabel="Cancel"
+        danger
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTargetId(null)}
+      />
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h2 className="font-display text-2xl font-bold tracking-tight text-white">
@@ -130,7 +144,7 @@ export function PortfolioTab({ portfolio, setPortfolio, onNotice }: PortfolioTab
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleDelete(item._id)}
+                  onClick={() => setDeleteTargetId(item._id)}
                   className="rounded-lg border border-red-500/20 bg-red-500/10 p-2 text-red-400 hover:bg-red-500/20 transition-colors cursor-pointer"
                   title="Delete Project"
                 >

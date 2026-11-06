@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Plus, Edit2, Trash2, X, Check } from "lucide-react";
 import { adminSaveVacancyFn, adminDeleteVacancyFn } from "@/api/admin";
+import { ConfirmModal } from "@/components/admin/ConfirmModal";
 
 interface CareersTabProps {
   vacancies: any[];
@@ -13,6 +14,7 @@ interface CareersTabProps {
 export function CareersTab({ vacancies, setVacancies, onNotice }: CareersTabProps) {
   const [editingVacancy, setEditingVacancy] = useState<any | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
 
   const handleSave = async () => {
     if (!editingVacancy) return;
@@ -35,8 +37,10 @@ export function CareersTab({ vacancies, setVacancies, onNotice }: CareersTabProp
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this job posting?")) return;
+  const confirmDelete = async () => {
+    if (!deleteTargetId) return;
+    const id = deleteTargetId;
+    setDeleteTargetId(null);
     try {
       await adminDeleteVacancyFn({ data: { id } });
       setVacancies((prev) => prev.filter((v) => v._id !== id));
@@ -48,6 +52,16 @@ export function CareersTab({ vacancies, setVacancies, onNotice }: CareersTabProp
 
   return (
     <div className="space-y-6">
+      <ConfirmModal
+        open={!!deleteTargetId}
+        title="Delete Job Posting?"
+        description="Are you sure you want to delete this job posting? This action cannot be undone."
+        confirmLabel="Yes, delete"
+        cancelLabel="Cancel"
+        danger
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTargetId(null)}
+      />
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h2 className="font-display text-2xl font-bold tracking-tight text-white">
@@ -119,7 +133,7 @@ export function CareersTab({ vacancies, setVacancies, onNotice }: CareersTabProp
               </button>
               <button
                 type="button"
-                onClick={() => handleDelete(v._id)}
+                onClick={() => setDeleteTargetId(v._id)}
                 className="rounded-xl border border-red-500/20 bg-red-500/10 p-2.5 text-red-400 hover:bg-red-500/20 transition-colors cursor-pointer"
                 title="Delete Vacancy"
               >

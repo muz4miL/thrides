@@ -5,7 +5,6 @@ import {
   Download,
   ExternalLink,
   Search,
-  Filter,
   Eye,
   Trash2,
   X,
@@ -23,6 +22,7 @@ import {
   Globe,
 } from "lucide-react";
 import { adminUpdateSubmissionNotesFn, adminDeleteSubmissionFn } from "@/api/admin";
+import { ConfirmModal } from "@/components/admin/ConfirmModal";
 
 interface SubmissionsTabProps {
   submissions: any[];
@@ -49,6 +49,9 @@ export function SubmissionsTab({
   const [isSavingNotes, setIsSavingNotes] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 12;
+
+  // Delete confirmation modal state
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
 
   // Sync state with parent updates
   useEffect(() => {
@@ -109,7 +112,16 @@ export function SubmissionsTab({
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this enquiry?")) return;
+    // Find the submission name for the modal title
+    const sub = submissions.find((s) => s._id === id);
+    const name = sub?.data?.fullName || sub?.data?.email || "this enquiry";
+    setDeleteTarget({ id, name });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    const { id } = deleteTarget;
+    setDeleteTarget(null);
     try {
       await adminDeleteSubmissionFn({ data: { id } });
       setSubmissions((prev) => prev.filter((s) => s._id !== id));
@@ -122,6 +134,17 @@ export function SubmissionsTab({
 
   return (
     <div className="space-y-6">
+      {/* ── Custom delete confirm modal ── */}
+      <ConfirmModal
+        open={!!deleteTarget}
+        title={`Delete enquiry from ${deleteTarget?.name ?? ""}?`}
+        description="This record will be permanently removed and cannot be recovered."
+        confirmLabel="Yes, delete"
+        cancelLabel="Cancel"
+        danger
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
       {/* Header & Stats */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
