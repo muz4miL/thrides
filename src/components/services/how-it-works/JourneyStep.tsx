@@ -51,7 +51,7 @@ export function JourneyStep({ step, index }: JourneyStepProps) {
       {/* Time Label Above Node */}
       <div className="mb-2.5 flex items-center justify-between">
         <span
-          className={`font-mono text-[11px] font-semibold tracking-[0.18em] px-2.5 py-0.5 rounded-md gold-pill-badge gold-shine ${
+          className={`font-mono text-[11px] font-bold tracking-[0.12em] uppercase px-3 py-1 rounded-md gold-pill-badge gold-shine ${
             index === 0
               ? "gold-shine-d1"
               : index === 1
@@ -59,7 +59,7 @@ export function JourneyStep({ step, index }: JourneyStepProps) {
                 : "gold-shine-d3"
           }`}
         >
-          <span className="gold-text-gradient">{step.timeLabel}</span>
+          <span className="gold-pill-text">{step.timeLabel}</span>
         </span>
       </div>
 

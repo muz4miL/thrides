@@ -679,20 +679,37 @@ body,
   color: transparent !important;
 }
 
+/* Solid metallic gold pill badge with dark espresso text */
 .gold-pill-badge {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(212, 175, 55, 0.08);
-  border: 1px solid transparent;
-  background-image: linear-gradient(rgba(212, 175, 55, 0.08), rgba(212, 175, 55, 0.08)), var(--gold-metal);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  box-shadow: inset 0 1px 0 rgba(255, 241, 184, 0.25);
-  font-weight: 600;
+  background: var(--gold-metal);
+  color: #1A1203 !important;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(255, 241, 184, 0.45);
+  box-shadow: 0 0 14px rgba(212, 175, 55, 0.32), inset 0 1px 0 rgba(255, 241, 184, 0.5);
+  border: 1px solid rgba(255, 241, 184, 0.45);
 }
 
+.gold-pill-badge span,
+.gold-pill-text {
+  position: relative;
+  z-index: 2;
+  color: #1A1203 !important;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(255, 241, 184, 0.45);
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  background: none !important;
+}
+
+/* Transparent/dark fill status pills with readable gold text */
 .gold-status-pill {
   position: relative;
   display: inline-flex;
@@ -700,6 +717,7 @@ body,
   background-color: rgba(212, 175, 55, 0.10);
   border: 1px solid rgba(212, 175, 55, 0.40);
   box-shadow: inset 0 1px 0 rgba(255, 241, 184, 0.25);
+  color: #F7E08A;
 }
 
 .gold-circle-node {
@@ -746,7 +764,7 @@ body,
   background-repeat: no-repeat;
   animation: gold-shine-sweep 8s ease-in-out infinite;
   border-radius: inherit;
-  z-index: 2;
+  z-index: 1;
 }
 
 .gold-shine-d1::after { animation-delay: 0.8s; }

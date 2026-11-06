@@ -95,28 +95,69 @@ export function ServicesContent({ data }: ServicesContentProps) {
   const uniqueProcessSteps = rawProcessSteps
     ? Array.from(new Map(rawProcessSteps.map((s) => [s.title.toLowerCase().trim(), s])).values())
     : undefined;
+
+  const processCopyMap: Record<string, string> = {
+    "free strategy call": "30 minutes. We audit your marketing. Zero obligation.",
+    "your plan": "One clear plan. Only the moves that matter.",
+    "we build": "Dates locked. Kickoff done. We ship.",
+  };
+
   const processSteps = uniqueProcessSteps?.map((ps, idx) => ({
     stepNumber: String(idx + 1).padStart(2, "0"),
     timeLabel: ps.timeLabel,
     title: ps.title,
-    desc: ps.desc,
+    desc: processCopyMap[ps.title.toLowerCase().trim()] || ps.desc,
   }));
 
   const rawChecklist = data?.checklistItems && data.checklistItems.length > 0 ? data.checklistItems : undefined;
+  const checklistCopyMap: Record<string, { title: string; desc: string }> = {
+    "a plan behind every move": {
+      title: "A plan behind every move",
+      desc: "Everything ties to your goals.",
+    },
+    "strategy backed by data": {
+      title: "Strategy backed by data",
+      desc: "We research before we create.",
+    },
+    "strategy backed by business intelligence": {
+      title: "Strategy backed by data",
+      desc: "We research before we create.",
+    },
+    "plain-language reporting": {
+      title: "Plain-language reporting",
+      desc: "You always know what's working.",
+    },
+  };
+
   const checklistItems = rawChecklist
-    ? Array.from(new Map(rawChecklist.map((c) => [c.title.toLowerCase().trim(), c])).values()).map((ci) => ({
-        title: ci.title,
-        desc: ci.desc,
-      }))
+    ? Array.from(new Map(rawChecklist.map((c) => [c.title.toLowerCase().trim(), c])).values()).map((ci) => {
+        const mapped = checklistCopyMap[ci.title.toLowerCase().trim()];
+        return {
+          title: mapped ? mapped.title : ci.title,
+          desc: mapped ? mapped.desc : ci.desc,
+        };
+      })
     : undefined;
 
   const rawTimeline = data?.timelineSteps && data.timelineSteps.length > 0 ? data.timelineSteps : undefined;
+  const timelineCopyMap: Record<string, { title: string; desc: string }> = {
+    "welcome": { title: "Welcome", desc: "A named contact from hour one." },
+    "first 48 hours": { title: "First 48 Hours", desc: "30 minutes. One action plan." },
+    "kickoff call": { title: "Kickoff Call", desc: "Goals, timeline, deliverables. Locked." },
+    "agreed response times": { title: "Kickoff Call", desc: "Goals, timeline, deliverables. Locked." },
+    "live delivery": { title: "Live Delivery", desc: "Track progress in real time." },
+    "progress you can see": { title: "Live Delivery", desc: "Track progress in real time." },
+  };
+
   const timelineSteps = rawTimeline
-    ? Array.from(new Map(rawTimeline.map((t) => [`${t.title.toLowerCase().trim()}-${t.dayLabel.toLowerCase().trim()}`, t])).values()).map((ts) => ({
-        dayLabel: ts.dayLabel,
-        title: ts.title,
-        desc: ts.desc,
-      }))
+    ? Array.from(new Map(rawTimeline.map((t) => [`${t.title.toLowerCase().trim()}-${t.dayLabel.toLowerCase().trim()}`, t])).values()).map((ts) => {
+        const mapped = timelineCopyMap[ts.title.toLowerCase().trim()];
+        return {
+          dayLabel: ts.dayLabel,
+          title: mapped ? mapped.title : ts.title,
+          desc: mapped ? mapped.desc : ts.desc,
+        };
+      })
     : undefined;
 
   const coreServices =

@@ -45,11 +45,11 @@ export function SpotlightCard({
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`group relative rounded-[24px] border transition-all duration-500 ease-out gold-card-hover ${
+      className={`group relative rounded-[24px] border transition-all duration-400 ease-out gold-card-hover ${
         isActive
-          ? "border-white/[0.09] shadow-[0_20px_50px_rgba(0,0,0,0.65)] hover:-translate-y-1"
+          ? "border-[rgba(212,175,55,0.45)] shadow-[0_0_35px_rgba(212,175,55,0.1),0_20px_50px_rgba(0,0,0,0.65)]"
           : "border-white/[0.04] shadow-[0_12px_30px_rgba(0,0,0,0.4)]"
-      } bg-[#0A0A0F]/85 backdrop-blur-xl overflow-hidden ${
+      } bg-[#0A0A0F]/90 backdrop-blur-xl overflow-hidden ${
         isHero ? "p-7 sm:p-9" : "p-6 sm:p-7"
       } ${className}`}
       style={
@@ -97,19 +97,23 @@ export function SpotlightCard({
         />
       )}
 
-      {/* Large Ghost Numeral (01, 02, 03, 04) - Stroke only in rgba(212,175,55,0.18), brightening on hover */}
+      {/* Large Ghost Numeral (01, 02, 03, 04) - Stroke only in rgba(212,175,55,0.18), brightening on active/hover */}
       {numeral && (
         <span
           aria-hidden="true"
           className="pointer-events-none absolute right-6 top-4 select-none font-mono text-5xl sm:text-6xl font-black tracking-tighter transition-all duration-300"
           style={{
-            WebkitTextStroke: isHovered
-              ? "1px rgba(212, 175, 55, 0.42)"
-              : "1px rgba(212, 175, 55, 0.18)",
+            WebkitTextStroke: isActive
+              ? "1px rgba(212, 175, 55, 0.55)"
+              : isHovered
+                ? "1px rgba(212, 175, 55, 0.42)"
+                : "1px rgba(212, 175, 55, 0.18)",
             color: "transparent",
-            textShadow: isHovered
-              ? "0 0 28px rgba(212, 175, 55, 0.22)"
-              : "0 0 20px rgba(212, 175, 55, 0.08)",
+            textShadow: isActive
+              ? "0 0 30px rgba(212, 175, 55, 0.28)"
+              : isHovered
+                ? "0 0 24px rgba(212, 175, 55, 0.18)"
+                : "0 0 16px rgba(212, 175, 55, 0.05)",
           }}
         >
           {numeral}

@@ -20,6 +20,7 @@ export type AdminTab =
   | "inbox"
   | "our-work"
   | "services-page"
+  | "trust-logos"
   | "services"
   | "portfolio"
   | "case-studies"
@@ -94,6 +95,11 @@ export function AdminSidebar({
           id: "services-page" as AdminTab,
           label: "Services Page CMS",
           icon: Layers,
+        },
+        {
+          id: "trust-logos" as AdminTab,
+          label: "Trust Logos",
+          icon: Shield,
         },
       ],
     },

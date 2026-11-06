@@ -484,3 +484,32 @@ export interface WorkPageSettingsDoc {
   updatedAt: Date;
 }
 
+export interface PartnerLogoDoc {
+  _id?: ObjectId | string;
+  id: string;
+  name: string;
+  altText: string;
+  imageUrl: string;
+  storageKey: string;
+  width: number;
+  height: number;
+  contentHash: string;
+  linkUrl: string | null;
+  sortOrder: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PartnerLogoSettingsDoc {
+  _id?: ObjectId | string;
+  id: string;
+  displayMode: "static" | "marquee";
+  marqueeSpeed: "slow" | "normal" | "fast";
+  logoHeight: number;
+  tone: "original" | "muted" | "mono-white";
+  floatEffect: boolean;
+  sectionEnabled: boolean;
+  updatedAt: string;
+}
+

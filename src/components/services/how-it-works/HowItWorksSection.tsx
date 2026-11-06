@@ -67,7 +67,7 @@ export function HowItWorksSection({ steps }: { steps?: HowItWorksStep[] | undefi
           </h2>
 
           <p className="mt-3 text-[15px] sm:text-[16px] text-neutral-400 leading-relaxed">
-            Three steps from your first conversation to results in progress.
+            Three steps. First call to real results.
           </p>
         </div>
 

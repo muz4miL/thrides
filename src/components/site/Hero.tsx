@@ -1,7 +1,11 @@
 import { ArrowUpRight } from "lucide-react";
 import { HeroButton } from "./HeroButton";
+import { getPublicPartnerLogos } from "@/server/partner-logo-service";
+import { PartnerStrip } from "./PartnerStrip";
 
-export function Hero() {
+export async function Hero() {
+  const { logos, settings } = await getPublicPartnerLogos();
+
   return (
     <section
       id="top"
@@ -33,11 +37,7 @@ export function Hero() {
             />
 
             <div className="flex items-center">
-              <img
-                src="/PartnerLogos.png"
-                alt="Partner credentials: Meta, Google, Shopify Plus, Klaviyo"
-                className="h-[36px] w-auto max-w-[320px] object-contain opacity-80 hover:opacity-100 transition-opacity"
-              />
+              <PartnerStrip logos={logos} settings={settings} align="left" />
             </div>
           </div>
         </div>
@@ -131,11 +131,7 @@ export function Hero() {
 
           {/* Partner Logos Strip Centered Below Button */}
           <div className="mt-5 flex items-center justify-center">
-            <img
-              src="/PartnerLogos.png"
-              alt="Meta, Google, Shopify Plus, Klaviyo Partners"
-              className="h-[28px] sm:h-[32px] w-auto max-w-[270px] sm:max-w-[300px] object-contain opacity-85"
-            />
+            <PartnerStrip logos={logos} settings={settings} align="center" isMobile />
           </div>
         </div>
       </div>

@@ -13,6 +13,7 @@ interface TimelineStepProps {
   index: number;
   dayLabel: string;
   isActive: boolean;
+  isPassed?: boolean;
   stepRef?: (el: HTMLDivElement | null) => void;
 }
 
@@ -21,6 +22,7 @@ export function TimelineStep({
   index,
   dayLabel,
   isActive,
+  isPassed = false,
   stepRef,
 }: TimelineStepProps) {
   const shouldReduceMotion = useReducedMotion();
@@ -33,48 +35,54 @@ export function TimelineStep({
       initial={
         shouldReduceMotion
           ? { opacity: 0 }
-          : { opacity: 0, y: 28, filter: "blur(6px)" }
+          : { opacity: 0, y: 28 }
       }
       whileInView={
         shouldReduceMotion
           ? { opacity: 1 }
-          : { opacity: 1, y: 0, filter: "blur(0px)" }
+          : { opacity: 1, y: 0 }
       }
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.15 }}
       transition={{
-        duration: 0.7,
-        delay: index * 0.12,
+        duration: 0.6,
+        delay: index * 0.1,
         ease: [0.22, 1, 0.36, 1],
       }}
-      className={`relative pl-8 sm:pl-12 transition-opacity duration-500 ease-out ${
-        isActive ? "opacity-100" : "opacity-45 hover:opacity-85"
+      className={`relative pl-8 sm:pl-12 transition-all duration-400 ease-out ${
+        shouldReduceMotion
+          ? isActive
+            ? "opacity-100"
+            : "opacity-40"
+          : isActive
+            ? "opacity-100 scale-100 filter-none"
+            : "opacity-40 scale-[0.97] blur-[1px] hover:opacity-80 hover:scale-[0.985] hover:blur-none"
       }`}
     >
       {/* Node Marker on the Timeline Track */}
-      <div className="absolute left-0 top-6 -translate-x-1/2 flex items-center justify-center">
-        {/* Outer Glow Ring if Active */}
-        <div
-          className={`h-6 w-6 rounded-full flex items-center justify-center transition-all duration-500 ${
-            isActive
-              ? "bg-[#D4AF37]/15 border-[1.5px] border-[#D4AF37] shadow-[0_0_16px_rgba(212,175,55,0.5)]"
-              : "bg-neutral-950 border border-white/20"
-          }`}
-        >
-          {/* Inner Core */}
-          <div
-            className={`h-2.5 w-2.5 rounded-full transition-all duration-500 ${
-              isActive
-                ? "bg-[#FFF1B8] shadow-[0_0_8px_rgba(212,175,55,0.9)]"
-                : "bg-neutral-500"
-            }`}
-          />
-        </div>
+      <div className="absolute left-0 top-6 -translate-x-1/2 flex items-center justify-center z-20">
+        {isActive ? (
+          /* Active pulsing ring node */
+          <div className="relative h-6 w-6 rounded-full flex items-center justify-center bg-[#D4AF37]/20 border-[1.5px] border-[#D4AF37] shadow-[0_0_16px_rgba(212,175,55,0.7)] transition-all duration-500">
+            <span className="gold-pulse-ring absolute inset-0 rounded-full border border-[#D4AF37]" />
+            <div className="h-2.5 w-2.5 rounded-full bg-[#FFF1B8] shadow-[0_0_10px_rgba(212,175,55,0.95)]" />
+          </div>
+        ) : isPassed ? (
+          /* Passed filled gold node */
+          <div className="h-5 w-5 rounded-full flex items-center justify-center bg-[#D4AF37] border-[1.5px] border-[#D4AF37] shadow-[0_0_10px_rgba(212,175,55,0.45)] transition-all duration-500">
+            <div className="h-2 w-2 rounded-full bg-[#FFF1B8]" />
+          </div>
+        ) : (
+          /* Upcoming dim node */
+          <div className="h-5 w-5 rounded-full flex items-center justify-center bg-neutral-900 border border-white/20 transition-all duration-500">
+            <div className="h-2 w-2 rounded-full bg-neutral-600" />
+          </div>
+        )}
       </div>
 
       {/* Day label badge: Day 1 · Phase 01 */}
       <div className="flex items-center gap-2 mb-2.5">
         <span
-          className={`font-mono text-[11px] font-semibold tracking-wider px-2.5 py-0.5 rounded-md gold-pill-badge gold-shine ${
+          className={`font-mono text-[11px] font-bold tracking-[0.12em] uppercase px-3 py-1 rounded-md gold-pill-badge gold-shine ${
             index === 0
               ? "gold-shine-d1"
               : index === 1
@@ -84,7 +92,7 @@ export function TimelineStep({
                   : "gold-shine-d4"
           }`}
         >
-          <span className="gold-text-gradient">
+          <span className="gold-pill-text">
             {dayLabel} · Phase {numeral}
           </span>
         </span>

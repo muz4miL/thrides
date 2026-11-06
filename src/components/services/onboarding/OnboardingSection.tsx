@@ -15,15 +15,15 @@ const instrumentSerif = Instrument_Serif({
 const DEFAULT_CHECKLIST_ITEMS = [
   {
     title: "A plan behind every move",
-    desc: "Everything we do ties back to your business goals.",
+    desc: "Everything ties to your goals.",
   },
   {
-    title: "Strategy backed by business intelligence",
-    desc: "We research your market, competitors, and customers before we create anything.",
+    title: "Strategy backed by data",
+    desc: "We research before we create.",
   },
   {
     title: "Plain-language reporting",
-    desc: "You always know what's working and what we're changing.",
+    desc: "You always know what's working.",
   },
 ];
 
@@ -31,22 +31,22 @@ const DEFAULT_TIMELINE_STEPS = [
   {
     dayLabel: "Day 1",
     title: "Welcome",
-    desc: "A welcome message and a named point of contact from day one.",
+    desc: "A named contact from hour one.",
   },
   {
     dayLabel: "Day 2",
-    title: "Kickoff Call",
-    desc: "We confirm your goals, timeline, deliverables, and what we need from you.",
+    title: "First 48 Hours",
+    desc: "30 minutes. One action plan.",
   },
   {
     dayLabel: "Day 5",
-    title: "Agreed Response Times",
-    desc: "You know how quickly we reply, with agreed SLAs from the start.",
+    title: "Kickoff Call",
+    desc: "Goals, timeline, deliverables. Locked.",
   },
   {
     dayLabel: "Day 14",
-    title: "Progress You Can See",
-    desc: "You always know what's in progress, what's next, and what has been delivered.",
+    title: "Live Delivery",
+    desc: "Track progress in real time.",
   },
 ];
 
@@ -70,16 +70,17 @@ export function OnboardingSection({
   // Scroll tracking across the timeline
   const { scrollYProgress } = useScroll({
     target: timelineRef,
-    offset: ["start 65%", "end 60%"],
+    offset: ["start 60%", "end 60%"],
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 28,
+    stiffness: 100,
+    damping: 30,
     restDelta: 0.001,
   });
 
-  const fillHeight = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
+  const progressScaleY = shouldReduceMotion ? scrollYProgress : smoothProgress;
+  const cometTopPercent = useTransform(progressScaleY, (v) => `${Math.max(0, Math.min(100, v * 100))}%`);
 
   // Calculate active step based on scroll progress
   useEffect(() => {
@@ -93,9 +94,17 @@ export function OnboardingSection({
 
   const currentActiveIndex = hoveredStep !== null ? hoveredStep : activeStep;
 
+  // Map 4 phases to the 3 checklist items
+  // Phase 0 -> Item 0 | Phase 1 & 2 -> Item 1 | Phase 3 -> Item 2
+  const activeChecklistIndex =
+    currentActiveIndex === 0 ? 0 : currentActiveIndex <= 2 ? 1 : 2;
+
   return (
-    <section className="relative py-24 sm:py-32 overflow-hidden bg-[#060608] border-t border-b border-white/[0.05] select-none">
-      {/* 1. Subtle, slow ambient luxury gold radial glows */}
+    <section
+      className="relative py-24 sm:py-32 bg-[#060608] border-t border-b border-white/[0.05] select-none"
+      style={{ overflowX: "clip" }}
+    >
+      {/* 1. Ambient luxury gold radial glows */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -top-40 right-1/4 h-[550px] w-[550px] rounded-full bg-[#D4AF37]/[0.035] blur-[160px]"
@@ -123,118 +132,140 @@ export function OnboardingSection({
 
       <div className="relative z-10 mx-auto max-w-[1240px] px-4 sm:px-6 md:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          {/* LEFT COLUMN */}
-          <div className="lg:col-span-5 lg:sticky lg:top-[120px] self-start space-y-6">
+          {/* LEFT COLUMN: Sticky storytelling panel */}
+          <div className="lg:col-span-5 lg:sticky lg:top-[112px] lg:self-start space-y-6">
             <div>
               <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-[#E6B93C] block">
                 CLIENT ONBOARDING
               </span>
 
               <h2 className="mt-3 font-display text-[clamp(28px,3.8vw,46px)] font-extrabold tracking-[-0.04em] text-[#F5F2EC] leading-[1.1]">
-                A smooth start, because the{" "}
+                The first two weeks{" "}
                 <span
                   className={`${instrumentSerif.className} italic font-normal text-[#F5F2EC] text-[1.12em] tracking-normal`}
                 >
-                  first two weeks
-                </span>{" "}
-                set the tone
+                  set the tone
+                </span>
               </h2>
 
-              <p className="mt-5 text-[14.5px] sm:text-[15.5px] leading-relaxed text-neutral-400">
-                No guesswork, no communication black holes. We establish
-                structured check-ins, rapid feedback loops, and clear delivery
-                roadmaps from day one.
+              <p className="mt-4 text-[14.5px] sm:text-[15.5px] leading-relaxed text-neutral-400">
+                No guesswork. No black holes. A clear plan from day one.
               </p>
             </div>
 
-            {/* Checklist Items with Self-Drawing SVG Checkmarks */}
-            <div className="pt-2 space-y-4">
-              {displayChecklist.map((item, i) => (
-                <div
-                  key={`${item.title}-${i}`}
-                  className="flex items-start gap-3.5 group"
-                >
-                  <div className="mt-0.5 h-6 w-6 flex items-center justify-center rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 shrink-0 shadow-[0_0_12px_rgba(212,175,55,0.22)] transition-colors duration-200 group-hover:border-[#D4AF37]/60 group-hover:bg-[#D4AF37]/20">
-                    <svg
-                      width="13"
-                      height="13"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      className="overflow-visible"
+            {/* Checklist Items reacting dynamically to active phase */}
+            <div className="pt-2 space-y-3.5">
+              {displayChecklist.slice(0, 3).map((item, i) => {
+                const isItemActive = activeChecklistIndex === i;
+                return (
+                  <div
+                    key={`${item.title}-${i}`}
+                    className={`flex items-start gap-3.5 transition-all duration-300 ease-out ${
+                      isItemActive
+                        ? "opacity-100 translate-x-1"
+                        : "opacity-45 translate-x-0"
+                    }`}
+                  >
+                    <div
+                      className={`mt-0.5 h-6 w-6 flex items-center justify-center rounded-full shrink-0 transition-all duration-300 ${
+                        isItemActive
+                          ? "bg-[#D4AF37]/20 border border-[#D4AF37]/60 shadow-[0_0_12px_rgba(212,175,55,0.35)]"
+                          : "bg-white/[0.04] border border-white/10"
+                      }`}
                     >
-                      <motion.path
-                        d="M4 12.5L9.5 18L20 6.5"
-                        stroke="#D4AF37"
-                        strokeWidth="2.75"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        initial={
-                          shouldReduceMotion
-                            ? { pathLength: 1, opacity: 1 }
-                            : { pathLength: 0, opacity: 0 }
-                        }
-                        whileInView={{ pathLength: 1, opacity: 1 }}
-                        viewport={{ once: true, amount: 0.6 }}
-                        transition={{
-                          duration: 0.65,
-                          delay: 0.2 + i * 0.15,
-                          ease: "easeOut",
-                        }}
-                      />
-                    </svg>
-                  </div>
+                      <svg
+                        width="13"
+                        height="13"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        className="overflow-visible"
+                      >
+                        <motion.path
+                          d="M4 12.5L9.5 18L20 6.5"
+                          stroke={isItemActive ? "#D4AF37" : "#A1A1AA"}
+                          strokeWidth="2.75"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          initial={
+                            shouldReduceMotion
+                              ? { pathLength: 1, opacity: 1 }
+                              : { pathLength: 0, opacity: 0 }
+                          }
+                          whileInView={{ pathLength: 1, opacity: 1 }}
+                          viewport={{ once: true, amount: 0.6 }}
+                          transition={{
+                            duration: 0.5,
+                            delay: 0.15 + i * 0.1,
+                            ease: "easeOut",
+                          }}
+                        />
+                      </svg>
+                    </div>
 
-                  <div>
-                    <h3 className="font-display font-bold text-[14.5px] text-[#F5F2EC] leading-snug">
-                      {item.title}
-                    </h3>
-                    <p className="mt-0.5 text-[13px] leading-relaxed text-neutral-400">
-                      {item.desc}
-                    </p>
+                    <div>
+                      <h3
+                        className={`font-display font-bold text-[14.5px] leading-snug transition-colors duration-300 ${
+                          isItemActive ? "text-white" : "text-neutral-400"
+                        }`}
+                      >
+                        {item.title}
+                      </h3>
+                      <p
+                        className={`mt-0.5 text-[13px] leading-relaxed transition-colors duration-300 ${
+                          isItemActive ? "text-neutral-300" : "text-neutral-500"
+                        }`}
+                      >
+                        {item.desc}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
-          {/* RIGHT COLUMN */}
+          {/* RIGHT COLUMN: Scrolling phase cards with gold timeline track */}
           <div className="lg:col-span-7 space-y-4">
             <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-[#E6B93C] block mb-6">
               WHAT HAPPENS WHEN YOU JOIN
             </span>
 
             <div ref={timelineRef} className="relative space-y-8 sm:space-y-10">
-              {/* Faint 6px blur glow duplicate underneath */}
+              {/* Unfilled vertical track */}
               <div
                 aria-hidden="true"
-                className="absolute left-0 top-6 bottom-6 w-[2px] -translate-x-1/2 blur-[6px] opacity-60 pointer-events-none"
-                style={{
-                  background:
-                    "linear-gradient(180deg, transparent 0%, #B8860B 25%, #F7E08A 50%, #B8860B 75%, transparent 100%)",
-                }}
-              />
-              {/* Base vertical track line */}
-              <div
-                aria-hidden="true"
-                className="absolute left-0 top-6 bottom-6 w-[1px] -translate-x-1/2 opacity-35 pointer-events-none"
-                style={{
-                  background:
-                    "linear-gradient(180deg, transparent 0%, #B8860B 20%, #F7E08A 50%, #B8860B 80%, transparent 100%)",
-                }}
+                className="absolute left-0 top-6 bottom-6 w-[2px] -translate-x-1/2 bg-white/[0.08] pointer-events-none"
               />
 
-              {/* Progress/filled portion using --gold-metal */}
+              {/* Faint 6px blur glow duplicate underneath filled portion */}
               <motion.div
                 aria-hidden="true"
-                style={{ height: fillHeight, background: "var(--gold-metal)" }}
-                className="absolute left-0 top-6 w-[2px] -translate-x-1/2 shadow-[0_0_14px_rgba(212,175,55,0.6),0_0_22px_rgba(212,175,55,0.35)] pointer-events-none z-10 origin-top"
+                style={{
+                  scaleY: progressScaleY,
+                  transformOrigin: "top",
+                  background: "var(--gold-metal)",
+                }}
+                className="absolute left-0 top-6 bottom-6 w-[2px] -translate-x-1/2 blur-[6px] opacity-70 pointer-events-none"
               />
 
-              {/* Active moving tracer node */}
+              {/* Progress/filled portion using --gold-metal with glow */}
               <motion.div
                 aria-hidden="true"
-                style={{ top: fillHeight }}
-                className="absolute left-0 top-6 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-[#FFF1B8] border-2 border-[#D4AF37] shadow-[0_0_16px_rgba(212,175,55,0.9),0_0_24px_rgba(212,175,55,0.5)] pointer-events-none z-20 transition-transform duration-150"
+                style={{
+                  scaleY: progressScaleY,
+                  transformOrigin: "top",
+                  background: "var(--gold-metal)",
+                }}
+                className="absolute left-0 top-6 bottom-6 w-[2px] -translate-x-1/2 shadow-[0_0_14px_rgba(212,175,55,0.7),0_0_22px_rgba(212,175,55,0.4)] pointer-events-none z-10"
+              />
+
+              {/* Glowing gold "comet" dot riding the leading edge */}
+              <motion.div
+                aria-hidden="true"
+                style={{
+                  top: cometTopPercent,
+                }}
+                className="absolute left-0 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-[#FFF1B8] border-2 border-[#D4AF37] shadow-[0_0_16px_rgba(212,175,55,0.95),0_0_24px_rgba(212,175,55,0.6)] pointer-events-none z-30 transition-transform duration-100"
               >
                 <span className="animate-ping absolute inset-0 rounded-full bg-[#E6B93C] opacity-75" />
               </motion.div>
@@ -250,6 +281,7 @@ export function OnboardingSection({
                     index={index}
                     dayLabel={step.dayLabel}
                     isActive={currentActiveIndex === index}
+                    isPassed={index < currentActiveIndex}
                   />
                 </div>
               ))}

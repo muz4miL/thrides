@@ -56,36 +56,46 @@ export function Leadership() {
         >
           {teamMembers.map((member, index) => (
             <article key={member.name} className="group flex flex-col">
-              {/* Grand Monogram Stage */}
+              {/* High-End Portrait Image Stage */}
               <div
-                aria-hidden="true"
                 style={{
                   background:
                     index % 2 === 0
-                      ? "radial-gradient(ellipse at 70% 20%, rgba(30, 59, 128, 0.66) 0%, transparent 65%), #10121c"
-                      : "radial-gradient(ellipse at 30% 80%, rgba(21, 69, 170, 0.56) 0%, transparent 70%), #0c1018",
+                      ? "radial-gradient(ellipse at 70% 20%, rgba(30, 59, 128, 0.45) 0%, transparent 65%), #0d0f16"
+                      : "radial-gradient(ellipse at 30% 80%, rgba(21, 69, 170, 0.4) 0%, transparent 70%), #0d0f16",
                 }}
-                className="relative aspect-[1.5/1] w-full overflow-hidden rounded-md border border-white/[0.09] flex items-center justify-center isolate"
+                className="relative aspect-[4/5] max-h-[480px] w-full overflow-hidden rounded-2xl border border-white/[0.09] flex items-center justify-center isolate group-hover:border-white/20 transition-all duration-500 shadow-2xl bg-[#0c1018]"
               >
-                {/* Top-left Index */}
-                <span className="absolute left-5 top-5 font-mono text-[9.5px] font-bold tracking-[0.18em] text-[#9ba7c2]">
+                {member.image ? (
+                  <>
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 bg-gradient-to-t from-[#08080B] via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500"
+                    />
+                  </>
+                ) : (
+                  <>
+                    {/* Giant Monogram Fallback */}
+                    <strong className="font-display font-medium text-[#b8cdff] text-[clamp(80px,13vw,160px)] tracking-[-0.07em] group-hover:-translate-y-1.5 transition-transform duration-500 select-none">
+                      {member.initials}
+                    </strong>
+                  </>
+                )}
+
+                {/* Top-right Index Badge (doesn't cut into forehead) */}
+                <span className="absolute right-4 top-4 font-mono text-[9.5px] font-bold tracking-[0.18em] text-[#C3D4FF] bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 z-10">
                   THRIDES / 0{index + 1}
                 </span>
 
-                {/* Rotating Luminous Ring */}
-                <div
-                  className="pointer-events-none absolute w-[75%] aspect-square rounded-full border border-[#7b9aff]/20 -z-10 shadow-[0_0_0_28px_rgba(70,117,255,0.03),0_0_0_55px_rgba(70,117,255,0.02)]"
-                  style={{ transform: "rotate(-25deg) scaleY(0.65)" }}
-                />
-
-                {/* Giant Monogram Letter */}
-                <strong className="font-display font-medium text-[#b8cdff] text-[clamp(80px,13vw,160px)] tracking-[-0.07em] group-hover:-translate-y-1.5 transition-transform duration-500 select-none">
-                  {member.initials}
-                </strong>
-
-                {/* Bottom-left Caption */}
-                <span className="absolute left-5 bottom-5 font-mono text-[9.5px] font-bold tracking-[0.18em] text-[#9ba7c2]">
-                  THE PEOPLE BEHIND THE PURPOSE
+                {/* Bottom-left discreet pill */}
+                <span className="absolute left-4 bottom-4 font-mono text-[9px] font-bold tracking-[0.18em] text-white/80 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 z-10">
+                  PARTNER
                 </span>
               </div>
 

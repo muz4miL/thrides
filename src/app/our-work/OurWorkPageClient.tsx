@@ -4,6 +4,7 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { WorkHero } from "@/components/work/WorkHero";
 import { OurWorkGallery } from "@/components/work/OurWorkGallery";
+import { OurWorkSection } from "@/components/site/OurWorkSection";
 import { WorkClosingCta } from "@/components/work/WorkClosingCta";
 import type { WorkProjectDoc, WorkPageSettingsDoc } from "@/server/types";
 
@@ -31,6 +32,9 @@ export function OurWorkPageClient({ settings, projects }: OurWorkPageClientProps
 
         {/* B. Curated Exhibition Gallery (Featured Exhibit, 12-Col Gallery Grid & Archive Index) */}
         <OurWorkGallery />
+
+        {/* C. Interactive Creative Showcase (Creative that Converts) */}
+        <OurWorkSection />
 
         {/* D. Editorial Closing Invitation */}
         <WorkClosingCta settings={settings} />

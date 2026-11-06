@@ -10,19 +10,19 @@ export const HOW_IT_WORKS_STEPS: HowItWorksStep[] = [
     stepNumber: "01",
     timeLabel: "DAY 1",
     title: "Free strategy call",
-    desc: "30 minutes. We review your current marketing, positioning, and goals. No obligation.",
+    desc: "30 minutes. We audit your marketing. Zero obligation.",
   },
   {
     stepNumber: "02",
     timeLabel: "DAY 3",
     title: "Your plan",
-    desc: "We recommend the package and priorities that will make the biggest difference for your business.",
+    desc: "One clear plan. Only the moves that matter.",
   },
   {
     stepNumber: "03",
     timeLabel: "WEEK 2",
     title: "We build",
-    desc: "You get a clear timeline, delivery dates, and a structured kickoff. Then we get to work.",
+    desc: "Dates locked. Kickoff done. We ship.",
   },
 ];
 

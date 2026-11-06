@@ -4,13 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, ArrowDown, Plus, Minus } from "lucide-react";
 import { CtaBanner } from "@/components/site/CtaBanner";
+import type { TeamMember } from "@/content/site";
 import rawStyles from "./about.module.css";
 
 const styles: any = rawStyles;
 
 type Props = {
   stats: readonly { value: string | number; label: string }[];
-  members: readonly { name: string; initials: string; role: string; bio: string }[];
+  members: readonly TeamMember[];
 };
 
 const principles = [
@@ -374,7 +375,33 @@ export default function AboutExperience({ stats, members }: Props) {
         <div className={styles.teamGrid}>
           {members.map((member, index) => (
             <article className={styles.person} key={member.name} data-reveal>
-              <div className={styles.monogram} aria-hidden="true"><span className={styles.personIndex}>THRIDES / 0{index + 1}</span><div className={styles.personRing} /><strong className="font-display">{member.initials}</strong><span className={styles.personCaption}>THE PEOPLE BEHIND THE PURPOSE</span></div>
+              <div className={`${styles.monogram} relative aspect-[4/5] max-h-[500px] overflow-hidden rounded-2xl`} style={{ aspectRatio: "4/5" }} aria-hidden="true">
+                {member.image ? (
+                  <>
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="h-full w-full object-cover object-center transition-transform duration-700 ease-out hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 bg-gradient-to-t from-[#08080B] via-transparent to-transparent opacity-60"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <div className={styles.personRing} />
+                    <strong className="font-display">{member.initials}</strong>
+                  </>
+                )}
+                <span className="absolute right-4 top-4 font-mono text-[9.5px] font-bold tracking-[0.18em] text-[#C3D4FF] bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 z-10">
+                  THRIDES / 0{index + 1}
+                </span>
+                <span className="absolute left-4 bottom-4 font-mono text-[9px] font-bold tracking-[0.18em] text-white/80 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 z-10">
+                  PARTNER
+                </span>
+              </div>
               <div className={styles.personInfo}><h3 className="font-display">{member.name}</h3><p className={styles.role}>{member.role}</p><p>{member.bio}</p></div>
             </article>
           ))}

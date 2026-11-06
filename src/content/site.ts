@@ -577,6 +577,7 @@ export interface TeamMember {
   role: string;
   initials: string;
   bio: string;
+  image?: string;
 }
 
 export const teamMembers: TeamMember[] = [
@@ -585,12 +586,14 @@ export const teamMembers: TeamMember[] = [
     role: "Chief Strategist",
     initials: "M",
     bio: "A full-stack digital marketer who leads strategy across every Thrides project. He researches the market, defines the direction, and checks every deliverable against the plan before it reaches you.",
+    image: "/images/team/mamoon.webp",
   },
   {
     name: "Jidran",
     role: "Operations Head",
     initials: "J",
     bio: "Runs the day-to-day operations at Thrides. He keeps every project on schedule, manages timelines and communication, and makes sure every deadline we commit to is met.",
+    image: "/images/team/jidran.webp",
   },
 ];
 

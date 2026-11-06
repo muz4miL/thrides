@@ -3,6 +3,7 @@ import { Inter, Inter_Tight, Instrument_Serif } from "next/font/google";
 import "../styles.css";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { SmoothScroll } from "@/providers/SmoothScroll";
+import { CinematicPreloader } from "@/components/site/CinematicPreloader";
 import type { ReactNode } from "react";
 
 const inter = Inter({
@@ -65,6 +66,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-[#08080B] text-foreground font-sans antialiased">
+        <CinematicPreloader />
         <QueryProvider>
           <SmoothScroll />
           {children}
