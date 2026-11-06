@@ -8,6 +8,7 @@ import { SubmissionsTab } from "@/components/admin/tabs/SubmissionsTab";
 import { OurWorkManager } from "@/components/admin/OurWorkManager";
 import { ServicesPageTab } from "@/components/admin/tabs/ServicesPageTab";
 import { TrustLogosTab } from "@/components/admin/tabs/TrustLogosTab";
+import { StatsStripTab } from "@/components/admin/tabs/StatsStripTab";
 import { ServicesTab } from "@/components/admin/tabs/ServicesTab";
 import { PortfolioTab } from "@/components/admin/tabs/PortfolioTab";
 import { CaseStudiesTab } from "@/components/admin/tabs/CaseStudiesTab";
@@ -180,6 +181,12 @@ export function AdminDashboard({
           {activeTab === "trust-logos" && (
             <div className="rounded-2xl border border-white/[0.08] bg-[#0E0F18]/90 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
               <TrustLogosTab onNotice={showNotice} />
+            </div>
+          )}
+
+          {activeTab === "stats-strip" && (
+            <div className="rounded-2xl border border-white/[0.08] bg-[#0E0F18]/90 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
+              <StatsStripTab onNotice={showNotice} />
             </div>
           )}
 

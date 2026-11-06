@@ -200,7 +200,6 @@ export function SubmissionsTab({
             <option value="all">All Types</option>
             <option value="contact">Contact &amp; Briefs</option>
             <option value="career">Job Applications</option>
-            <option value="studio">Studio Bookings</option>
           </select>
         </div>
       </div>

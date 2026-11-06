@@ -513,3 +513,51 @@ export interface PartnerLogoSettingsDoc {
   updatedAt: string;
 }
 
+// ── STATS STRIP (second home section: "3 YEARS · 14+ BUSINESSES · 8 COUNTRIES") ──
+
+export interface StatPillDoc {
+  _id?: ObjectId | string;
+  id: string;         // uuid
+  value: string;      // e.g. "3 Years"
+  sortOrder: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MarqueeItemDoc {
+  _id?: ObjectId | string;
+  id: string;
+  text: string;       // e.g. "On-Purpose Marketing"
+  sortOrder: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Floating logo in the 3D-cloud background of the stats strip */
+export interface StatsLogoDoc {
+  _id?: ObjectId | string;
+  id: string;
+  name: string;
+  altText: string;
+  imageUrl: string;
+  storageKey: string;
+  width: number;
+  height: number;
+  contentHash: string;
+  sortOrder: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface StatsStripSettingsDoc {
+  _id?: ObjectId | string;
+  id: string;
+  marqueeSectionEnabled: boolean;
+  marqueeSpeedPixelsPerSec: number; // default 40
+  logoCloudEnabled: boolean;        // show 3D floating logos in bg
+  updatedAt: string;
+}
+

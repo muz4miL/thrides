@@ -23,6 +23,10 @@ import type {
   SpTimelineStepDoc,
   SpCoreServiceDoc,
   SpFaqDoc,
+  StatPillDoc,
+  MarqueeItemDoc,
+  StatsLogoDoc,
+  StatsStripSettingsDoc,
 } from "./types";
 
 // Ensure DNS resolution succeeds across Windows Node SRV lookups
@@ -94,6 +98,11 @@ export async function getCollections() {
     spTimelineSteps: db.collection<SpTimelineStepDoc>("sp_timeline_steps"),
     spCoreServices: db.collection<SpCoreServiceDoc>("sp_core_services"),
     spFaqs: db.collection<SpFaqDoc>("sp_faqs"),
+    // Stats Strip (home page second section)
+    statPills: db.collection<StatPillDoc>("stat_pills"),
+    marqueeItems: db.collection<MarqueeItemDoc>("marquee_items"),
+    statsLogos: db.collection<StatsLogoDoc>("stats_logos"),
+    statsStripSettings: db.collection<StatsStripSettingsDoc>("stats_strip_settings"),
   };
 }
 

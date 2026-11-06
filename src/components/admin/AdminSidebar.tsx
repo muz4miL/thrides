@@ -14,6 +14,7 @@ import {
   ChevronRight,
   Shield,
   X,
+  BarChart3,
 } from "lucide-react";
 
 export type AdminTab =
@@ -21,6 +22,7 @@ export type AdminTab =
   | "our-work"
   | "services-page"
   | "trust-logos"
+  | "stats-strip"
   | "services"
   | "portfolio"
   | "case-studies"
@@ -100,6 +102,11 @@ export function AdminSidebar({
           id: "trust-logos" as AdminTab,
           label: "Trust Logos",
           icon: Shield,
+        },
+        {
+          id: "stats-strip" as AdminTab,
+          label: "Stats Strip",
+          icon: BarChart3,
         },
       ],
     },
