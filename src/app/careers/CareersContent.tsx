@@ -1241,7 +1241,7 @@ export function CareersContent({ vacancies = [] }: { vacancies: Vacancy[] }) {
 function StatCard({
   stat,
 }: {
-  stat: { icon: React.ComponentType<{ size: number; className?: string }>; label: string; value: string; color: string };
+  stat: StatCardData;
 }) {
   const Icon = stat.icon;
   return (
@@ -1255,7 +1255,7 @@ function StatCard({
     >
       <div
         className="h-9 w-9 rounded-xl grid place-items-center mb-3"
-        style={{ background: `${stat.color}22`, border: `1px solid ${stat.color}44` }}
+        style={{ background: `${stat.color}22`, border: `1px solid ${stat.color}44`, color: stat.color }}
       >
         <Icon size={16} className="text-current" />
       </div>
@@ -1319,9 +1319,9 @@ function ValueCard({
       {/* Icon Tile */}
       <div
         className="h-12 w-12 rounded-xl grid place-items-center mb-5"
-        style={{ background: iconBg, border: `1px solid ${iconBorder}` }}
+        style={{ background: iconBg, border: `1px solid ${iconBorder}`, color: iconColor }}
       >
-        <Icon size={22} style={{ color: iconColor } as React.CSSProperties} />
+        <Icon size={22} className="opacity-90" />
       </div>
 
       <h3 className="font-display text-lg font-bold text-white mb-3">{title}</h3>
