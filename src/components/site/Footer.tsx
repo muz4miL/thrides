@@ -60,9 +60,12 @@ export function Footer() {
             </a>
             <a
               href="/careers"
-              className="font-display text-2xl sm:text-[28px] font-extrabold text-white hover:text-[#60A5FA] transition-colors tracking-tight"
+              className="group font-display text-2xl sm:text-[28px] font-extrabold text-white hover:text-[#60A5FA] transition-colors tracking-tight flex items-center gap-2.5"
             >
-              Careers
+              <span>Careers</span>
+              <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.25)] group-hover:bg-emerald-500/25 transition-colors">
+                We&apos;re Hiring • Remote
+              </span>
             </a>
             <a
               href="/studio"

@@ -449,6 +449,18 @@ export function Header() {
             Contact
           </a>
 
+          {/* Careers */}
+          <a
+            href="/careers"
+            onClick={() => setIsMobileOpen(false)}
+            className="flex min-h-[46px] items-center justify-between rounded-2xl bg-[#17171E] px-4 text-[15px] font-medium text-white transition-colors hover:bg-[#0052FF] hover:font-bold hover:text-white"
+          >
+            <span>Careers</span>
+            <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full">
+              Hiring Remote
+            </span>
+          </a>
+
           {/* Mobile CTA */}
           <a
             href="/contact"

@@ -82,3 +82,4 @@ describe("Showcase Management - Schema & Validation", () => {
     expect(parsed.sectionEnabled).toBe(true);
   });
 });
+

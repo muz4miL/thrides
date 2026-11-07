@@ -20,6 +20,7 @@ import {
   Mail,
   Calendar,
   Globe,
+  MapPin,
 } from "lucide-react";
 import { adminUpdateSubmissionNotesFn, adminDeleteSubmissionFn } from "@/api/admin";
 import { ConfirmModal } from "@/components/admin/ConfirmModal";
@@ -282,32 +283,68 @@ export function SubmissionsTab({
                       </td>
 
                       <td className="px-5 py-4 max-w-xs">
-                        <div className="flex flex-wrap gap-1">
-                          {servicesList.slice(0, 2).map((srv: string, sIdx: number) => (
-                            <span
-                              key={sIdx}
-                              className="rounded bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 text-[9.5px] font-medium text-neutral-300"
-                            >
-                              {srv}
+                        {sub.type === "career" ? (
+                          <div>
+                            <span className="rounded-lg bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-[10.5px] font-bold text-emerald-300 inline-block mb-1">
+                              {data.vacancyTitle || "General Talent Application"}
                             </span>
-                          ))}
-                          {servicesList.length > 2 && (
-                            <span className="text-[10px] text-neutral-500 font-mono self-center">
-                              +{servicesList.length - 2} more
-                            </span>
-                          )}
-                        </div>
-                        {data.message && (
-                          <p className="mt-1 text-[11px] text-neutral-400 line-clamp-1">
-                            {data.message}
-                          </p>
+                            {data.portfolioUrl && (
+                              <a
+                                href={data.portfolioUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="flex items-center gap-1 text-[10.5px] text-[#60A5FA] hover:underline"
+                              >
+                                <ExternalLink size={10} />
+                                <span className="truncate max-w-[160px]">{data.portfolioUrl}</span>
+                              </a>
+                            )}
+                          </div>
+                        ) : (
+                          <>
+                            <div className="flex flex-wrap gap-1">
+                              {servicesList.slice(0, 2).map((srv: string, sIdx: number) => (
+                                <span
+                                  key={sIdx}
+                                  className="rounded bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 text-[9.5px] font-medium text-neutral-300"
+                                >
+                                  {srv}
+                                </span>
+                              ))}
+                              {servicesList.length > 2 && (
+                                <span className="text-[10px] text-neutral-500 font-mono self-center">
+                                  +{servicesList.length - 2} more
+                                </span>
+                              )}
+                            </div>
+                            {data.message && (
+                              <p className="mt-1 text-[11px] text-neutral-400 line-clamp-1">
+                                {data.message}
+                              </p>
+                            )}
+                          </>
                         )}
                       </td>
 
                       <td className="px-5 py-4 font-mono text-[11px] text-neutral-300">
-                        <div>{data.budgetRange || "Flexible"}</div>
-                        {data.timeline && (
-                          <div className="text-[10px] text-neutral-500 mt-0.5">{data.timeline}</div>
+                        {sub.type === "career" ? (
+                          <div>
+                            <div className="flex items-center gap-1 text-white font-sans text-xs">
+                              <MapPin size={11} className="text-[#60A5FA]" />
+                              <span>{data.candidateLocation || "Remote"}</span>
+                            </div>
+                            <div className="text-[10px] text-cyan-300 font-mono mt-0.5">
+                              {data.workplacePreference || "100% Remote"}
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <div>{data.budgetRange || "Flexible"}</div>
+                            {data.timeline && (
+                              <div className="text-[10px] text-neutral-500 mt-0.5">{data.timeline}</div>
+                            )}
+                          </>
                         )}
                       </td>
 
@@ -611,33 +648,74 @@ export function SubmissionsTab({
                 )}
               </div>
 
-              {/* Scope & Strategic Parameters */}
-              <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 space-y-3">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-500 block">
-                  Requested Capabilities &amp; Timeline
-                </span>
-                <div className="flex flex-wrap gap-1.5">
-                  {(selectedSubmission.data?.services || [selectedSubmission.data?.serviceOfInterest]).map(
-                    (s: string, idx: number) => (
-                      <span
-                        key={idx}
-                        className="rounded-lg bg-[#0052FF]/15 border border-[#0052FF]/30 px-2.5 py-1 text-xs font-semibold text-[#4385FF]"
-                      >
-                        {s}
-                      </span>
-                    ),
-                  )}
-                </div>
+              {/* Scope & Strategic Parameters / Career Parameters */}
+              {selectedSubmission.type === "career" ? (
+                <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 space-y-3">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-500 block">
+                    Candidate Profile &amp; Role Parameters
+                  </span>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="rounded-lg bg-emerald-500/15 border border-emerald-500/30 px-3 py-1 text-xs font-bold text-emerald-300">
+                      {selectedSubmission.data?.vacancyTitle || "General Talent Application"}
+                    </span>
+                    <span className="rounded-lg bg-[#0052FF]/15 border border-[#0052FF]/30 px-3 py-1 text-xs font-semibold text-[#60A5FA]">
+                      {selectedSubmission.data?.workplacePreference || "100% Remote"}
+                    </span>
+                  </div>
 
-                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/[0.04] text-xs">
-                  <div>
-                    Budget: <strong className="text-white font-mono">{selectedSubmission.data?.budgetRange || "Flexible"}</strong>
-                  </div>
-                  <div>
-                    Timeline: <strong className="text-white font-mono">{selectedSubmission.data?.timeline || "Flexible"}</strong>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-white/[0.04] text-xs">
+                    <div>
+                      <span className="text-neutral-500 block text-[10px] uppercase font-mono">Location &amp; Timezone</span>
+                      <strong className="text-white font-medium flex items-center gap-1.5 mt-0.5">
+                        <MapPin size={12} className="text-[#60A5FA]" />
+                        <span>{selectedSubmission.data?.candidateLocation || "Remote (Worldwide)"}</span>
+                      </strong>
+                    </div>
+
+                    {selectedSubmission.data?.portfolioUrl && (
+                      <div>
+                        <span className="text-neutral-500 block text-[10px] uppercase font-mono">Portfolio / Profile</span>
+                        <a
+                          href={selectedSubmission.data.portfolioUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#60A5FA] font-medium hover:underline flex items-center gap-1.5 mt-0.5"
+                        >
+                          <ExternalLink size={12} />
+                          <span className="truncate max-w-[220px]">{selectedSubmission.data.portfolioUrl}</span>
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 space-y-3">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-500 block">
+                    Requested Capabilities &amp; Timeline
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {(selectedSubmission.data?.services || [selectedSubmission.data?.serviceOfInterest]).map(
+                      (s: string, idx: number) => (
+                        <span
+                          key={idx}
+                          className="rounded-lg bg-[#0052FF]/15 border border-[#0052FF]/30 px-2.5 py-1 text-xs font-semibold text-[#4385FF]"
+                        >
+                          {s}
+                        </span>
+                      ),
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/[0.04] text-xs">
+                    <div>
+                      Budget: <strong className="text-white font-mono">{selectedSubmission.data?.budgetRange || "Flexible"}</strong>
+                    </div>
+                    <div>
+                      Timeline: <strong className="text-white font-mono">{selectedSubmission.data?.timeline || "Flexible"}</strong>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Full Submitted Brief */}
               <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">

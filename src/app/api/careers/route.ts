@@ -59,10 +59,13 @@ export async function POST(req: Request) {
       data: {
         fullName: data.fullName.trim(),
         email: data.email.trim(),
+        phoneWhatsApp: data.phoneWhatsApp?.trim() || "",
         vacancyId: data.vacancySlug,
         vacancyTitle,
         candidateLocation: data.candidateLocation?.trim() || "",
+        workplacePreference: data.workplacePreference?.trim() || "Remote",
         portfolioUrl: data.portfolioUrl?.trim() || "",
+        message: (data.message || data.coverNote || "").trim(),
         cvStorageKey,
         cvOriginalFilename: data.cvOriginalFilename || "resume.pdf",
       },

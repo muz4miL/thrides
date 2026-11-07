@@ -121,8 +121,12 @@ export interface VacancyDoc {
   _id?: ObjectId | string;
   slug: string;
   jobTitle: string;
+  department?: string;
   location: string;
-  employmentType: "Full-time" | "Part-time" | "Contract";
+  isRemote?: boolean;
+  employmentType: "Full-time" | "Part-time" | "Contract" | string;
+  experienceLevel?: string;
+  salaryRange?: string;
   description: string;
   responsibilities: string[];
   requirements: string[];
@@ -157,6 +161,7 @@ export interface SubmissionDoc {
     vacancyId?: string;
     vacancyTitle?: string;
     candidateLocation?: string;
+    workplacePreference?: string;
     portfolioUrl?: string;
     cvStorageKey?: string;
     cvOriginalFilename?: string;

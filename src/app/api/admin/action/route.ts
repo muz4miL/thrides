@@ -94,13 +94,35 @@ export async function POST(req: Request) {
       case "saveVacancy": {
         const { _id, ...fields } = data;
         fields.updatedAt = new Date();
+
+        // Ensure slug is clean and present
+        let baseSlug = (fields.slug && typeof fields.slug === "string" && fields.slug.trim().length > 0)
+          ? fields.slug.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")
+          : (fields.jobTitle || "vacancy").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+        if (!baseSlug) baseSlug = `role-${Date.now().toString(36)}`;
+        fields.slug = baseSlug;
+
+        // Auto-detect remote flag if not explicitly set
+        if (typeof fields.isRemote !== "boolean") {
+          const loc = String(fields.location || "").toLowerCase();
+          fields.isRemote = loc.includes("remote") || loc.includes("worldwide") || loc.includes("anywhere");
+        }
+
         if (_id && ObjectId.isValid(_id)) {
           await collections.vacancies.updateOne({ _id: new ObjectId(_id) }, { $set: fields });
-          return NextResponse.json({ success: true, id: _id });
+          return NextResponse.json({ success: true, id: _id, slug: fields.slug });
         } else {
+          // Check for collision on insert
+          const existing = await collections.vacancies.findOne({ slug: fields.slug });
+          if (existing) {
+            fields.slug = `${fields.slug}-${Math.random().toString(36).slice(2, 6)}`;
+          }
           fields.createdAt = new Date();
+          fields.isArchived = false;
+          if (typeof fields.isOpen !== "boolean") fields.isOpen = true;
           const res = await collections.vacancies.insertOne(fields as any);
-          return NextResponse.json({ success: true, id: res.insertedId.toString() });
+          return NextResponse.json({ success: true, id: res.insertedId.toString(), slug: fields.slug });
         }
       }
       case "deleteVacancy": {

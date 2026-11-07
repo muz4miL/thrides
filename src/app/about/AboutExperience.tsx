@@ -411,6 +411,36 @@ export default function AboutExperience({ stats, members }: Props) {
       {/* ─── OUR STANDARD ─── */}
       <section className={styles.standard} data-reveal><p className={styles.eyebrow}>OUR STANDARD</p><blockquote className="font-display">Attention should never<br />be accidental.<br /><em className="font-serif">Let’s make yours on purpose.</em></blockquote><p>Every website, post, campaign, and email we produce is backed by research and built to deliver measurable commercial clarity.</p></section>
 
+      {/* ─── REMOTE CAREERS BANNER ─── */}
+      <section className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-8 py-8">
+        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-[#0E0F18] via-[#121526] to-[#0A0B10] p-8 sm:p-12 backdrop-blur-xl">
+          <div className="pointer-events-none absolute -top-24 right-0 h-[280px] w-[280px] rounded-full bg-[#0052FF]/15 blur-[90px]" />
+          <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-8">
+            <div className="max-w-2xl space-y-3">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#0052FF]/40 bg-[#0052FF]/10 px-3.5 py-1 text-xs font-semibold text-[#60A5FA]">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider">
+                  We&apos;re Hiring • 100% Remote Friendly
+                </span>
+              </div>
+              <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-tight">
+                Want to build with us from anywhere?
+              </h2>
+              <p className="text-sm sm:text-base text-neutral-300 leading-relaxed">
+                We are actively looking for exceptional media buyers, motion designers, creative strategists, and engineers who thrive on high autonomy and commercial impact.
+              </p>
+            </div>
+            <Link
+              href="/careers"
+              className="btn-shiny-blue inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-xs font-bold uppercase tracking-wider text-white shrink-0 self-start md:self-center cursor-pointer"
+            >
+              <span>Explore Remote Roles</span>
+              <ArrowUpRight size={14} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* ─── CTA ─── */}
       <section className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-8 py-16 sm:py-24">
         <CtaBanner
