@@ -261,15 +261,15 @@ export function Header() {
           </nav>
         </div>
 
-        {/* Right: Standout CTA Button "t. Get Started" in Thrides Blue */}
+        {/* Right: Standout CTA Button "t. Get Started" in Shiny Poppy Blue */}
         <div className="flex items-center gap-3 justify-self-end">
           <a
             href="/contact"
-            className="inline-flex h-[52px] items-center gap-2.5 rounded-full bg-[#0052FF] px-6 text-[15px] font-bold text-white transition-all duration-200 hover:bg-[#0043DB] hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_24px_rgba(0,82,255,0.45)] select-none focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-3"
+            className="inline-flex h-[50px] items-center gap-2.5 rounded-full btn-shiny-blue px-6 text-[15px] font-bold text-white transition-all duration-200 select-none focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-3 cursor-pointer"
           >
-            <span className="font-display font-black text-[17px] leading-none">t.</span>
-            <span>Get Started</span>
-            <ArrowUpRight size={17} className="stroke-[2.5]" aria-hidden="true" />
+            <span className="font-display font-black text-[17px] leading-none drop-shadow-sm">t.</span>
+            <span className="drop-shadow-sm">Get Started</span>
+            <ArrowUpRight size={17} className="stroke-[2.5] drop-shadow-sm" aria-hidden="true" />
           </a>
         </div>
       </div>

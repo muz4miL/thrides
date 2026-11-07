@@ -15,11 +15,13 @@ import {
   Shield,
   X,
   BarChart3,
+  Film,
 } from "lucide-react";
 
 export type AdminTab =
   | "inbox"
   | "our-work"
+  | "showcase"
   | "services-page"
   | "trust-logos"
   | "stats-strip"
@@ -92,6 +94,11 @@ export function AdminSidebar({
           label: "Our Work CMS",
           icon: Sparkles,
           count: counts.ourWork,
+        },
+        {
+          id: "showcase" as AdminTab,
+          label: "Showcase CMS",
+          icon: Film,
         },
         {
           id: "services-page" as AdminTab,

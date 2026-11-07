@@ -471,6 +471,24 @@ export function OurWorkSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [isSectionNear, setIsSectionNear] = useState(false);
 
+  // Dynamic CMS data
+  const [dynamicItems, setDynamicItems] = useState<any[]>([]);
+  const [dynamicSettings, setDynamicSettings] = useState<any>(null);
+
+  useEffect(() => {
+    fetch("/api/showcase")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.items && Array.isArray(data.items)) {
+          setDynamicItems(data.items);
+        }
+        if (data.settings) {
+          setDynamicSettings(data.settings);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
@@ -486,6 +504,63 @@ export function OurWorkSection() {
     return () => observer.disconnect();
   }, []);
 
+  // Compute active items per category with zero-regression fallbacks
+  const adsItems: VideoMediaItem[] =
+    dynamicItems.filter((i) => i.category === "ads" && i.isActive).length > 0
+      ? dynamicItems
+          .filter((i) => i.category === "ads" && i.isActive)
+          .map((i) => ({ video: i.videoUrl, poster: i.posterUrl || "" }))
+      : ADS_VIDEOS;
+
+  const ugcItems: VideoMediaItem[] =
+    dynamicItems.filter((i) => i.category === "ugc" && i.isActive).length > 0
+      ? dynamicItems
+          .filter((i) => i.category === "ugc" && i.isActive)
+          .map((i) => ({ video: i.videoUrl, poster: i.posterUrl || "" }))
+      : UGC_VIDEOS;
+
+  const emailItems: EmailCardData[] =
+    dynamicItems.filter((i) => i.category === "emails" && i.isActive).length > 0
+      ? dynamicItems
+          .filter((i) => i.category === "emails" && i.isActive)
+          .map((i) => ({
+            id: i.id,
+            sender: i.sender || "BRAND",
+            subject: i.subject || "",
+            tag: i.tag || "FEATURED",
+            heroImg: i.heroImg || identityImg,
+            heading: i.heading || "",
+            subheading: i.subheading || "",
+            ctaText: i.ctaText || "LEARN MORE >",
+            accentColor: i.accentColor || "#0056F5",
+            theme: i.theme || "dark",
+          }))
+      : EMAILS_DATA;
+
+  const landingItems: LandingCardData[] =
+    dynamicItems.filter((i) => i.category === "landing" && i.isActive).length > 0
+      ? dynamicItems
+          .filter((i) => i.category === "landing" && i.isActive)
+          .map((i) => ({
+            id: i.id,
+            client: i.client || "CLIENT",
+            url: i.url || "",
+            title: i.title || "",
+            highlight: i.highlight || "",
+            description: i.description || "",
+            stats: Array.isArray(i.stats) && i.stats.length > 0 ? i.stats : [{ label: "Growth", value: "100%" }],
+            tag: i.tag || "CASE STUDY",
+            bgGradient: i.bgGradient || "from-[#111116] via-[#161622] to-[#0d0d12]",
+          }))
+      : LANDING_DATA;
+
+  if (dynamicSettings?.sectionEnabled === false) return null;
+
+  const badgeText = dynamicSettings?.sectionBadge || "OUR WORK";
+  const headingPrefix = dynamicSettings?.headingPrefix || "Creative that";
+  const headingItalic = dynamicSettings?.headingItalic || "Converts";
+  const durationSec = dynamicSettings?.marqueeSpeedSeconds || 32;
+
   return (
     <section
       ref={sectionRef}
@@ -495,15 +570,15 @@ export function OurWorkSection() {
     >
       <div className="mx-auto flex max-w-[1440px] flex-col items-center px-4 text-center">
         {/* Pill badge at top */}
-        <SectionBadge>OUR WORK</SectionBadge>
+        <SectionBadge>{badgeText}</SectionBadge>
 
         {/* Section Heading: Creative that Converts */}
         <h2 className="mt-5 sm:mt-7 lg:mt-9 flex flex-col items-center text-center">
           <span className="block font-display text-[34px] sm:text-[50px] lg:text-[clamp(50px,6vw,96px)] font-extrabold leading-[0.98] lg:leading-[0.95] tracking-[-0.04em] text-white">
-            Creative that
+            {headingPrefix}
           </span>
           <span className="block font-serif text-[38px] sm:text-[54px] lg:text-[clamp(54px,6.5vw,104px)] font-normal italic leading-[0.98] lg:leading-[0.95] tracking-[-0.02em] text-white mt-1">
-            Converts
+            {headingItalic}
           </span>
         </h2>
 
@@ -538,13 +613,16 @@ export function OurWorkSection() {
 
       {/* Moving Row of Mockups with Infinite Marquee */}
       <div className="showcase-row relative mt-10 sm:mt-14 lg:mt-16 w-full overflow-hidden">
-        <div className="showcase-track flex w-max will-change-transform">
+        <div
+          className="showcase-track flex w-max will-change-transform"
+          style={{ animationDuration: `${durationSec}s` }}
+        >
           {/* TAB: Ads Creative */}
           {activeTab === "ads" && (
             <>
               {/* Set 1 */}
               <div className="flex shrink-0 items-center gap-4 sm:gap-6 lg:gap-7 pr-4 sm:pr-6 lg:pr-7">
-                {ADS_VIDEOS.map((item, idx) => (
+                {adsItems.map((item, idx) => (
                   <PhoneCard
                     key={`ads-1-${idx}`}
                     item={item}
@@ -558,7 +636,7 @@ export function OurWorkSection() {
                 className="flex shrink-0 items-center gap-4 sm:gap-6 lg:gap-7 pr-4 sm:pr-6 lg:pr-7"
                 aria-hidden="true"
               >
-                {ADS_VIDEOS.map((item, idx) => (
+                {adsItems.map((item, idx) => (
                   <PhoneCard
                     key={`ads-2-${idx}`}
                     item={item}
@@ -576,7 +654,7 @@ export function OurWorkSection() {
             <>
               {/* Set 1 */}
               <div className="flex shrink-0 items-center gap-6 sm:gap-8 lg:gap-10 pr-6 sm:pr-8 lg:pr-10">
-                {EMAILS_DATA.map((item) => (
+                {emailItems.map((item) => (
                   <EmailCard key={`email-1-${item.id}`} item={item} />
                 ))}
               </div>
@@ -585,7 +663,7 @@ export function OurWorkSection() {
                 className="flex shrink-0 items-center gap-6 sm:gap-8 lg:gap-10 pr-6 sm:pr-8 lg:pr-10"
                 aria-hidden="true"
               >
-                {EMAILS_DATA.map((item) => (
+                {emailItems.map((item) => (
                   <EmailCard key={`email-2-${item.id}`} item={item} />
                 ))}
               </div>
@@ -597,7 +675,7 @@ export function OurWorkSection() {
             <>
               {/* Set 1 */}
               <div className="flex shrink-0 items-center gap-6 sm:gap-8 lg:gap-10 pr-6 sm:pr-8 lg:pr-10">
-                {LANDING_DATA.map((item) => (
+                {landingItems.map((item) => (
                   <LandingPageCard key={`landing-1-${item.id}`} item={item} />
                 ))}
               </div>
@@ -606,7 +684,7 @@ export function OurWorkSection() {
                 className="flex shrink-0 items-center gap-6 sm:gap-8 lg:gap-10 pr-6 sm:pr-8 lg:pr-10"
                 aria-hidden="true"
               >
-                {LANDING_DATA.map((item) => (
+                {landingItems.map((item) => (
                   <LandingPageCard key={`landing-2-${item.id}`} item={item} />
                 ))}
               </div>
@@ -618,7 +696,7 @@ export function OurWorkSection() {
             <>
               {/* Set 1 */}
               <div className="flex shrink-0 items-center gap-4 sm:gap-6 lg:gap-7 pr-4 sm:pr-6 lg:pr-7">
-                {UGC_VIDEOS.map((item, idx) => (
+                {ugcItems.map((item, idx) => (
                   <PhoneCard
                     key={`ugc-1-${idx}`}
                     item={item}
@@ -632,7 +710,7 @@ export function OurWorkSection() {
                 className="flex shrink-0 items-center gap-4 sm:gap-6 lg:gap-7 pr-4 sm:pr-6 lg:pr-7"
                 aria-hidden="true"
               >
-                {UGC_VIDEOS.map((item, idx) => (
+                {ugcItems.map((item, idx) => (
                   <PhoneCard
                     key={`ugc-2-${idx}`}
                     item={item}

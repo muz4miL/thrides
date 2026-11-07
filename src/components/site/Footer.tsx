@@ -181,7 +181,7 @@ export function Footer() {
                 />
                 <button
                   type="submit"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#0052FF] px-5 py-3.5 text-[14px] font-bold text-white transition-all hover:bg-[#0043DB] hover:scale-[1.02] active:scale-[0.98] shrink-0 shadow-lg shadow-blue-950/50"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl btn-shiny-blue px-6 py-3.5 text-[14px] font-bold text-white transition-all shrink-0 cursor-pointer"
                 >
                   {isSubmitted ? (
                     <>
@@ -246,9 +246,15 @@ export function Footer() {
 
         {/* ========================================================
             THE ICONIC DEFIANT WATERMARK (GIANT GHOST WORDMARK)
+            Subtle High-End Luminous Blue Aesthetics
            ======================================================== */}
-        <div className="mt-12 sm:mt-16 w-full overflow-hidden select-none pointer-events-none text-center">
-          <span className="block font-display font-black tracking-[-0.06em] text-[clamp(72px,17vw,250px)] leading-[0.76] text-[#0D0D11] uppercase select-none">
+        <div className="mt-12 sm:mt-16 w-full overflow-hidden select-none pointer-events-none text-center relative">
+          {/* Ambient soft blue back-glow to lift the watermark */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-36 w-2/3 rounded-full bg-[#0055F6]/10 blur-[80px]"
+          />
+          <span className="relative block font-display font-black tracking-[-0.06em] text-[clamp(72px,17vw,250px)] leading-[0.76] uppercase select-none bg-gradient-to-b from-[#3B82F6]/35 via-[#1E40AF]/20 to-[#0F172A]/5 bg-clip-text text-transparent drop-shadow-[0_0_45px_rgba(37,99,235,0.2)]">
             thrides.
           </span>
         </div>

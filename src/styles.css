@@ -69,8 +69,9 @@
   --destructive-foreground: #ffffff;
   --border: rgba(255, 255, 255, 0.08);
   --input: rgba(255, 255, 255, 0.14);
-  --ring: #0052FF;
+  --ring: #0056F5;
   --header-h: 76px;
+  --blue-glow: 0 0 24px rgba(0, 86, 245, 0.45), 0 6px 18px rgba(0, 40, 160, 0.35);
 
   /* Step 1: True luxury metallic gold tokens */
   --gold-50: #FFF6D6;
@@ -800,4 +801,45 @@ body,
   10%  { opacity: 1;                                   }
   90%  { opacity: 1;                                   }
   100% { transform: translateY(-18px);  opacity: 0.75; }
+}
+
+/* ── Luxury Shiny Poppy Electric Blue Buttons (Reference-Grade) ── */
+.btn-shiny-blue {
+  position: relative;
+  background: linear-gradient(180deg, #2A7BFF 0%, #0056F5 52%, #0042D4 100%);
+  color: #FFFFFF !important;
+  box-shadow: 
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.65),
+    inset 0 -1.5px 2px 0 rgba(0, 20, 80, 0.35),
+    0 0 24px rgba(0, 86, 245, 0.45),
+    0 6px 20px rgba(0, 40, 160, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-shiny-blue:hover {
+  background: linear-gradient(180deg, #448BFF 0%, #0E60FF 50%, #004BE8 100%);
+  box-shadow: 
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1.5px 2px 0 rgba(0, 20, 80, 0.3),
+    0 0 36px rgba(0, 102, 255, 0.7),
+    0 8px 24px rgba(0, 50, 180, 0.45);
+  transform: translateY(-1px) scale(1.015);
+}
+
+.btn-shiny-blue:active {
+  transform: translateY(1px) scale(0.985);
+  box-shadow: 
+    inset 0 2px 4px 0 rgba(0, 20, 80, 0.4),
+    0 0 16px rgba(0, 85, 246, 0.4);
+}
+
+/* Ambient Logo Bloom for High-End Cinematic Feel */
+.logo-bloom {
+  filter: drop-shadow(0 0 12px rgba(0, 86, 245, 0.4)) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.logo-bloom:hover {
+  filter: drop-shadow(0 0 22px rgba(0, 102, 255, 0.7)) drop-shadow(0 1px 4px rgba(0, 0, 0, 0.9));
+  transform: scale(1.02);
 }

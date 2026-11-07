@@ -561,3 +561,49 @@ export interface StatsStripSettingsDoc {
   updatedAt: string;
 }
 
+// ── SHOWCASE CMS ("Creative that Converts" interactive moving showcase) ──
+
+export type ShowcaseCategory = "ads" | "emails" | "landing" | "ugc";
+
+export interface ShowcaseItemDoc {
+  _id?: ObjectId | string;
+  id: string;
+  category: ShowcaseCategory | string;
+  title: string;
+  // For Ads & UGC (Phone video mockups)
+  videoUrl?: string;
+  posterUrl?: string;
+  // For Emails
+  sender?: string;
+  subject?: string;
+  tag?: string;
+  heroImg?: string;
+  heading?: string;
+  subheading?: string;
+  ctaText?: string;
+  accentColor?: string;
+  theme?: "dark" | "light";
+  // For Landing Pages
+  client?: string;
+  url?: string;
+  highlight?: string;
+  description?: string;
+  stats?: { label: string; value: string }[];
+  bgGradient?: string;
+  sortOrder: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ShowcaseSettingsDoc {
+  _id?: ObjectId | string;
+  id: string;
+  sectionBadge: string;
+  headingPrefix: string;
+  headingItalic: string;
+  marqueeSpeedSeconds: number;
+  sectionEnabled: boolean;
+  updatedAt: string;
+}
+

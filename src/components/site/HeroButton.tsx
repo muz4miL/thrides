@@ -1,3 +1,5 @@
+import { ArrowUpRight } from "lucide-react";
+
 interface HeroButtonProps {
   href?: string;
   leftText?: string;
@@ -19,33 +21,43 @@ export function HeroButton({
     <a
       href={href}
       aria-label={label}
-      className={`group relative inline-flex h-[74px] sm:h-[80px] w-full max-w-[345px] shrink-0 items-center justify-between rounded-full bg-[#000000] p-[5px] transition-colors duration-200 hover:bg-[#0052FF] focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-4 select-none ${className}`}
+      className={`group relative inline-flex h-[64px] sm:h-[70px] w-full max-w-[345px] shrink-0 items-center justify-between rounded-full btn-shiny-blue px-6 sm:px-7 select-none cursor-pointer focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-4 ${className}`}
     >
-      {/* Animated Outer Blue Pulse */}
+      {/* Outer ambient pulsing blue aura */}
       <span
-        className="pointer-events-none absolute -inset-[2px] rounded-full border-2 border-[#0052FF] animate-hero-border-pulse"
+        className="pointer-events-none absolute -inset-1 rounded-full bg-[#0056F5]/40 blur-xl opacity-75 group-hover:opacity-100 transition-opacity duration-300"
         aria-hidden="true"
       />
 
-      {/* Inner Pill Container */}
-      <div className="relative z-10 flex h-full w-full items-center justify-between rounded-full border border-white/20 px-5 sm:px-6 transition-colors duration-200 group-hover:border-white/50">
-        <span className="text-[16px] sm:text-[18px] font-medium text-white transition-colors duration-200 whitespace-nowrap">
-          {leftText}
-        </span>
+      {/* Glossy top glass reflection highlight */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-4 top-0.5 h-[1.5px] bg-gradient-to-r from-transparent via-white/80 to-transparent rounded-full"
+      />
 
-        {/* Central Glowing Brand Squircle with t. */}
-        <div className="relative mx-2 flex items-center justify-center shrink-0">
-          <div className="absolute inset-0 rounded-[14px] bg-[#0052FF] blur-[10px] opacity-40 transition-opacity duration-200 group-hover:opacity-85" />
-          <div className="relative grid h-[42px] w-[42px] sm:h-[46px] sm:w-[46px] place-items-center rounded-[14px] bg-[#0052FF] shadow-[0_0_18px_rgba(0,82,255,0.55)]">
-            <span className="font-display text-[20px] sm:text-[22px] font-black text-white leading-none pl-0.5 group-hover:scale-105 transition-transform">
-              t.
-            </span>
-          </div>
+      {/* Left text */}
+      <span className="relative z-10 text-[16px] sm:text-[17px] font-bold text-white tracking-tight whitespace-nowrap drop-shadow-sm">
+        {leftText}
+      </span>
+
+      {/* Central Glass Brand Badge with t. */}
+      <div className="relative z-10 mx-2 flex items-center justify-center shrink-0">
+        <div className="grid h-[36px] w-[36px] sm:h-[40px] sm:w-[40px] place-items-center rounded-full bg-black/25 backdrop-blur-md border border-white/30 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)] group-hover:bg-black/35 group-hover:scale-105 transition-all">
+          <span className="font-display text-[18px] sm:text-[20px] font-black text-white leading-none pl-0.5">
+            t.
+          </span>
         </div>
+      </div>
 
-        <span className="text-[16px] sm:text-[18px] font-medium text-white transition-colors duration-200 whitespace-nowrap">
+      {/* Right text + subtle arrow */}
+      <div className="relative z-10 flex items-center gap-1.5">
+        <span className="text-[16px] sm:text-[17px] font-bold text-white tracking-tight whitespace-nowrap drop-shadow-sm">
           {rightText}
         </span>
+        <ArrowUpRight
+          size={16}
+          className="stroke-[3] text-white/90 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+        />
       </div>
     </a>
   );

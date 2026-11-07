@@ -27,6 +27,8 @@ import type {
   MarqueeItemDoc,
   StatsLogoDoc,
   StatsStripSettingsDoc,
+  ShowcaseItemDoc,
+  ShowcaseSettingsDoc,
 } from "./types";
 
 // Ensure DNS resolution succeeds across Windows Node SRV lookups
@@ -103,6 +105,9 @@ export async function getCollections() {
     marqueeItems: db.collection<MarqueeItemDoc>("marquee_items"),
     statsLogos: db.collection<StatsLogoDoc>("stats_logos"),
     statsStripSettings: db.collection<StatsStripSettingsDoc>("stats_strip_settings"),
+    // Showcase CMS ("Creative that Converts" moving component)
+    showcaseItems: db.collection<ShowcaseItemDoc>("showcase_items"),
+    showcaseSettings: db.collection<ShowcaseSettingsDoc>("showcase_settings"),
   };
 }
 
