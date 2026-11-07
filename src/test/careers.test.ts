@@ -61,3 +61,4 @@ describe("Careers & Remote Vacancy System", () => {
     expect(parsed.success).toBe(false);
   });
 });
+

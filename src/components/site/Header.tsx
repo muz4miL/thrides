@@ -245,7 +245,27 @@ export function Header() {
               Our Work
             </a>
 
-            {/* 5. Contact */}
+            {/* 5. Careers */}
+            <a
+              href="/careers"
+              className={cn(
+                "flex h-[44px] items-center justify-center rounded-full px-4 text-[15px] transition-colors duration-150 gap-2",
+                "focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2",
+                activePath.startsWith("/careers")
+                  ? "bg-[#0052FF] font-bold text-white shadow-md shadow-blue-950/40"
+                  : "bg-transparent font-medium text-[#E4E4E7] hover:bg-white/10 hover:text-white",
+              )}
+            >
+              Careers
+              {!activePath.startsWith("/careers") && (
+                <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-emerald-300">
+                  <span className="h-1 w-1 rounded-full bg-emerald-400 animate-pulse" />
+                  Hiring
+                </span>
+              )}
+            </a>
+
+            {/* 6. Contact */}
             <a
               href="/contact"
               className={cn(
